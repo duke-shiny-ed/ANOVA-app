@@ -12,7 +12,23 @@ ui <- navbarPage(title = "ANOVA",
                     sidebarLayout(
                             sidebarPanel(
                             fluidRow(
-                            selectInput(inputId = "skew", 
+                            selectInput(inputId = "skew1", 
+                                        label = "Shape",
+                                        choices = c("Normal",
+                                                    "Right Skewed",
+                                                    "Left Skewed",
+                                        selected = "Normal")
+                                        ),
+                            tags$br(),
+                            selectInput(inputId = "skew2", 
+                                        label = "Shape",
+                                        choices = c("Normal",
+                                                    "Right Skewed",
+                                                    "Left Skewed",
+                                        selected = "Normal")
+                                        ),
+                            tags$br(),
+                            selectInput(inputId = "skew3", 
                                         label = "Shape",
                                         choices = c("Normal",
                                                     "Right Skewed",
@@ -120,7 +136,26 @@ ui <- navbarPage(title = "ANOVA",
 )
 
 
-server <- function(input, output) {}
+server <- function(input, output) {
+  ##--------------------------------------------------------------Tab 2
+  dist <- function(skew) {
+    if(skew == "Normal") {
+      set.seed(1)
+      rbeta(10000, shape1 = 22, shape2 = 22)
+    } else if(skew == "Right Skewed") {
+      set.seed(1)
+      rbeta(10000, shape1 = 13, shape2 = 31)
+    } else {
+      set.seed(1)
+      rbeta(10000, shape1 = 31, shape2 = 13)
+    }
+  }
+  
+  d1 <- reactive({dist(input$skew1)})
+  d2 <- reactive({dist(input$skew2)})
+  d3 <- reactive({dist(input$skew3)})
+  
+}
 
 
 shinyApp(ui = ui, server = server)

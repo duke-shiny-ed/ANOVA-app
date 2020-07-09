@@ -5,6 +5,9 @@ ui <- navbarPage(title = "ANOVA",
                     tags$h1("About the App"),
                     tags$br(),
                     tags$p("contents")),
+                    tags$hr(),
+        
+                    tags$h1("Acknowledgements"),
         tabPanel("Robustness of Assumptions",
                     sidebarLayout(
                             sidebarPanel(
@@ -39,6 +42,8 @@ ui <- navbarPage(title = "ANOVA",
                         column(plotOutput(outputId = "curve"), width = 8),
                         column(verbatimTextOutput(outputId = "aovTest"), width = 4,
                                tags$br(),
+                               ## Confirm this latex is correct; pretty sure it isn't
+                               tags$p("At the $$\alpha = .05$$ level this F-stat corresponds to a p-value that suggests there is"),
                                textOutput(outputId = "concl"))))
                 )
              ),
@@ -75,11 +80,43 @@ ui <- navbarPage(title = "ANOVA",
                                     verbatimTextOutput(outputId = "aovTest"),
                                     tags$br(),
                                     tags$br(),
-                                    
+                                   ## Check this latex
+                                   tags$p("At the $$\\alpha = .05$$ level this F-stat corresponds to a p-value that suggests there is"),  
                                    textOutput(outputId = "concl"), width = 4)))
                
-    )
-                
+    ),
+      tabPanel("Glossary",
+               tags$h1("Vocabulary"),
+               tags$p("contents"),
+               tags$br(),
+               
+               tags$h1("Equations"),
+               tags$p("contents")),
+  ##---------------------------------------------------------quiz on boxplots comparing F-stats  
+      tabPanel("Quiz",
+              tags$img(src = "...png", width = "200", height = "100"),
+              tags$p("Explain what image is showing. i.e. what the boxplots represent"),
+              tags$br(),
+                             
+              radioButtons(inputId = "q1",
+                           label = "1. Write question here",
+                           choices = c("True", "False")),
+                             
+              tags$br(),
+              radioButtons(inputId = "q2",
+                           label = "2. Write question here",
+                           choices = c("True", "False")),
+                             
+              tags$br(),
+              radioButtons(inputId = "q3",
+                           label = "3. Write question here",
+                           choices = c("True", "False")),
+                             
+              actionButton(inputId = "submit",
+                           label = "Submit"),
+              textOutput(outputId = "answers"))
+                    
+
 )
 
 

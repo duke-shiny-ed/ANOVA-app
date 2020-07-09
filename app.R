@@ -12,8 +12,12 @@ ui <- navbarPage(title = "ANOVA",
                     sidebarLayout(
                             sidebarPanel(
                             fluidRow(
-                            selectInput(inputId = "skew1", 
-                                        label = "Shape",
+                              tags$h4("Shape"),
+                              tags$p("Instructions"),
+                              tags$br(),
+                              
+                              selectInput(inputId = "skew1", 
+                                        label = p("Curve 1", style = "color:red"),
                                         choices = c("Normal",
                                                     "Right Skewed",
                                                     "Left Skewed",
@@ -21,7 +25,7 @@ ui <- navbarPage(title = "ANOVA",
                                         ),
                             tags$br(),
                             selectInput(inputId = "skew2", 
-                                        label = "Shape",
+                                        label = p("Curve 2", style = "color:blue"),
                                         choices = c("Normal",
                                                     "Right Skewed",
                                                     "Left Skewed",
@@ -29,7 +33,7 @@ ui <- navbarPage(title = "ANOVA",
                                         ),
                             tags$br(),
                             selectInput(inputId = "skew3", 
-                                        label = "Shape",
+                                        label = p("Curve 3", style = "color:green"),
                                         choices = c("Normal",
                                                     "Right Skewed",
                                                     "Left Skewed",
@@ -154,6 +158,8 @@ server <- function(input, output) {
   d1 <- reactive({dist(input$skew1)})
   d2 <- reactive({dist(input$skew2)})
   d3 <- reactive({dist(input$skew3)})
+  
+  
   
 }
 

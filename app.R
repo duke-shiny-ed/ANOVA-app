@@ -1,13 +1,16 @@
 library(shiny)
+library(tidyr)
+library(ggplot2)
 
 ui <- navbarPage(title = "ANOVA",
         tabPanel("About",
                     tags$h1("About the App"),
                     tags$br(),
-                    tags$p("contents")),
+                    tags$p("contents"),
                     tags$hr(),
         
                     tags$h1("Acknowledgements"),
+                    tags$p("contents")),
         tabPanel("Robustness of Assumptions",
                     sidebarLayout(
                             sidebarPanel(
@@ -48,8 +51,7 @@ ui <- navbarPage(title = "ANOVA",
                                                     "Left Skewed" = "lskew",
                                         selected = "norm")
                                         ),
-                            tags$br(),
-                            tags$p("Instructions")),
+                            tags$br()),
                             
                             fluidRow(tags$h4("Whithin group variance"),
                                      tags$p("Instructions"),
@@ -130,17 +132,20 @@ ui <- navbarPage(title = "ANOVA",
                              
               radioButtons(inputId = "q1",
                            label = "1. Write question here",
-                           choices = c("True", "False")),
+                           choices = c("True", "False"),
+                           selected = "_None"),
                              
               tags$br(),
               radioButtons(inputId = "q2",
                            label = "2. Write question here",
-                           choices = c("True", "False")),
+                           choices = c("True", "False"),
+                           selected = "_None"),
                              
               tags$br(),
               radioButtons(inputId = "q3",
                            label = "3. Write question here",
-                           choices = c("True", "False")),
+                           choices = c("True", "False"),
+                           selected = "_None"),
                              
               actionButton(inputId = "submit",
                            label = "Submit"),
@@ -168,22 +173,20 @@ server <- function(input, output) {
     }
   }
   
-  sd <- function(data, sd) {
-    data * (input$sd * 0.1)
-  }
-  
-  ##use sapply? to apple sd function to every component of each dataset? -- nope!
-  
   d1 <- reactive({dist(skew = input$skew1, within = input$sd1, between = input$btwsd)})
   d2 <- reactive({dist(skew = input$skew2, within = input$sd2, between = input$btwsd)})
   d3 <- reactive({dist(skew = input$skew3, within = input$sd3, between = input$btwsd)})
   
+  df <- reactive({dataframe(d1(), d2(), d3())})
+  df_long <- reactive({
+    df() %>%
+      gather(key = dataset, value = value)
+    })
+  
   ##look into using ggplot for density curves; also how to add title
 output$curve <- renderPlot({
-  ggplot() + 
-    geom_density(data = d1, aes(x = samples1, y = ..density..), color = "red") + 
-    geom_density(data = d2, aes(x = , y = ), color = "blue") +
-    geom_density(data = d3, aes(x = , y = ), color = "green") +
+  ggplot(data = df_long, aes(x = value)) + 
+    geom_density(aes(color = dataset)) + 
     coord_cartesian(xlim =c(0, 1))
   })  
   

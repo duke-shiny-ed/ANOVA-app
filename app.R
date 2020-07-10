@@ -12,32 +12,41 @@ ui <- navbarPage(title = "ANOVA",
                     sidebarLayout(
                             sidebarPanel(
                             fluidRow(
+                              sliderInput(inputId = "btwsd",
+                                          label = "Between group variance",
+                                          min = 1, max = 5, value = 1),
+                              tags$br(),
+                              tags$p("Instructions"),
+                              tags$hr(),
+                              
+                              tags$h2("Assumptions"),
+                              tags$br(),
                               tags$h4("Shape"),
                               tags$p("Instructions"),
                               tags$br(),
                               
                               selectInput(inputId = "skew1", 
                                         label = p("Curve 1", style = "color:red"),
-                                        choices = c("Normal",
-                                                    "Right Skewed",
-                                                    "Left Skewed",
-                                        selected = "Normal")
+                                        choices = c("Normal" = "norm",
+                                                    "Right Skewed" = "rskew",
+                                                    "Left Skewed" = "lskew",
+                                        selected = "norm")
                                         ),
                             tags$br(),
                             selectInput(inputId = "skew2", 
                                         label = p("Curve 2", style = "color:blue"),
-                                        choices = c("Normal",
-                                                    "Right Skewed",
-                                                    "Left Skewed",
-                                        selected = "Normal")
+                                        choices = c("Normal" = "norm",
+                                                    "Right Skewed" = "rskew",
+                                                    "Left Skewed" = "lskew",
+                                        selected = "norm")
                                         ),
                             tags$br(),
                             selectInput(inputId = "skew3", 
                                         label = p("Curve 3", style = "color:green"),
-                                        choices = c("Normal",
-                                                    "Right Skewed",
-                                                    "Left Skewed",
-                                        selected = "Normal")
+                                        choices = c("Normal" = "norm",
+                                                    "Right Skewed" = "rskew",
+                                                    "Left Skewed" = "lskew",
+                                        selected = "norm")
                                         ),
                             tags$br(),
                             tags$p("Instructions")),
@@ -143,10 +152,10 @@ ui <- navbarPage(title = "ANOVA",
 server <- function(input, output) {
   ##--------------------------------------------------------------Tab 2
   dist <- function(skew) {
-    if(skew == "Normal") {
+    if(skew == "norm") {
       set.seed(1)
       rbeta(10000, shape1 = 22, shape2 = 22)
-    } else if(skew == "Right Skewed") {
+    } else if(skew == "rskew") {
       set.seed(1)
       rbeta(10000, shape1 = 13, shape2 = 31)
     } else {

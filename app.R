@@ -14,7 +14,7 @@ ui <- navbarPage(title = "ANOVA",
                             fluidRow(
                               sliderInput(inputId = "btwsd",
                                           label = "Between group variance",
-                                          min = 1, max = 5, value = 1),
+                                          min = 1, max = 2, value = 1),
                               tags$br(),
                               tags$p("Instructions"),
                               tags$hr(),
@@ -78,7 +78,15 @@ ui <- navbarPage(title = "ANOVA",
              ),
         tabPanel("Relationship between ANOVA and F-Statistic",
                 sidebarLayout(
-                    sidebarPanel(tags$h4("Whithin group variance"),
+                    sidebarPanel(sliderInput(inputId = "btwsd",
+                                             label = "Between group variance",
+                                             min = 1, max = 2, value = 1),
+                                 tags$br(),
+                                 tags$p("Instructions"),
+                                 tags$br(),
+                                 tags$br(),
+                      
+                                tags$h4("Whithin group variance"),
                                 tags$p("Instructions"),
                                 tags$br(),
                                          
@@ -92,15 +100,7 @@ ui <- navbarPage(title = "ANOVA",
                                 tags$br(),
                                 sliderInput(inputId = "sd3",
                                             label = p("Curve 3", style = "color:green"),
-                                            min = 0.5, max = 2, value = 1, step = .05),
-                                tags$br(),
-                                tags$br(),
-                                         
-                                sliderInput(inputId = "btwsd",
-                                            label = "Between group variance",
-                                            min = 1, max = 5, value = 1),
-                                tags$br(),
-                                tags$p("Instructions"))),
+                                            min = 0.5, max = 2, value = 1, step = .05)),
                     mainPanel(
                         fluidRow(
                             column(plotOutput(outputId = "boxplot"), width = 8),
@@ -112,6 +112,7 @@ ui <- navbarPage(title = "ANOVA",
                                    ## Check this latex
                                    tags$p("At the $$\\alpha = .05$$ level this F-stat corresponds to a p-value that suggests there is"),  
                                    textOutput(outputId = "concl"), width = 4)))
+                )
                
     ),
       tabPanel("Glossary",
@@ -151,24 +152,40 @@ ui <- navbarPage(title = "ANOVA",
 
 server <- function(input, output) {
   ##--------------------------------------------------------------Tab 2
-  dist <- function(skew) {
+  dist <- function(skew, within, between) {
     if(skew == "norm") {
       set.seed(1)
-      rbeta(10000, shape1 = 22, shape2 = 22)
+      (rbeta(10000, shape1 = 22, shape2 = 22) * within + (between * 0.1))
+      #initial mean = 0.5002202
     } else if(skew == "rskew") {
       set.seed(1)
-      rbeta(10000, shape1 = 13, shape2 = 31)
+      (rbeta(10000, shape1 = 13, shape2 = 31) * within + (between * 0.1))
+      #initial mean = 0.2955792
     } else {
       set.seed(1)
-      rbeta(10000, shape1 = 31, shape2 = 13)
+      (rbeta(10000, shape1 = 31, shape2 = 13) * within + (between * 0.1))
+      #initial mean = 0.7044208
     }
   }
   
-  d1 <- reactive({dist(input$skew1)})
-  d2 <- reactive({dist(input$skew2)})
-  d3 <- reactive({dist(input$skew3)})
+  sd <- function(data, sd) {
+    data * (input$sd * 0.1)
+  }
   
+  ##use sapply? to apple sd function to every component of each dataset? -- nope!
   
+  d1 <- reactive({dist(skew = input$skew1, within = input$sd1, between = input$btwsd)})
+  d2 <- reactive({dist(skew = input$skew2, within = input$sd2, between = input$btwsd)})
+  d3 <- reactive({dist(skew = input$skew3, within = input$sd3, between = input$btwsd)})
+  
+  ##look into using ggplot for density curves; also how to add title
+output$curve <- renderPlot({
+  ggplot() + 
+    geom_density(data = d1, aes(x = samples1, y = ..density..), color = "red") + 
+    geom_density(data = d2, aes(x = , y = ), color = "blue") +
+    geom_density(data = d3, aes(x = , y = ), color = "green") +
+    coord_cartesian(xlim =c(0, 1))
+  })  
   
 }
 

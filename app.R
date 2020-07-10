@@ -11,95 +11,94 @@ ui <- navbarPage(title = "ANOVA",
         
                     tags$h1("Acknowledgements"),
                     tags$p("contents")),
+        
         tabPanel("Robustness of Assumptions",
                     sidebarLayout(
                             sidebarPanel(
                             fluidRow(
+                              tags$h3(strong("Between Group Variance")),
+                              tags$p("Instructions"),
+                              tags$br(),
                               sliderInput(inputId = "btwsd",
-                                          label = "Between group variance",
+                                          label = NULL,
                                           min = 1, max = 2, value = 1),
                               tags$br(),
-                              tags$p("Instructions"),
-                              tags$hr(),
+                              tags$br()),
                               
-                              tags$h2("Assumptions"),
-                              tags$br(),
-                              tags$h4("Shape"),
-                              tags$p("Instructions"),
-                              tags$br(),
+                             fluidRow(
+                               tags$h3(strong("Assumptions")),
                               
-                              selectInput(inputId = "skew1", 
+                               wellPanel(
+                               tags$h4("Shape"),
+                               tags$p("Instructions"),
+                               
+                               tags$br(),
+                               selectInput(inputId = "skew1", 
                                         label = p("Curve 1", style = "color:red"),
                                         choices = c("Normal" = "norm",
                                                     "Right Skewed" = "rskew",
-                                                    "Left Skewed" = "lskew",
-                                        selected = "norm")
-                                        ),
-                            tags$br(),
-                            selectInput(inputId = "skew2", 
+                                                    "Left Skewed" = "lskew"),
+                                        selected = "norm"),
+                               selectInput(inputId = "skew2", 
                                         label = p("Curve 2", style = "color:blue"),
                                         choices = c("Normal" = "norm",
                                                     "Right Skewed" = "rskew",
-                                                    "Left Skewed" = "lskew",
-                                        selected = "norm")
-                                        ),
-                            tags$br(),
-                            selectInput(inputId = "skew3", 
+                                                    "Left Skewed" = "lskew"),
+                                        selected = "norm"),
+                               selectInput(inputId = "skew3", 
                                         label = p("Curve 3", style = "color:green"),
                                         choices = c("Normal" = "norm",
                                                     "Right Skewed" = "rskew",
-                                                    "Left Skewed" = "lskew",
-                                        selected = "norm")
-                                        ),
-                            tags$br()),
-                            
-                            fluidRow(tags$h4("Whithin group variance"),
+                                                    "Left Skewed" = "lskew"),
+                                        selected = "norm")),
+                                
+                                wellPanel(
+                                tags$h4("Whithin group variance"),
                                      tags$p("Instructions"),
                                      tags$br(),
                                      
                                      sliderInput(inputId = "sd1",
                                                  label = p("Curve 1", style = "color:red"),
-                                                 min = 0.5, max = 2, value = 1, step = 0.5),
-                                     tags$br(),
+                                                 min = 0.5, max = 2, value = 1, step = 0.01),
                                      sliderInput(inputId = "sd2",
                                                  label = p("Curve 2", style = "color:blue"),
-                                                 min = 0.5, max = 2, value = 1, step = .05),
-                                     tags$br(),
+                                                 min = 0.5, max = 2, value = 1, step = .01),
                                      sliderInput(inputId = "sd3",
                                                  label = p("Curve 3", style = "color:green"),
-                                                 min = 0.5, max = 2, value = 1, step = .05))),
+                                                 min = 0.5, max = 2, value = 1, step = .01))
+                            )
+                          ),
                     mainPanel(
                     fluidRow(
                         column(plotOutput(outputId = "curve"), width = 8),
                         column(verbatimTextOutput(outputId = "aovTest"), width = 4,
                                tags$br(),
-                               ## Confirm this latex is correct; pretty sure it isn't
-                               tags$p("At the $$\alpha = .05$$ level this F-stat corresponds to a p-value that suggests there is"),
-                               textOutput(outputId = "concl"))))
+                               ## This latex is incorrect
+                               tags$p("At the $\alpha$ = .05 level this F-stat corresponds to a p-value that suggests there is"),
+                               textOutput(outputId = "concl")))
+                    )
                 )
              ),
         tabPanel("Relationship between ANOVA and F-Statistic",
                 sidebarLayout(
-                    sidebarPanel(sliderInput(inputId = "btwsd",
-                                             label = "Between group variance",
-                                             min = 1, max = 2, value = 1),
-                                 tags$br(),
+                    sidebarPanel(tags$h3(strong("Between Group Variance")),
                                  tags$p("Instructions"),
                                  tags$br(),
+                                 sliderInput(inputId = "btwsd",
+                                             label = NULL,
+                                             min = 1, max = 2, value = 1),
                                  tags$br(),
                       
-                                tags$h4("Whithin group variance"),
+                                tags$h3(strong("Whithin group variance")),
                                 tags$p("Instructions"),
                                 tags$br(),
                                          
                                 sliderInput(inputId = "sd1",
                                             label = p("Curve 1", style = "color:red"),
                                             min = 0.5, max = 2, value = 1, step = 0.5),
-                                tags$br(),
                                 sliderInput(inputId = "sd2",
                                             label = p("Curve 2", style = "color:blue"),
                                             min = 0.5, max = 2, value = 1, step = .05),
-                                tags$br(),
                                 sliderInput(inputId = "sd3",
                                             label = p("Curve 3", style = "color:green"),
                                             min = 0.5, max = 2, value = 1, step = .05)),
@@ -156,7 +155,7 @@ ui <- navbarPage(title = "ANOVA",
 
 
 server <- function(input, output) {
-  ##--------------------------------------------------------------Tab 2
+  ##--------------------------------------------------------------Assumptions Tab
   dist <- function(skew, within, between) {
     if(skew == "norm") {
       set.seed(1)

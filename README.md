@@ -1,4 +1,5 @@
 # ANOVA-app
+author: Samantha Owusu-Antwi
 
 Learning Objectives:
   1. Examine how violations of assumptions of (1) normality of all groups and (2) equal within group variances affect ANOVA test output (tab 1)

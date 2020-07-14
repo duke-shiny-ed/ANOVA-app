@@ -114,7 +114,7 @@ ui <- navbarPage(theme = shinytheme("lumen"),
                             mainPanel(
                               fluidRow(column(width = 12, plotOutput(outputId = "boxplot"))),
                               fluidRow(
-                               p("Non-reactive text explaining what F-stat is..."),
+                               p("Non-reactive text explaining what F-stat is... Also indicate that below is the F-stat:"),
                                 br(),
                                 
                                 verbatimTextOutput(outputId = "aovTest2"),
@@ -275,13 +275,14 @@ server <- function(input, output, session) {
   output$boxplot <- renderPlot({
     ggplot(data = df_long(), aes(group = dataset, y = value)) + 
       geom_boxplot(aes(color = dataset)) +
+      #coord_cartesian(ylim =c(0.1, 1.2)) +
       labs(title = "Sample Data") +
       theme(legend.position = "none")
   })
   
   runTest2 <- reactive({aov(value ~ dataset, data = df_long())})
   output$aovTest2 <- renderPrint ({
-    print(summary(runTest2()))
+    print(summary(runTest2())[[1]][["F value"]][[1]])
   })
   
   output$concl2 <- renderText({

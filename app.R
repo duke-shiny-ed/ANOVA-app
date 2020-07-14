@@ -115,19 +115,18 @@ ui <- navbarPage(theme = shinytheme("lumen"),
                             
                             mainPanel(
                               #fluidRow(
-                              #column(width = 8, plotOutput(outputId = "boxplot")),
-                              #column(width = 4, 
-                              #       p("Non-reactive text explaining what F-stat is..."),
-                              #       br(),
-                              
-                              #       verbatimTextOutput(outputId = "aovTest"),
-                              #       br(),
-                              #       br(),
-                              #       p("At the $$\\alpha = .05$$ level this F-stat corresponds to a p-value that suggests there is, 
-                              #         textOutput(outputId = "concl"))
-                              #     ))
+                               # column(width = 8, plotOutput(outputId = "boxplot")),
+                                #column(width = 4, 
+                                 #    p("Non-reactive text explaining what F-stat is..."),
+                                  #   br(),
+                                     
+                                   #  verbatimTextOutput(outputId = "aovTest"),
+                                    # br(),
+                                     #br(),
+                                     #p("At the $$\\alpha = .05$$ level this F-stat corresponds to a p-value that suggests there is",
+                                    #  textOutput(outputId = "concl"))))
                             )
-                          )
+                        )
                           
                  ),
                  

@@ -79,10 +79,8 @@ ui <- navbarPage(theme = shinytheme("lumen"),
                                 
                                 ## check this LaTeX
                                 withMathJax(),
-                                p("At the $$\\alpha = .05$$ level this F-stat corresponds to a p-value that suggests there is"),
-                                textOutput(outputId = "concl"))
-                              
-                              
+                                p("At the $$\\alpha = .05$$ level this F-stat corresponds to a p-value that suggests there is", 
+                                  textOutput(outputId = "concl")))
                             )
                           )
                  ),
@@ -210,6 +208,22 @@ server <- function(input, output) {
     # + coord_cartesian(xlim =c(0, 1))
   })  
   
+  
+  runTest <- reactive({aov(value ~ dataset, data = df_long())})
+  output$aovTest <- renderPrint ({
+    print(summary(runTest()))
+  })
+  
+  
+  output$concl <- renderText({
+    if(tidy(runTest())$p.value < 0.05) {
+      print("sufficient evidence to conclude that there is at least one difference between the group means.")
+    } else {
+      print("insufficent evidence to conclude that there is at least one difference between the group means.")
+    }
+  })
+  
+  ##--------------------------------------------------------------F-Stat Tab
 }
 
 shinyApp(ui = ui, server = server)

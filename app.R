@@ -14,21 +14,21 @@ ui <- navbarPage(theme = shinytheme("lumen"),
                           h1("Acknowledgements"),
                           p("contents")),
                  
-                 tabPanel("Robustness of Assumptions",
+                 tabPanel("Robustness of Assumptions", value = 1,
                           sidebarLayout(
                             
                             sidebarPanel(
                               h3(strong("Between Group Variance")),
                               p("Instructions", style = "color:grey"),
-                              
                               br(),
-                              sliderInput(inputId = "btwsd",
+                              
+                              sliderInput(inputId = "btwsd1",
                                           label = NULL,
                                           min = 1, max = 2, value = 1),
                               br(),
                               br(),
                               
-                              
+                    
                               h3(strong("Assumptions")),
                               wellPanel(
                                 h4("Shape"),
@@ -58,16 +58,16 @@ ui <- navbarPage(theme = shinytheme("lumen"),
                                 h4("Within group variance"),
                                 p("Instructions", style = "color:grey"),
                                 br(),
-                                
-                                sliderInput(inputId = "sd1",
+                                sliderInput(inputId = "sd1.1",
                                             label = p("Curve 1", style = "color:red"),
                                             min = 0.5, max = 1.5, value = 1, step = 0.5),
-                                sliderInput(inputId = "sd2",
-                                            label = p("Curve 2", style = "color:green"), 
+                                sliderInput(inputId = "sd1.2",
+                                            label = p("Curve 2", style = "color:green"),
                                             min = 0.5, max = 1.5, value = 1, step = 0.5),
-                                sliderInput(inputId = "sd3",
+                                sliderInput(inputId = "sd1.3",
                                             label = p("Curve 3", style = "color:blue"),
-                                            min = 0.5, max = 1.5, value = 1, step = 0.5))
+                                            min = 0.5, max = 1.5, value = 1, step = 0.5)
+                                )
                             ),
                             
                             mainPanel(
@@ -85,15 +85,14 @@ ui <- navbarPage(theme = shinytheme("lumen"),
                           )
                  ),
                  
-                 tabPanel("Relationship between ANOVA and F-Statistic",
+                 tabPanel("Relationship between ANOVA and F-Statistic", value = 2,
                           sidebarLayout(
                             
                             sidebarPanel(
                               h3(strong("Between Group Variance")),
                               p("Instructions", style = "color:grey"),
                               br(),
-                              
-                              sliderInput(inputId = "btwsd",
+                              sliderInput(inputId = "btwsd2",
                                           label = NULL,
                                           min = 1, max = 2, value = 1),
                               br(),
@@ -101,19 +100,19 @@ ui <- navbarPage(theme = shinytheme("lumen"),
                               h3(strong("Within group variance")),
                               p("Instructions", style = "color:grey"),
                               br(),
-                              
-                              sliderInput(inputId = "sd1",
+                              sliderInput(inputId = "sd2.1",
                                           label = p("Curve 1", style = "color:red"),
                                           min = 0.5, max = 1.5, value = 1, step = 0.5),
-                              sliderInput(inputId = "sd2",
+                              sliderInput(inputId = "sd2.2",
                                           label = p("Curve 2", style = "color:green"),
                                           min = 0.5, max = 1.5, value = 1, step = 0.5),
-                              sliderInput(inputId = "sd3",
+                              sliderInput(inputId = "sd2.3",
                                           label = p("Curve 3", style = "color:blue"),
                                           min = 0.5, max = 1.5, value = 1, step = 0.5)
                             ),
                             
                             mainPanel(
+                              fluidRow(p("test test"))
                               #fluidRow(
                                # column(width = 8, plotOutput(outputId = "boxplot")),
                                 #column(width = 4, 
@@ -130,7 +129,7 @@ ui <- navbarPage(theme = shinytheme("lumen"),
                           
                  ),
                  
-                 tabPanel("Glossary",
+                 tabPanel("Glossary", value = 3,
                           h1("Vocabulary"),
                           p("contents"),
                           br(),
@@ -140,7 +139,7 @@ ui <- navbarPage(theme = shinytheme("lumen"),
                  ),
                  
                  ##---------------------------------------------------------quiz on boxplots comparing F-stats  
-                 tabPanel("Quiz",
+                 tabPanel("Quiz", value = 4,
                           img(src = "...png", width = "200", height = "100"),
                           p("Explain what image is showing. i.e. what the boxplots represent"),
                           br(),
@@ -171,9 +170,59 @@ ui <- navbarPage(theme = shinytheme("lumen"),
 )
 
 
-server <- function(input, output) {
+server <- function(input, output, session) {
+  ##--------------------------------------------------------------Fluid Sidebar
+  ## Btw var slider
+  observeEvent(input$btwsd1, {
+    if(input$btwsd2 != input$btwsd1) {
+      updateSliderInput(session, "btwsd2", value = input$btwsd1)
+    }
+  })
+  observeEvent(input$btwsd2, {
+    if(input$btwsd1 != input$btwsd2) {
+      updateSliderInput(session, "btwsd1", value = input$btwsd2)
+    }
+  })
+  
+  ## Within var Curve 1 slider
+  observeEvent(input$sd1.1, {
+    if(input$sd2.1 != input$sd1.1) {
+      updateSliderInput(session, "sd2.1", value = input$sd1.1)
+    }
+  })
+  observeEvent(input$sd2.1, {
+    if(input$sd1.1 != input$sd2.1) {
+      updateSliderInput(session, "sd1.1", value = input$sd2.1)
+    }
+  })
+  
+  
+  ## Within var Curve 2 slider
+  observeEvent(input$sd1.2, {
+    if(input$sd2.2 != input$sd1.2) {
+      updateSliderInput(session, "sd2.2", value = input$sd1.2)
+    }
+  })
+  observeEvent(input$sd2.2, {
+    if(input$sd1.2 != input$sd2.2) {
+      updateSliderInput(session, "sd1.2", value = input$sd2.2)
+    }
+  })
+  
+  ## Within var Curve 3 slider
+  observeEvent(input$sd1.3, {
+    if(input$sd2.3 != input$sd1.3) {
+      updateSliderInput(session, "sd2.3", value = input$sd1.3)
+    }
+  })
+  observeEvent(input$sd2.3, {
+    if(input$sd1.3 != input$sd2.3) {
+      updateSliderInput(session, "sd1.3", value = input$sd2.3)
+    }
+  })
+  
   ##--------------------------------------------------------------Assumptions Tab
-  dist <- function(skew, within, between) {
+  dist <- function(skew, within) {
     if(skew == "norm") {
       set.seed(1)
       return(rbeta(10000, shape1 = 22, shape2 = 22) * within)
@@ -189,9 +238,9 @@ server <- function(input, output) {
     }
   }
   
-  d1 <- reactive({dist(skew = input$skew1, within = input$sd1, between = input$btwsd)})
-  d2 <- reactive({dist(skew = input$skew2, within = input$sd2, between = input$btwsd)})
-  d3 <- reactive({dist(skew = input$skew3, within = input$sd3, between = input$btwsd)})
+  d1 <- reactive({dist(skew = input$skew1, within = input$sd1.1)})
+  d2 <- reactive({dist(skew = input$skew2, within = input$sd1.2)})
+  d3 <- reactive({dist(skew = input$skew3, within = input$sd1.3)})
   
   df <- reactive({data.frame(d1(), d2(), d3())})
   df_long <- reactive({

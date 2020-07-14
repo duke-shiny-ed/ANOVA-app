@@ -221,25 +221,25 @@ server <- function(input, output, session) {
   })
   
   ##--------------------------------------------------------------Assumptions Tab
-  dist <- function(skew, within) {
+  dist <- function(skew, within, n) {
     if(skew == "norm") {
-      set.seed(1)
-      return(rbeta(10000, shape1 = 22, shape2 = 22) * within)
-      #initial mean = 0.5002202
+      set.seed(n)
+      return(rbeta(20000, shape1 = 22, shape2 = 22) * within)
+      #initial mean = 0.5002202, 0.5009305, 0.4988691
     } else if(skew == "rskew") {
-      set.seed(1)
-      return(rbeta(10000, shape1 = 13, shape2 = 31) * within)
-      #initial mean = 0.2955792
+      set.seed(n)
+      return(rbeta(20000, shape1 = 13, shape2 = 31) * within)
+      #initial mean = 0.2955792, 0.2961759, 0.2941847
     } else {
-      set.seed(1)
-      return(rbeta(10000, shape1 = 31, shape2 = 13) * within)
-      #initial mean = 0.7044208
+      set.seed(n)
+      return(rbeta(20000, shape1 = 31, shape2 = 13) * within)
+      #initial mean = 0.7044208, 0.7038241, 0.7058153
     }
   }
   
-  d1 <- reactive({dist(skew = input$skew1, within = input$sd1.1)})
-  d2 <- reactive({dist(skew = input$skew2, within = input$sd1.2)})
-  d3 <- reactive({dist(skew = input$skew3, within = input$sd1.3)})
+  d1 <- reactive({dist(skew = input$skew1, within = input$sd1.1, n = 1)})
+  d2 <- reactive({dist(skew = input$skew2, within = input$sd1.2, n = 2)})
+  d3 <- reactive({dist(skew = input$skew3, within = input$sd1.3, n = 3)})
   
   df <- reactive({data.frame(d1(), d2(), d3())})
   df_long <- reactive({
@@ -253,7 +253,7 @@ server <- function(input, output, session) {
       geom_density() +
       ggtitle("Population Distributions") +
       theme(legend.position = "none") +
-      coord_cartesian(xlim =c(0, 1))
+      coord_cartesian(xlim = c(0, 1), ylim = c(0,25))
   })  
   
   

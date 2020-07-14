@@ -74,13 +74,13 @@ ui <- navbarPage(theme = shinytheme("lumen"),
                               
                               fluidRow(column(width = 12, plotOutput(outputId = "curve"))),
                               fluidRow( 
-                                verbatimTextOutput(outputId = "aovTest"),
+                                verbatimTextOutput(outputId = "aovTest1"),
                                 br(),
                                 
                                 ## check this LaTeX
                                 withMathJax(),
                                 p("At the $$\\alpha = .05$$ level this F-stat corresponds to a p-value that suggests there is", 
-                                  textOutput(outputId = "concl")))
+                                  textOutput(outputId = "concl1")))
                             )
                           )
                  ),
@@ -112,18 +112,17 @@ ui <- navbarPage(theme = shinytheme("lumen"),
                             ),
                             
                             mainPanel(
-                              #fluidRow(p("test test"))
-                              #fluidRow(
-                                column(width = 8, plotOutput(outputId = "boxplot")),
-                                #column(width = 4, 
-                                 #    p("Non-reactive text explaining what F-stat is..."),
-                                  #   br(),
-                                     
-                                   #  verbatimTextOutput(outputId = "aovTest"),
-                                    # br(),
-                                     #br(),
-                                     #p("At the $$\\alpha = .05$$ level this F-stat corresponds to a p-value that suggests there is",
-                                    #  textOutput(outputId = "concl"))))
+                              fluidRow(column(width = 12, plotOutput(outputId = "boxplot"))),
+                              fluidRow(
+                               p("Non-reactive text explaining what F-stat is..."),
+                                br(),
+                                
+                                verbatimTextOutput(outputId = "aovTest2"),
+                                br(),
+                                br(),
+                                p("At the $$\\alpha = .05$$ level this F-stat corresponds to a p-value that suggests there is",
+                                  textOutput(outputId = "concl2")))
+                              
                             )
                         )
                           
@@ -258,14 +257,14 @@ server <- function(input, output, session) {
   })  
   
   
-  runTest <- reactive({aov(value ~ dataset, data = df_long())})
-  output$aovTest <- renderPrint ({
-    print(summary(runTest()))
+  runTest1 <- reactive({aov(value ~ dataset, data = df_long())})
+  output$aovTest1 <- renderPrint ({
+    print(summary(runTest1()))
   })
   
   
-  output$concl <- renderText({
-    if(tidy(runTest())$p.value[1] < 0.05) {
+  output$concl1 <- renderText({
+    if(tidy(runTest1())$p.value[1] < 0.05) {
       print("sufficient evidence to conclude that there is at least one difference between the group means.")
     } else {
       print("insufficent evidence to conclude that there is at least one difference between the group means.")
@@ -278,6 +277,19 @@ server <- function(input, output, session) {
       geom_boxplot(aes(color = dataset)) +
       labs(title = "Sample Data") +
       theme(legend.position = "none")
+  })
+  
+  runTest2 <- reactive({aov(value ~ dataset, data = df_long())})
+  output$aovTest2 <- renderPrint ({
+    print(summary(runTest2()))
+  })
+  
+  output$concl2 <- renderText({
+    if(tidy(runTest2())$p.value[1] < 0.05) {
+      print("sufficient evidence to conclude that there is at least one difference between the group means.")
+    } else {
+      print("insufficent evidence to conclude that there is at least one difference between the group means.")
+    }
   })
 }
 

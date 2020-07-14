@@ -112,9 +112,9 @@ ui <- navbarPage(theme = shinytheme("lumen"),
                             ),
                             
                             mainPanel(
-                              fluidRow(p("test test"))
+                              #fluidRow(p("test test"))
                               #fluidRow(
-                               # column(width = 8, plotOutput(outputId = "boxplot")),
+                                column(width = 8, plotOutput(outputId = "boxplot")),
                                 #column(width = 4, 
                                  #    p("Non-reactive text explaining what F-stat is..."),
                                   #   br(),
@@ -248,7 +248,7 @@ server <- function(input, output, session) {
       gather(key = dataset, value = value)
   })
   
-  ##look more into using ggplot for density curves
+  
   output$curve <- renderPlot({
     ggplot(data = df_long(), aes(x=value, color = dataset)) +
       geom_density() +
@@ -265,7 +265,7 @@ server <- function(input, output, session) {
   
   
   output$concl <- renderText({
-    if(tidy(runTest())$p.value < 0.05) {
+    if(tidy(runTest())$p.value[1] < 0.05) {
       print("sufficient evidence to conclude that there is at least one difference between the group means.")
     } else {
       print("insufficent evidence to conclude that there is at least one difference between the group means.")
@@ -274,9 +274,10 @@ server <- function(input, output, session) {
   
   ##--------------------------------------------------------------F-Stat Tab
   output$boxplot <- renderPlot({
-    ggplot(data = df_long, aes(group = dataset, y = value)) + 
+    ggplot(data = df_long(), aes(group = dataset, y = value)) + 
       geom_boxplot(aes(color = dataset)) +
-      labs(title = "Sample Data")
+      labs(title = "Sample Data") +
+      theme(legend.position = "none")
   })
 }
 

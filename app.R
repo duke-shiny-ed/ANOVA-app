@@ -24,7 +24,7 @@ ui <- navbarPage(theme = shinytheme("lumen"),
                               
                               sliderInput(inputId = "btwsd1",
                                           label = NULL,
-                                          min = 1, max = 2, value = 1),
+                                          min = 0, max = 2, value = 1, step = .1),
                               br(),
                               br(),
                               
@@ -94,7 +94,7 @@ ui <- navbarPage(theme = shinytheme("lumen"),
                               br(),
                               sliderInput(inputId = "btwsd2",
                                           label = NULL,
-                                          min = 1, max = 2, value = 1),
+                                          min = 0, max = 2, value = 1, step = .1),
                               br(),
                               
                               h3(strong("Within group variance")),
@@ -241,7 +241,22 @@ server <- function(input, output, session) {
   d2 <- reactive({dist(skew = input$skew2, within = input$sd1.2, n = 2)})
   d3 <- reactive({dist(skew = input$skew3, within = input$sd1.3, n = 3)})
   
-  df <- reactive({data.frame(d1(), d2(), d3())})
+  ## effect of btwsd slider
+  transl <- function(set1, set2, set3, between) {
+    if(mean(set1) > mean(set2) & mean(set1) > mean(set3)) {
+      return(set1 + (between * 0.1))
+    } else if(mean(set1) < mean(set2) & mean(set1) < mean(set3)) {
+      return(set1 - (between * 0.1))
+    } else {
+      return(set1)
+    }
+  }
+  
+  d1_transl <- reactive({transl(set1 = d1(), set2 = d2(), set3 = d3(), between = input$btwsd1)})
+  d2_transl <- reactive({transl(set1 = d2(), set2 = d1(), set3 = d3(), between = input$btwsd1)})
+  d3_transl <- reactive({transl(set1 = d3(), set2 = d1(), set3 = d2(), between = input$btwsd1)})
+  
+  df <- reactive({data.frame(d1_transl(), d2_transl(), d3_transl())})
   df_long <- reactive({
     df() %>%
       gather(key = dataset, value = value)

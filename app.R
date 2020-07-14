@@ -60,13 +60,13 @@ ui <- navbarPage(theme = shinytheme("lumen"),
                                 br(),
                                 sliderInput(inputId = "sd1.1",
                                             label = p("Curve 1", style = "color:red"),
-                                            min = 0.5, max = 1.5, value = 1, step = 0.5),
+                                            min = 0.25, max = 1.25, value = 1, step = 0.25),
                                 sliderInput(inputId = "sd1.2",
                                             label = p("Curve 2", style = "color:green"),
-                                            min = 0.5, max = 1.5, value = 1, step = 0.5),
+                                            min = 0.25, max = 1.25, value = 1, step = 0.25),
                                 sliderInput(inputId = "sd1.3",
                                             label = p("Curve 3", style = "color:blue"),
-                                            min = 0.5, max = 1.5, value = 1, step = 0.5)
+                                            min = 0.25, max = 1.25, value = 1, step = 0.25)
                                 )
                             ),
                             
@@ -102,13 +102,13 @@ ui <- navbarPage(theme = shinytheme("lumen"),
                               br(),
                               sliderInput(inputId = "sd2.1",
                                           label = p("Curve 1", style = "color:red"),
-                                          min = 0.5, max = 1.5, value = 1, step = 0.5),
+                                          min = 0.25, max = 1.25, value = 1, step = 0.25),
                               sliderInput(inputId = "sd2.2",
                                           label = p("Curve 2", style = "color:green"),
-                                          min = 0.5, max = 1.5, value = 1, step = 0.5),
+                                          min = 0.25, max = 1.25, value = 1, step = 0.25),
                               sliderInput(inputId = "sd2.3",
                                           label = p("Curve 3", style = "color:blue"),
-                                          min = 0.5, max = 1.5, value = 1, step = 0.5)
+                                          min = 0.25, max = 1.25, value = 1, step = 0.25)
                             ),
                             
                             mainPanel(
@@ -252,8 +252,8 @@ server <- function(input, output, session) {
     ggplot(data = df_long(), aes(x=value, color = dataset)) +
       geom_density() +
       ggtitle("Population Distributions") +
-      theme(legend.position = "none")
-    # + coord_cartesian(xlim =c(0, 1))
+      theme(legend.position = "none") +
+      coord_cartesian(xlim =c(0, 1))
   })  
   
   

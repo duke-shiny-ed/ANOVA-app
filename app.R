@@ -114,17 +114,18 @@ ui <- navbarPage(theme = shinytheme("lumen"),
                             ),
                             
                             mainPanel(
-                              #column(plotOutput(outputId = "boxplot"), width = 8),
-                              #column(p("Non-reactive text explaining what F-stat is..."),
+                              #fluidRow(
+                              #column(width = 8, plotOutput(outputId = "boxplot")),
+                              #column(width = 4, 
+                              #       p("Non-reactive text explaining what F-stat is..."),
                               #       br(),
                               
                               #       verbatimTextOutput(outputId = "aovTest"),
                               #       br(),
                               #       br(),
-                              
-                              ## Check this latex
-                              #      p("At the $$\\alpha = .05$$ level this F-stat corresponds to a p-value that suggests there is"),
-                              #     textOutput(outputId = "concl"), width = 4)
+                              #       p("At the $$\\alpha = .05$$ level this F-stat corresponds to a p-value that suggests there is, 
+                              #         textOutput(outputId = "concl"))
+                              #     ))
                             )
                           )
                           
@@ -224,6 +225,11 @@ server <- function(input, output) {
   })
   
   ##--------------------------------------------------------------F-Stat Tab
+  output$boxplot <- renderPlot({
+    ggplot(data = df_long, aes(group = dataset, y = value)) + 
+      geom_boxplot(aes(color = dataset)) +
+      labs(title = "Sample Data")
+  })
 }
 
 shinyApp(ui = ui, server = server)

@@ -1,0 +1,79 @@
+---
+title: "ANOVA quiz"
+output: learnr::tutorial
+runtime: shiny_prerendered
+description: "Practice what you've learned (learning goal 3)"
+---
+
+```{r setup, include=FALSE}
+library(learnr)
+data <- load.csv()
+knitr::opts_chunk$set(echo = FALSE)
+
+tutorial_options(exercise.checker = gradethis::grade_learnr)
+```
+
+
+## Topic 1
+*Goal: Practice running aov(...); interpret summary() output table; identify F-stat and p-value from summary() output and come to basic conclusion*
+
+### Exercise
+
+Write question here
+```{r use aov(), exercise=TRUE, exercise.lines = 7}
+#empty code chunk for user to enter answer (remove this comment before deploy)
+
+#Start your code below!
+
+#Print your conclusion in quotes. Is there sufficient or insufficient evidence to conclude...
+print("")
+
+```
+
+```{r use aov()-hint}
+#write hint
+```
+
+*Use check chunk to create a function which explains answer; not just provides answer*
+*Note must use -solution chunk with grade_code()*
+```{r use aov()-solution}
+#write model solution code
+summary(aov(y ~ x, data = data))
+```
+```{r use aov()-check}
+#what the user receives if the code is correct
+grade_code("This code is correct...")
+
+grade_result(
+  pass_if(~ identical(.result, print("sufficient")), "Correct, ..."),
+  fail_if(~ identical(.result, ...), "Incorrect, ..."),
+  fail_if(~ identical(.result, ...), "Incorrect,...")
+)
+
+```
+
+## Topic 2
+
+### Quiz
+
+*You can include any number of single or multiple choice questions as a quiz. Use the `question` function to define a question and the `quiz` function for grouping multiple questions together.*
+
+Some questions to verify that you understand the purposes of various base and recommended R packages:
+
+```{r quiz}
+quiz(
+  question("Which package contains functions for installing other R packages?",
+    answer("base"),
+    answer("tools"),
+    answer("utils", correct = TRUE),
+    answer("codetools")
+  ),
+  question("Which of the R packages listed below are used to create plots?",
+    answer("lattice", correct = TRUE),
+    answer("tools"),
+    answer("stats"),
+    answer("grid", correct = TRUE)
+  )
+)
+```
+

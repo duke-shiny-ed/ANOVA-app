@@ -24,7 +24,7 @@ ui <- navbarPage(theme = shinytheme("lumen"),
                               
                               sliderInput(inputId = "btwsd1",
                                           label = NULL,
-                                          min = 0, max = 2, value = 1, step = .1),
+                                          min = 0, max = 1, value = 1, step = .001),
                               br(),
                               br(),
                               
@@ -94,7 +94,7 @@ ui <- navbarPage(theme = shinytheme("lumen"),
                               br(),
                               sliderInput(inputId = "btwsd2",
                                           label = NULL,
-                                          min = 0, max = 2, value = 1, step = .1),
+                                          min = 0, max = 1, value = 1, step = .001),
                               br(),
                               
                               h3(strong("Within group variance")),
@@ -251,6 +251,7 @@ server <- function(input, output, session) {
       return(set1)
     }
   }
+  # difference between means detected at 0.0005 total
   
   d1_transl <- reactive({transl(set1 = d1(), set2 = d2(), set3 = d3(), between = input$btwsd1)})
   d2_transl <- reactive({transl(set1 = d2(), set2 = d1(), set3 = d3(), between = input$btwsd1)})
@@ -267,9 +268,9 @@ server <- function(input, output, session) {
     ggplot(data = df_long(), aes(x=value, color = dataset)) +
       geom_density() +
       ggtitle("Population Distributions") +
-      theme(legend.position = "none") +
-      coord_cartesian(xlim = c(0, 1), ylim = c(0,25))
-  })  
+      theme(legend.position = "none") #+
+      #coord_cartesian(xlim = c(0, 1), ylim = c(0,25))
+  })
   
   
   runTest1 <- reactive({aov(value ~ dataset, data = df_long())})

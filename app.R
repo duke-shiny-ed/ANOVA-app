@@ -102,7 +102,7 @@ ui <- navbarPage(theme = shinytheme("lumen"),
                               br(),
                               sliderInput(inputId = "btwsd2",
                                           label = NULL,
-                                          min = 0, max = 1, value = 0, step = .001),
+                                          min = 0, max = 1, value = 0, step = .001), ## <- set btwsd2 to a value that doesn't initilaly maniuplate sample data
                               br(),
                               
                               h3(strong("Within group variance")),
@@ -234,8 +234,26 @@ server <- function(input, output, session) {
       theme(legend.position = "none") 
   })
   
+  sample1c <- reactive({
+    set.seed(1)
+    sample(d1_translc(), size = 100, replace = TRUE)
+  })
+  sample2c <- reactive({
+    set.seed(1)
+    sample(d2_translc(), size = 100, replace = TRUE)
+  })
+  sample3c <- reactive({
+    set.seed(1)
+    sample(d3_translc(), size = 100, replace = TRUE)
+  })
   
-  runTest1 <- reactive({aov(value ~ dataset, data = dfc_long())})
+  samplesc <- reactive({data.frame(sample1c(), sample2c(), sample3c())})
+  samplesc_long <- reactive({
+    samplesc() %>%
+      gather(key = dataset, value = value)
+  })
+  
+  runTest1 <- reactive({aov(value ~ dataset, data = samplesc_long())})
   output$aovTest1 <- renderPrint ({
     print(summary(runTest1()))
   })
@@ -250,9 +268,18 @@ server <- function(input, output, session) {
   })
   
   ##--------------------------------------------------------------F-Stat Tab
-  sample1 <- reactive({sample(d1_translc(), size = 100, replace = TRUE)})
-  sample2 <- reactive({sample(d2_translc(), size = 100, replace = TRUE)})
-  sample3 <- reactive({sample(d3_translc(), size = 100, replace = TRUE)})
+  sample1b <- reactive({
+    set.seed(1)
+    sample(d1_translc(), size = 100, replace = TRUE)
+  })
+  sample2b <- reactive({
+    set.seed(1)
+    sample(d2_translc(), size = 100, replace = TRUE)
+  })
+  sample3b <- reactive({
+    set.seed(1)
+    sample(d3_translc(), size = 100, replace = TRUE)
+  })
   
   distb <- function(set1, set2, set3, between, within) {
       if(mean(set1) > mean(set2) & mean(set1) > mean(set3)) {
@@ -268,9 +295,9 @@ server <- function(input, output, session) {
       }
     }
   
-  d1b <- reactive({distb(set1 = sample1(), set2 = sample2(), set3 = sample3(), within = input$sd2.1, between = input$btwsd2)})
-  d2b <- reactive({distb(set1 = sample2(), set2 = sample3(), set3 = sample1(), within = input$sd2.2, between = input$btwsd2)})
-  d3b <- reactive({distb(set1 = sample3(), set2 = sample1(), set3 = sample2(), within = input$sd2.3, between = input$btwsd2)})
+  d1b <- reactive({distb(set1 = sample1b(), set2 = sample2b(), set3 = sample3b(), within = input$sd2.1, between = input$btwsd2)})
+  d2b <- reactive({distb(set1 = sample2b(), set2 = sample3b(), set3 = sample1b(), within = input$sd2.2, between = input$btwsd2)})
+  d3b <- reactive({distb(set1 = sample3b(), set2 = sample1b(), set3 = sample2b(), within = input$sd2.3, between = input$btwsd2)})
   
   dfb <- reactive({data.frame(d1b(), d2b(), d3b())})
   dfb_long <- reactive({

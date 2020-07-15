@@ -18,6 +18,9 @@ ui <- navbarPage(theme = shinytheme("lumen"),
                           sidebarLayout(
                             
                             sidebarPanel(
+                              h3("Population Inputs"),
+                              hr(),
+                              
                               h3(strong("Between Group Variance")),
                               p("Instructions", style = "color:grey"),
                               br(),
@@ -89,6 +92,9 @@ ui <- navbarPage(theme = shinytheme("lumen"),
                           sidebarLayout(
                             
                             sidebarPanel(
+                              h3("Sample Inputs"),
+                              hr(),
+                              
                               h3(strong("Between Group Variance")),
                               p("Instructions", style = "color:grey"),
                               br(),
@@ -170,56 +176,6 @@ ui <- navbarPage(theme = shinytheme("lumen"),
 
 
 server <- function(input, output, session) {
-  ##--------------------------------------------------------------Fluid Sidebar
-  ## Btw var slider
-  observeEvent(input$btwsd1, {
-    if(input$btwsd2 != input$btwsd1) {
-      updateSliderInput(session, "btwsd2", value = input$btwsd1)
-    }
-  })
-  observeEvent(input$btwsd2, {
-    if(input$btwsd1 != input$btwsd2) {
-      updateSliderInput(session, "btwsd1", value = input$btwsd2)
-    }
-  })
-  
-  ## Within var Curve 1 slider
-  observeEvent(input$sd1.1, {
-    if(input$sd2.1 != input$sd1.1) {
-      updateSliderInput(session, "sd2.1", value = input$sd1.1)
-    }
-  })
-  observeEvent(input$sd2.1, {
-    if(input$sd1.1 != input$sd2.1) {
-      updateSliderInput(session, "sd1.1", value = input$sd2.1)
-    }
-  })
-  
-  
-  ## Within var Curve 2 slider
-  observeEvent(input$sd1.2, {
-    if(input$sd2.2 != input$sd1.2) {
-      updateSliderInput(session, "sd2.2", value = input$sd1.2)
-    }
-  })
-  observeEvent(input$sd2.2, {
-    if(input$sd1.2 != input$sd2.2) {
-      updateSliderInput(session, "sd1.2", value = input$sd2.2)
-    }
-  })
-  
-  ## Within var Curve 3 slider
-  observeEvent(input$sd1.3, {
-    if(input$sd2.3 != input$sd1.3) {
-      updateSliderInput(session, "sd2.3", value = input$sd1.3)
-    }
-  })
-  observeEvent(input$sd2.3, {
-    if(input$sd1.3 != input$sd2.3) {
-      updateSliderInput(session, "sd1.3", value = input$sd2.3)
-    }
-  })
-  
   ##--------------------------------------------------------------Assumptions Tab
   dist <- function(skew, within, n) {
     if(skew == "norm") {
@@ -237,12 +193,12 @@ server <- function(input, output, session) {
     }
   }
   
-  d1 <- reactive({dist(skew = input$skew1, within = input$sd1.1, n = 1)})
-  d2 <- reactive({dist(skew = input$skew2, within = input$sd1.2, n = 2)})
-  d3 <- reactive({dist(skew = input$skew3, within = input$sd1.3, n = 3)})
+  d1c <- reactive({dist(skew = input$skew1, within = input$sd1.1, n = 1)})
+  d2c <- reactive({dist(skew = input$skew2, within = input$sd1.2, n = 2)})
+  d3c <- reactive({dist(skew = input$skew3, within = input$sd1.3, n = 3)})
   
   ## effect of btwsd slider
-  transl <- function(set1, set2, set3, between) {
+  translc <- function(set1, set2, set3, between) {
     if(mean(set1) > mean(set2) & mean(set1) > mean(set3)) {
       return(set1 + (between * 0.1))
     } else if(mean(set1) < mean(set2) & mean(set1) < mean(set3)) {
@@ -257,11 +213,11 @@ server <- function(input, output, session) {
   }
   # difference between means detected at 0.0005 total
   
-  d1_transl <- reactive({transl(set1 = d1(), set2 = d2(), set3 = d3(), between = input$btwsd1)})
-  d2_transl <- reactive({transl(set1 = d2(), set2 = d1(), set3 = d3(), between = input$btwsd1)})
-  d3_transl <- reactive({transl(set1 = d3(), set2 = d1(), set3 = d2(), between = input$btwsd1)})
+  d1_translc <- reactive({translc(set1 = d1c(), set2 = d2c(), set3 = d3c(), between = input$btwsd1)})
+  d2_translc <- reactive({translc(set1 = d2c(), set2 = d1c(), set3 = d3c(), between = input$btwsd1)})
+  d3_translc <- reactive({translc(set1 = d3c(), set2 = d1c(), set3 = d2c(), between = input$btwsd1)})
   
-  dfc <- reactive({data.frame(d1_transl(), d2_transl(), d3_transl())})
+  dfc <- reactive({data.frame(d1_translc(), d2_translc(), d3_translc())})
   dfc_long <- reactive({
     dfc() %>%
       gather(key = dataset, value = value)
@@ -292,11 +248,29 @@ server <- function(input, output, session) {
   })
   
   ##--------------------------------------------------------------F-Stat Tab
-  sample1 <- reactive({sample(d1_transl(), size = 100, replace = TRUE)})
-  sample2 <- reactive({sample(d2_transl(), size = 100, replace = TRUE)})
-  sample3 <- reactive({sample(d3_transl(), size = 100, replace = TRUE)})
+  sample1 <- reactive({sample(d1_translc(), size = 100, replace = TRUE)})
+  sample2 <- reactive({sample(d2_translc(), size = 100, replace = TRUE)})
+  sample3 <- reactive({sample(d3_translc(), size = 100, replace = TRUE)})
   
-  dfb <- reactive({data.frame(sample1(), sample2(), sample3())})
+  distb <- function(set1, set2, set3, between, within) {
+      if(mean(set1) > mean(set2) & mean(set1) > mean(set3)) {
+        return(set1 * within + (between * 0.1))
+      } else if(mean(set1) < mean(set2) & mean(set1) < mean(set3)) {
+        return(set1 * within - (between * 0.1))
+      } else {
+        #if() {
+        
+        # } else {
+        return(set1 * within)
+        #}
+      }
+    }
+  
+  d1b <- reactive({distb(set1 = sample1(), set2 = sample2(), set3 = sample3(), within = input$sd2.1, between = input$btwsd2)})
+  d2b <- reactive({distb(set1 = sample2(), set2 = sample3(), set3 = sample1(), within = input$sd2.2, between = input$btwsd2)})
+  d3b <- reactive({distb(set1 = sample3(), set2 = sample1(), set3 = sample2(), within = input$sd2.3, between = input$btwsd2)})
+  
+  dfb <- reactive({data.frame(d1b(), d2b(), d3b())})
   dfb_long <- reactive({
     dfb() %>%
       gather(key = dataset, value = value)

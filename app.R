@@ -248,7 +248,11 @@ server <- function(input, output, session) {
     } else if(mean(set1) < mean(set2) & mean(set1) < mean(set3)) {
       return(set1 - (between * 0.1))
     } else {
-      return(set1)
+      #if() {
+        
+     # } else {
+        return(set1)
+      #}
     }
   }
   # difference between means detected at 0.0005 total
@@ -257,23 +261,23 @@ server <- function(input, output, session) {
   d2_transl <- reactive({transl(set1 = d2(), set2 = d1(), set3 = d3(), between = input$btwsd1)})
   d3_transl <- reactive({transl(set1 = d3(), set2 = d1(), set3 = d2(), between = input$btwsd1)})
   
-  df <- reactive({data.frame(d1_transl(), d2_transl(), d3_transl())})
-  df_long <- reactive({
-    df() %>%
+  dfc <- reactive({data.frame(d1_transl(), d2_transl(), d3_transl())})
+  dfc_long <- reactive({
+    dfc() %>%
       gather(key = dataset, value = value)
   })
   
   
   output$curve <- renderPlot({
-    ggplot(data = df_long(), aes(x=value, color = dataset)) +
+    ggplot(data = dfc_long(), aes(x=value, color = dataset)) +
       geom_density() +
+      coord_cartesian(xlim = c(0, 1), ylim = c(0,35)) +
       ggtitle("Population Distributions") +
-      theme(legend.position = "none") #+
-      #coord_cartesian(xlim = c(0, 1), ylim = c(0,25))
+      theme(legend.position = "none") 
   })
   
   
-  runTest1 <- reactive({aov(value ~ dataset, data = df_long())})
+  runTest1 <- reactive({aov(value ~ dataset, data = dfc_long())})
   output$aovTest1 <- renderPrint ({
     print(summary(runTest1()))
   })
@@ -288,15 +292,25 @@ server <- function(input, output, session) {
   })
   
   ##--------------------------------------------------------------F-Stat Tab
+  sample1 <- reactive({sample(d1_transl(), size = 100, replace = TRUE)})
+  sample2 <- reactive({sample(d2_transl(), size = 100, replace = TRUE)})
+  sample3 <- reactive({sample(d3_transl(), size = 100, replace = TRUE)})
+  
+  dfb <- reactive({data.frame(sample1(), sample2(), sample3())})
+  dfb_long <- reactive({
+    dfb() %>%
+      gather(key = dataset, value = value)
+  })
+  
   output$boxplot <- renderPlot({
-    ggplot(data = df_long(), aes(group = dataset, y = value)) + 
+    ggplot(data = dfb_long(), aes(group = dataset, y = value)) + 
       geom_boxplot(aes(color = dataset)) +
       #coord_cartesian(ylim =c(0.1, 1.2)) +
       labs(title = "Sample Data") +
       theme(legend.position = "none")
   })
   
-  runTest2 <- reactive({aov(value ~ dataset, data = df_long())})
+  runTest2 <- reactive({aov(value ~ dataset, data = dfb_long())})
   output$aovTest2 <- renderPrint ({
     print(summary(runTest2())[[1]][["F value"]][[1]])
   })

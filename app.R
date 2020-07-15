@@ -93,6 +93,8 @@ ui <- navbarPage(theme = shinytheme("lumen"),
                             
                             sidebarPanel(
                               h3("Sample Inputs"),
+                              p("Remember to clarify that in reality we can't manipulate sample data like we are doing here", 
+                                style = "color:grey"),
                               hr(),
                               
                               h3(strong("Between Group Variance")),
@@ -100,7 +102,7 @@ ui <- navbarPage(theme = shinytheme("lumen"),
                               br(),
                               sliderInput(inputId = "btwsd2",
                                           label = NULL,
-                                          min = 0, max = 1, value = 1, step = .001),
+                                          min = 0, max = 1, value = 0, step = .001),
                               br(),
                               
                               h3(strong("Within group variance")),

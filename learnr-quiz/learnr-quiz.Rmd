@@ -56,23 +56,19 @@ grade_result(
 
 ### Quiz
 
-*You can include any number of single or multiple choice questions as a quiz. Use the `question` function to define a question and the `quiz` function for grouping multiple questions together.*
+*Have the user answer a group of questions after exmaining image of boxplots and predicting/comparing F-stats; effectively rank them i.e. F-stat_1 > F-stat_2, True or False*
 
 Some questions to verify that you understand the purposes of various base and recommended R packages:
 
-```{r quiz}
-quiz(
-  question("Which package contains functions for installing other R packages?",
-    answer("base"),
-    answer("tools"),
-    answer("utils", correct = TRUE),
-    answer("codetools")
+```{r quiz, echo=FALSE}
+quiz(caption = "Question 1",
+  question("Write question 1 part a here",
+    answer("True", message = "Explain why this is not the correct answer"),
+    answer("False", correct = TRUE),
   ),
-  question("Which of the R packages listed below are used to create plots?",
-    answer("lattice", correct = TRUE),
-    answer("tools"),
-    answer("stats"),
-    answer("grid", correct = TRUE)
+  question("Write question 1 part b here",
+    answer("True", correct = TRUE, message = "Explain why this is correct..."),
+    answer("False", message = "Explain why this is not the correct answer...")
   )
 )
 ```

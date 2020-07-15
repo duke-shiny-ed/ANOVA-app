@@ -1,10 +1,13 @@
 library(shiny)
 library(shinythemes)
+library(shinyWidgets)
 library(mathjaxr)
 library(tidyr)
 library(ggplot2)
+library(plotly)
 
 ui <- navbarPage(theme = shinytheme("lumen"),
+                 
                  title = "ANOVA",
                  tabPanel("About",
                           h1("About the App"),
@@ -82,7 +85,15 @@ ui <- navbarPage(theme = shinytheme("lumen"),
                                 
                                 ## check this LaTeX
                                 withMathJax(),
-                                p("At the $$\\alpha = .05$$ level this F-stat corresponds to a p-value that suggests there is", 
+                                tags$script(
+                                "MathJax.Hub.Config({
+                                tex2jax: {
+                                inlineMath: [['$','$'], ['\\(','\\)']],
+                                processEscapes: true
+                                }
+                                });"
+                                ),
+                                p("At the $\\alpha = .05$ level this F-stat corresponds to a p-value that suggests there is", 
                                   textOutput(outputId = "concl1")))
                             )
                           )
@@ -128,7 +139,8 @@ ui <- navbarPage(theme = shinytheme("lumen"),
                                 verbatimTextOutput(outputId = "aovTest2"),
                                 br(),
                                 br(),
-                                p("At the $$\\alpha = .05$$ level this F-stat corresponds to a p-value that suggests there is",
+                               
+                                p("At the $\\alpha = .05$ level this F-stat corresponds to a p-value that suggests there is",
                                   textOutput(outputId = "concl2")))
                               
                             )
@@ -229,7 +241,7 @@ server <- function(input, output, session) {
   output$curve <- renderPlot({
     ggplot(data = dfc_long(), aes(x=value, color = dataset)) +
       geom_density() +
-      coord_cartesian(xlim = c(0, 1), ylim = c(0,35)) +
+      #coord_cartesian(xlim = c(0, 1), ylim = c(0,35)) +
       ggtitle("Population Distributions") +
       theme(legend.position = "none") 
   })
@@ -306,11 +318,13 @@ server <- function(input, output, session) {
   })
   
   output$boxplot <- renderPlot({
-    ggplot(data = dfb_long(), aes(group = dataset, y = value)) + 
+    ggplot(data = dfb_long(), aes(x = dataset, y = value)) + 
       geom_boxplot(aes(color = dataset)) +
+      geom_jitter(aes(x = dataset, y = value, alpha = .2, color = dataset), position=position_jitter(0.04)) +
       #coord_cartesian(ylim =c(0.1, 1.2)) +
       labs(title = "Sample Data") +
-      theme(legend.position = "none")
+      theme(legend.position = "none", axis.text.x=element_blank(),
+            axis.ticks.x=element_blank())
   })
   
   runTest2 <- reactive({aov(value ~ dataset, data = dfb_long())})

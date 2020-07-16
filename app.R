@@ -16,7 +16,7 @@ ui <- navbarPage(theme = shinytheme("lumen"),
                           h1("Acknowledgements"),
                           p("contents")),
                  
-                 tabPanel("Robustness of Assumptions", value = 1,
+                 tabPanel("Step 1: Create the Population", value = 1,
                           sidebarLayout(
                             
                             sidebarPanel(

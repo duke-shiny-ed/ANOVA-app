@@ -1,10 +1,9 @@
 library(shiny)
 library(shinythemes)
-library(shinyWidgets)
 library(mathjaxr)
 library(tidyr)
 library(ggplot2)
-library(plotly)
+library(broom)
 
 ui <- navbarPage(theme = shinytheme("lumen"),
                  
@@ -22,6 +21,8 @@ ui <- navbarPage(theme = shinytheme("lumen"),
                             
                             sidebarPanel(
                               h3("Population Inputs"),
+                              p("Remember to clarify that in reality we can't manipulate sample data like we are doing here", 
+                                style = "color:grey"),
                               hr(),
                               
                               h3(strong("Between Group Variance")),
@@ -32,12 +33,9 @@ ui <- navbarPage(theme = shinytheme("lumen"),
                                           label = NULL,
                                           min = 0, max = 1, value = 1, step = .001),
                               br(),
-                              br(),
                               
-                    
-                              h3(strong("Assumptions")),
+                              h3(strong("Shape")),
                               wellPanel(
-                                h4("Shape"),
                                 p("Instructions", style = "color:grey"),
                                 br(),       
                                 
@@ -59,11 +57,13 @@ ui <- navbarPage(theme = shinytheme("lumen"),
                                                         "Right Skewed" = "rskew",
                                                         "Left Skewed" = "lskew"),
                                             selected = "norm")),
+                              br(),
                               
+                              h3(strong("Within group variance")),
                               wellPanel(
-                                h4("Within group variance"),
                                 p("Instructions", style = "color:grey"),
                                 br(),
+                                
                                 sliderInput(inputId = "sd1.1",
                                             label = p("Curve 1", style = "color:red"),
                                             min = 0.25, max = 1.25, value = 1, step = 0.25),
@@ -73,7 +73,7 @@ ui <- navbarPage(theme = shinytheme("lumen"),
                                 sliderInput(inputId = "sd1.3",
                                             label = p("Curve 3", style = "color:blue"),
                                             min = 0.25, max = 1.25, value = 1, step = 0.25)
-                                )
+                              )
                             ),
                             
                             mainPanel(
@@ -86,7 +86,7 @@ ui <- navbarPage(theme = shinytheme("lumen"),
                                 ## check this LaTeX
                                 withMathJax(),
                                 tags$script(
-                                "MathJax.Hub.Config({
+                                  "MathJax.Hub.Config({
                                 tex2jax: {
                                 inlineMath: [['$','$'], ['\\(','\\)']],
                                 processEscapes: true
@@ -99,7 +99,7 @@ ui <- navbarPage(theme = shinytheme("lumen"),
                           )
                  ),
                  
-                 tabPanel("Relationship between ANOVA and F-Statistic", value = 2,
+                 tabPanel("Step 2: Use Samples to Visualize the F-Statistic", value = 2,
                           sidebarLayout(
                             
                             sidebarPanel(
@@ -133,18 +133,18 @@ ui <- navbarPage(theme = shinytheme("lumen"),
                             mainPanel(
                               fluidRow(column(width = 12, plotOutput(outputId = "boxplot"))),
                               fluidRow(
-                               p("Non-reactive text explaining what F-stat is... Also indicate that below is the F-stat:"),
+                                p("Non-reactive text explaining what F-stat is... Also indicate that below is the F-stat:"),
                                 br(),
                                 
                                 verbatimTextOutput(outputId = "aovTest2"),
                                 br(),
                                 br(),
-                               
+                                
                                 p("At the $\\alpha = .05$ level this F-stat corresponds to a p-value that suggests there is",
                                   textOutput(outputId = "concl2")))
                               
                             )
-                        )
+                          )
                           
                  ),
                  
@@ -218,11 +218,7 @@ server <- function(input, output, session) {
     } else if(mean(set1) < mean(set2) & mean(set1) < mean(set3)) {
       return(set1 - (between * 0.1))
     } else {
-      #if() {
-        
-     # } else {
-        return(set1)
-      #}
+      return(set1)
     }
   }
   # difference between means detected at 0.0005 total
@@ -294,18 +290,18 @@ server <- function(input, output, session) {
   })
   
   distb <- function(set1, set2, set3, between, within) {
-      if(mean(set1) > mean(set2) & mean(set1) > mean(set3)) {
-        return(set1 * within + (between * 0.1))
-      } else if(mean(set1) < mean(set2) & mean(set1) < mean(set3)) {
-        return(set1 * within - (between * 0.1))
-      } else {
-        #if() {
-        
-        # } else {
-        return(set1 * within)
-        #}
-      }
+    if(mean(set1) > mean(set2) & mean(set1) > mean(set3)) {
+      return(set1 * within + (between * 0.1))
+    } else if(mean(set1) < mean(set2) & mean(set1) < mean(set3)) {
+      return(set1 * within - (between * 0.1))
+    } else {
+      #if() {
+      
+      # } else {
+      return(set1 * within)
+      #}
     }
+  }
   
   d1b <- reactive({distb(set1 = sample1b(), set2 = sample2b(), set3 = sample3b(), within = input$sd2.1, between = input$btwsd2)})
   d2b <- reactive({distb(set1 = sample2b(), set2 = sample3b(), set3 = sample1b(), within = input$sd2.2, between = input$btwsd2)})

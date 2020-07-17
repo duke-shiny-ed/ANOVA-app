@@ -4,13 +4,51 @@ library(mathjaxr)
 library(tidyr)
 library(ggplot2)
 library(broom)
+library(shinyBS)
 
 ui <- navbarPage(theme = shinytheme("lumen"),
                  
                  title = "ANOVA",
                  tabPanel("About",
                           h1("About the App"),
-                          p("contents"),
+                          withMathJax(),
+                          tags$script(
+                            "MathJax.Hub.Config({
+                                tex2jax: {
+                                inlineMath: [['$','$'], ['\\(','\\)']],
+                                processEscapes: true
+                                }
+                                });"
+                          ),
+                          tags$style(
+                            HTML("
+                                 .tooltip > .tooltip-inner {
+                                 background-color: #F1F0F0;
+                                 color: #000000;
+                                 border: 1px solid #F1F0F0;
+                                 }
+                                 ")),
+                          p("Welcome! This interactive learning tool is brought to you by Duke Shiny-Ed. In this particular app 
+                            you will be able to explore", tipify(strong("ANOVA"), 
+                                                                 title = "Hypothesis test which analyzes variance to make inferences about means. Tests $H_0$: $\\mu_1$ = $\\mu_2$ = ... = $\\mu_K$ and $H_1$: at least one of the means are different; not necessarily that all are unequal", 
+                                                                 placement = "top", trigger = "hover"), 
+                            ", or Analysis of Variance. This app is designed to gradually introduce you to the different aspects of ANOVA and it concludes with a quiz so that you 
+                            can test what you've learned! Hopefully, after using this
+                            app, you will be able to:"),
+                          p("1. Examine how violations of the", span(strong("assumptions of ANOVA"), title = "test", color = "red"), "affect the ANOVA test output"),
+                          p("2. Understand the relationship between the", strong("F-statistic"), "and the ANOVA test output"),
+                          p("3. Predict how manipulation of between and withing group variances will affect the F-statistic
+                            and the ANOVA test output"),
+                          br(),
+                          
+                          p("ANOVA is a method used in statistical anylsis to make inferences about numerical data. In particular 
+                            ANOVA is used to question whether there is a meaningful difference between the groups in question. To
+                            do this ANOVA tests the alternative hypothesis that", em("at least one"), "of the group means is truly different
+                            from the others against the null hypothesis that there is no difference between the group means. In this sense, 
+                            ANOVA can be thought of as generalizing the", strong("t-test"), "to more that two categories of numerical data!"),
+                          
+                          
+                          # t-test assess associations between variables.
                           hr(),
                           
                           h1("Acknowledgements"),
@@ -89,16 +127,6 @@ ui <- navbarPage(theme = shinytheme("lumen"),
                                 verbatimTextOutput(outputId = "aovTest1"),
                                 br(),
                                 
-                                ## check this LaTeX
-                                withMathJax(),
-                                tags$script(
-                                  "MathJax.Hub.Config({
-                                tex2jax: {
-                                inlineMath: [['$','$'], ['\\(','\\)']],
-                                processEscapes: true
-                                }
-                                });"
-                                ),
                                 p("At the $\\alpha = .05$ level this F-stat corresponds to a p-value that suggests there is", 
                                   textOutput(outputId = "concl1")))
                             )

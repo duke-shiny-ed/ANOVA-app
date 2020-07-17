@@ -204,7 +204,7 @@ ui <- navbarPage(theme = shinytheme("lumen"),
 
 server <- function(input, output, session) {
   ##--------------------------------------------------------------Assumptions Tab
-  pop_data <- function(skew, within, n) {
+  pop_dist <- function(skew, within, n) {
     if(skew == "norm") {
       set.seed(n)
       return(rbeta(20000, shape1 = 22, shape2 = 22) * within)
@@ -220,34 +220,34 @@ server <- function(input, output, session) {
     }
   }
   
-  pop1 <- reactive({pop_data(skew = input$skew1, within = input$sd1.1, n = 1)})
-  pop2 <- reactive({pop_data(skew = input$skew2, within = input$sd1.2, n = 2)})
-  pop3 <- reactive({pop_data(skew = input$skew3, within = input$sd1.3, n = 3)})
+  pop1 <- reactive({pop_dist(skew = input$skew1, within = input$sd1.1, n = 1)})
+  pop2 <- reactive({pop_dist(skew = input$skew2, within = input$sd1.2, n = 2)})
+  pop3 <- reactive({pop_dist(skew = input$skew3, within = input$sd1.3, n = 3)})
   
   ## effect of btwsd slider
-  pop_trans <- function(set1, set2, set3, between, within = 1) {
+  translate_pop <- function(set1, set2, set3, between) {
     if(mean(set1) > mean(set2) & mean(set1) > mean(set3)) {
-      return(set1 * within + (between * 0.1))
+      return(set1 + (between * 0.1))
     } else if(mean(set1) < mean(set2) & mean(set1) < mean(set3)) {
-      return(set1 * within - (between * 0.1))
+      return(set1 - (between * 0.1))
     } else {
       return(set1)
     }
   }
   # difference between means detected at 0.0005 total
   
-  pop1_trans <- reactive({pop_trans(set1 = pop1(), set2 = pop2(), set3 = pop3(), between = input$btwsd1)})
-  pop2_trans <- reactive({pop_trans(set1 = pop2(), set2 = pop1(), set3 = pop3(), between = input$btwsd1)})
-  pop3_trans <- reactive({pop_trans(set1 = pop3(), set2 = pop1(), set3 = pop2(), between = input$btwsd1)})
+  pop1_trans <- reactive({translate_pop(set1 = pop1(), set2 = pop2(), set3 = pop3(), between = input$btwsd1)})
+  pop2_trans <- reactive({translate_pop(set1 = pop2(), set2 = pop1(), set3 = pop3(), between = input$btwsd1)})
+  pop3_trans <- reactive({translate_pop(set1 = pop3(), set2 = pop1(), set3 = pop2(), between = input$btwsd1)})
   
   popdf <- reactive({data.frame(pop1_trans(), pop2_trans(), pop3_trans())})
-  long_popdf <- reactive({
+  popdf_long <- reactive({
     popdf() %>%
       gather(key = dataset, value = values)
   })
   
   output$curve <- renderPlot({
-    ggplot(data = long_popdf(), aes(x=values, color = dataset)) +
+    ggplot(data = popdf_long(), aes(x=values, color = dataset)) +
       geom_density() +
       #coord_cartesian(xlim = c(0, 1), ylim = c(0,35)) +
       ggtitle("Population Distributions") +
@@ -267,13 +267,13 @@ server <- function(input, output, session) {
     sample(pop3_trans(), size = 100, replace = TRUE)
   })
   
-  samples <- reactive({data.frame(sample1(), sample2(), sample3())})
-  long_samples <- reactive({
-    samples() %>%
-      gather(key = dataset, value = value)
+  sampledf <- reactive({data.frame(sample1(), sample2(), sample3())})
+  sampledf_long <- reactive({
+    sampledf() %>%
+      gather(key = dataset, value = values)
   })
   
-  runTest1 <- reactive({aov(value ~ dataset, data = long_samples())})
+  runTest1 <- reactive({aov(values ~ dataset, data = sampledf_long())})
   output$aovTest1 <- renderPrint ({
     print(summary(runTest1()))
   })
@@ -288,21 +288,30 @@ server <- function(input, output, session) {
   })
   
   ##--------------------------------------------------------------F-Stat Tab
+  ##recall that sample1, sample2, sample3 already defined 
+
+  translate_sample <- function(set1, set2, set3, between, within) {
+    if(mean(set1) > mean(set2) & mean(set1) > mean(set3)) {
+      return(set1 * within + (between * 0.1))
+    } else if(mean(set1) < mean(set2) & mean(set1) < mean(set3)) {
+      return(set1 * within - (between * 0.1))
+    } else {
+      return(set1 * within)
+    }
+  }
   
-  sample_trans <- repeatable(pop_trans)
+  sample1_trans <- reactive({translate_sample(set1 = sample1(), set2 = sample2(), set3 = sample3(), within = input$sd2.1, between = input$btwsd2)})
+  sample2_trans <- reactive({translate_sample(set1 = sample2(), set2 = sample3(), set3 = sample1(), within = input$sd2.2, between = input$btwsd2)})
+  sample3_trans <- reactive({translate_sample(set1 = sample3(), set2 = sample1(), set3 = sample2(), within = input$sd2.3, between = input$btwsd2)})
   
-  sample1_trans <- reactive({sample_trans(set1 = sample1(), set2 = sample2(), set3 = sample3(), within = input$sd2.1, between = input$btwsd2)})
-  sample2_trans <- reactive({sample_trans(set1 = sample2(), set2 = sample3(), set3 = sample1(), within = input$sd2.2, between = input$btwsd2)})
-  sample3_trans <- reactive({sample_trans(set1 = sample3(), set2 = sample1(), set3 = sample2(), within = input$sd2.3, between = input$btwsd2)})
-  
-  samplesdf <- reactive({data.frame(sample1_trans(), sample2_trans(), sample3_trans())})
-  long_samplesdf <- reactive({
-    samplesdf() %>%
+  trans_sampledf <- reactive({data.frame(sample1_trans(), sample2_trans(), sample3_trans())})
+  trans_sampledf_long <- reactive({
+    trans_sampledf() %>%
       gather(key = dataset, value = values)
   })
   
   output$boxplot <- renderPlot({
-    ggplot(data = long_samplesdf(), aes(x = dataset, y = values)) + 
+    ggplot(data = trans_sampledf_long(), aes(x = dataset, y = values)) + 
       geom_boxplot(aes(color = dataset)) +
       geom_jitter(aes(x = dataset, y = values, alpha = .2, color = dataset), position=position_jitter(0.04)) +
       #coord_cartesian(ylim =c(0.1, 1.2)) +
@@ -311,7 +320,7 @@ server <- function(input, output, session) {
             axis.ticks.x=element_blank())
   })
   
-  runTest2 <- reactive({aov(values ~ dataset, data = long_samplesdf())})
+  runTest2 <- reactive({aov(values ~ dataset, data = trans_sampledf_long())})
   output$aovTest2 <- renderPrint ({
     print(summary(runTest2())[[1]][["F value"]][[1]])
   })

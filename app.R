@@ -20,46 +20,57 @@ ui <- navbarPage(theme = shinytheme("lumen"),
                                 }
                                 });"
                           ),
+                          #style = "font-size:14px" for size later?
                           tags$style(
                             HTML("
                                  .tooltip > .tooltip-inner {
                                  background-color: #F1F0F0;
                                  color: #000000;
                                  border: 1px solid #F1F0F0;
+                                 text-align: left;
                                  }
                                  ")),
+                          fluidRow(
+                          column(offset = 1, width = 6,
                           p("Welcome! This interactive learning tool is brought to you by Duke Shiny-Ed. In this particular app 
-                            you will be able to explore", tipify(strong("ANOVA"), 
+                            you will be able to explore", tipify(strong("ANOVA", style = "color:#00B5E5"), 
                                                                  title = "Hypothesis test which analyzes variance to make inferences about means. Tests $H_0$: $\\mu_1$ = $\\mu_2$ = ... = $\\mu_K$ and $H_1$: at least one of the means are different; not necessarily that all are unequal", 
-                                                                 placement = "top", trigger = "hover"), 
+                                                                 placement = "right", trigger = "hover"), 
                             ", or Analysis of Variance. This app is designed to gradually introduce you to the different aspects of ANOVA and it concludes with a quiz so that you 
                             can test what you've learned! Hopefully, after using this
                             app, you will be able to:"),
-                          p("1. Examine how violations of the", span(strong("assumptions of ANOVA"), title = "test", color = "red"), "affect the ANOVA test output"),
-                          p("2. Understand the relationship between the", strong("F-statistic"), "and the ANOVA test output"),
+                          p("1. Examine how violations of the", tipify(strong("assumptions of ANOVA"),
+                                                                       title = "1)Independent observations. 2)Approximately normal population distributions within each group. 3)Approximately equal within group variances for all groups.", 
+                                                                       placement = "right", trigger = "hover"), 
+                            "affect the ANOVA test output"),
+                          p("2. Understand the relationship between the", tipify(strong("F-statistic"),
+                                                                                 title = "text here",
+                                                                                 placement = "bottom", trigger = "hover"), "and the ANOVA test output"),
                           p("3. Predict how manipulation of between and withing group variances will affect the F-statistic
-                            and the ANOVA test output"),
-                          br(),
+                            and the ANOVA test output")),
                           
-                          p("ANOVA is a method used in statistical anylsis to make inferences about numerical data. In particular 
+                          column(width = 4,
+                            p("ANOVA is a method used in statistical anylsis to make inferences about numerical data. In particular 
                             ANOVA is used to question whether there is a meaningful difference between the groups in question. To
-                            do this ANOVA tests the alternative hypothesis that", em("at least one"), "of the group means is truly different
+                            do this ANOVA tests the alternative hypothesis that at least one of the group means is truly different
                             from the others against the null hypothesis that there is no difference between the group means. In this sense, 
-                            ANOVA can be thought of as generalizing the", strong("t-test"), "to more that two categories of numerical data!"),
-                          
-                          
-                          # t-test assess associations between variables.
+                            ANOVA can be thought of as generalizing the", tipify(strong("t-test", style = "color:#00B5E5"),
+                                                                                 title = "define t-test i.e assess associations between variables...",
+                                                                                 placement = "bottom", trigger = "hover"), 
+                            "to more that two categories of numerical data!"))
+                        ),
                           hr(),
                           
                           h1("Acknowledgements"),
-                          p("contents")),
+                          p("contents"),
+                          p("Created by Samantha Owusu-Antwi for 'Creating Interactive Learning Tools' Project, Summer 2020")),
                  
                  tabPanel("Step 1: Create the Population", value = 1,
                           sidebarLayout(
                             
                             sidebarPanel(
                               h3("Population Inputs"),
-                              p("Remember to clarify that in reality we can't manipulate sample data like we are doing here", 
+                              p("Remember to clarify that in reality we can not manipulate population data like we are doing here", 
                                 style = "color:grey"),
                               hr(),
                               

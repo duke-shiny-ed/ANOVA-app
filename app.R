@@ -29,22 +29,15 @@ ui <- navbarPage(theme = shinytheme("lumen"),
                               p("Instructions", style = "color:grey"),
                               br(),
                               
-                              sliderInput(inputId = "btwsd1",
+                              #sliderInput(inputId = "btwsd1",
+                                          #label = NULL,
+                                          #min = 0, max = 1, value = 1, step = .001),
+                              #toggle btw group variance
+                              selectInput(inputId = "btwsd1",
                                           label = NULL,
-                                          min = 0, max = 1, value = 1, step = .001),
-                              #radioButtons(inputId = "translate",
-                                           #label = NULL,
-                                           #choices = c("Curve 1", "Curve 2", "Curve 3"),
-                                           #selected = "Curve 1"),
-                              #uiOutput("buttons", inline = TRUE),
-                              #fluidRow(
-                               # column(width = 3, 
-                                #       actionButton(inputId = "popdec",
-                                 #                   "< Translate Left")),
-                                #column(offset = 1, width = 3,
-                                 #      actionButton(inputId = "popinc",
-                                  #                  "Translate Right >"))
-                              #),
+                                          choices = c("Increased Between Group Variance" = "inc",
+                                                      "Reduced Between Group Variance" = "dec"),
+                                          selected = "inc"),
                               br(),
                               
                               h3(strong("Shape")),
@@ -79,13 +72,13 @@ ui <- navbarPage(theme = shinytheme("lumen"),
                                 
                                 sliderInput(inputId = "sd1.1",
                                             label = p("Curve 1", style = "color:red"),
-                                            min = 0.25, max = 1.25, value = 1, step = 0.25),
+                                            min = 0.75, max = 1.25, value = 1),
                                 sliderInput(inputId = "sd1.2",
                                             label = p("Curve 2", style = "color:green"),
-                                            min = 0.25, max = 1.25, value = 1, step = 0.25),
+                                            min = 0.75, max = 1.25, value = 1),
                                 sliderInput(inputId = "sd1.3",
                                             label = p("Curve 3", style = "color:blue"),
-                                            min = 0.25, max = 1.25, value = 1, step = 0.25)
+                                            min = 0.75, max = 1.25, value = 1)
                               )
                             ),
                             
@@ -124,9 +117,14 @@ ui <- navbarPage(theme = shinytheme("lumen"),
                               h3(strong("Between Group Variance")),
                               p("Instructions", style = "color:grey"),
                               br(),
-                              sliderInput(inputId = "btwsd2",
+                              #sliderInput(inputId = "btwsd2",
+                                          #label = NULL,
+                                          #min = 0, max = 1, value = 0, step = .001), ## <- set btwsd2 to a value that doesn't initilaly maniuplate sample data
+                              selectInput(inputId = "btwsd2",
                                           label = NULL,
-                                          min = 0, max = 1, value = 0, step = .001), ## <- set btwsd2 to a value that doesn't initilaly maniuplate sample data
+                                          choices = c("Increased Between Group Variance" = "inc",
+                                                      "Reduced Between Group Variance" = "dec"),
+                                          selected = "inc"),
                               br(),
                               
                               h3(strong("Within group variance")),
@@ -134,13 +132,13 @@ ui <- navbarPage(theme = shinytheme("lumen"),
                               br(),
                               sliderInput(inputId = "sd2.1",
                                           label = p("Curve 1", style = "color:red"),
-                                          min = 0.25, max = 1.25, value = 1, step = 0.25),
+                                          min = 0.75, max = 1.25, value = 1),
                               sliderInput(inputId = "sd2.2",
                                           label = p("Curve 2", style = "color:green"),
-                                          min = 0.25, max = 1.25, value = 1, step = 0.25),
+                                          min = 0.75, max = 1.25, value = 1),
                               sliderInput(inputId = "sd2.3",
                                           label = p("Curve 3", style = "color:blue"),
-                                          min = 0.25, max = 1.25, value = 1, step = 0.25)
+                                          min = 0.75, max = 1.25, value = 1)
                             ),
                             
                             mainPanel(
@@ -224,15 +222,26 @@ server <- function(input, output, session) {
   pop2 <- reactive({pop_dist(skew = input$skew2, within = input$sd1.2, n = 2)})
   pop3 <- reactive({pop_dist(skew = input$skew3, within = input$sd1.3, n = 3)})
   
-  ## effect of btwsd slider
+  ## effect of btwsd select menu
   translate_pop <- function(set1, set2, set3, between) {
-    if(mean(set1) > mean(set2) & mean(set1) > mean(set3)) {
-      return(set1 + (between * 0.1))
-    } else if(mean(set1) < mean(set2) & mean(set1) < mean(set3)) {
-      return(set1 - (between * 0.1))
-    } else {
-      return(set1)
+    if(between == "inc") {
+      if(mean(set1) > mean(set2) & mean(set1) > mean(set3)) {
+        return(set1 + 0.15)
+      } else if(mean(set1) < mean(set2) & mean(set1) < mean(set3)) {
+        return(set1 - 0.15)
+      } else {
+        return(set1)
+      }
+    } else if(between == "dec"){
+      if(mean(set1) > mean(set2) & mean(set1) > mean(set3)) {
+        return(set1)
+      } else if(mean(set1) < mean(set2) & mean(set1) < mean(set3)) {
+        return(set1)
+      } else {
+        return(set1)
+      }
     }
+      
   }
   # difference between means detected at 0.0005 total
   
@@ -249,7 +258,7 @@ server <- function(input, output, session) {
   output$curve <- renderPlot({
     ggplot(data = popdf_long(), aes(x=values, color = dataset)) +
       geom_density() +
-      #coord_cartesian(xlim = c(0, 1), ylim = c(0,35)) +
+      coord_cartesian(xlim = c(0, 1), ylim = c(0,35)) +
       ggtitle("Population Distributions") +
       theme(legend.position = "none") 
   })

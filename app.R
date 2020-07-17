@@ -259,7 +259,7 @@ server <- function(input, output, session) {
   output$curve <- renderPlot({
     ggplot(data = popdf_long()) +
       geom_density(aes(x=values, color = dataset)) +
-      #coord_cartesian(xlim = c(0, 1), ylim = c(0,35)) +
+      coord_cartesian(xlim = c(-.125, 1.25), ylim = c(0,35)) +
       ggtitle("Population Distributions") +
       theme(legend.position = "none") 
   })

@@ -124,7 +124,7 @@ ui <- navbarPage(theme = shinytheme("lumen"),
                                           label = NULL,
                                           choices = c("Increased Between Group Variance" = "inc",
                                                       "Reduced Between Group Variance" = "dec"),
-                                          selected = "inc"),
+                                          selected = "dec"),
                               br(),
                               
                               h3(strong("Within group variance")),
@@ -144,9 +144,10 @@ ui <- navbarPage(theme = shinytheme("lumen"),
                             mainPanel(
                               fluidRow(column(width = 12, plotOutput(outputId = "boxplot"))),
                               fluidRow(
-                                p("Non-reactive text explaining what F-stat is... Also indicate that below is the F-stat:"),
+                                p("Non-reactive text explaining what F-stat is..."),
                                 br(),
                                 
+                                p("Indicate that below is the F-stat:"),
                                 verbatimTextOutput(outputId = "aovTest2"),
                                 br(),
                                 br(),
@@ -334,6 +335,7 @@ server <- function(input, output, session) {
       geom_boxplot(aes(color = dataset)) +
       geom_jitter(aes(x = dataset, y = values, alpha = .2, color = dataset), position=position_jitter(0.04)) +
       #coord_cartesian(ylim =c(0.1, 1.2)) +
+      geom_hline(yintercept=mean(trans_sampledf_long()$values), linetype=3, color = "black") +
       labs(title = "Sample Data") +
       theme(legend.position = "none", axis.text.x=element_blank(),
             axis.ticks.x=element_blank())

@@ -298,15 +298,25 @@ server <- function(input, output, session) {
   
   ##--------------------------------------------------------------F-Stat Tab
   ##recall that sample1, sample2, sample3 already defined 
-
-  translate_sample <- function(set1, set2, set3, between, within) {
-    if(mean(set1) > mean(set2) & mean(set1) > mean(set3)) {
-      return(set1 * within + (between * 0.1))
-    } else if(mean(set1) < mean(set2) & mean(set1) < mean(set3)) {
-      return(set1 * within - (between * 0.1))
-    } else {
-      return(set1 * within)
+  translate_sample <- function(set1, set2, set3, within, between) {
+    if(between == "inc") {
+      if(mean(set1) > mean(set2) & mean(set1) > mean(set3)) {
+        return(set1 * within + 0.15)
+      } else if(mean(set1) < mean(set2) & mean(set1) < mean(set3)) {
+        return(set1 * within - 0.15)
+      } else {
+        return(set1 * within)
+      }
+    } else if(between == "dec"){
+      if(mean(set1) > mean(set2) & mean(set1) > mean(set3)) {
+        return(set1 * within)
+      } else if(mean(set1) < mean(set2) & mean(set1) < mean(set3)) {
+        return(set1 * within)
+      } else {
+        return(set1 * within)
+      }
     }
+    
   }
   
   sample1_trans <- reactive({translate_sample(set1 = sample1(), set2 = sample2(), set3 = sample3(), within = input$sd2.1, between = input$btwsd2)})

@@ -257,9 +257,9 @@ server <- function(input, output, session) {
   })
   
   output$curve <- renderPlot({
-    ggplot(data = popdf_long(), aes(x=values, color = dataset)) +
-      geom_density() +
-      coord_cartesian(xlim = c(0, 1), ylim = c(0,35)) +
+    ggplot(data = popdf_long()) +
+      geom_density(aes(x=values, color = dataset)) +
+      #coord_cartesian(xlim = c(0, 1), ylim = c(0,35)) +
       ggtitle("Population Distributions") +
       theme(legend.position = "none") 
   })
@@ -335,7 +335,7 @@ server <- function(input, output, session) {
       geom_boxplot(aes(color = dataset)) +
       geom_jitter(aes(x = dataset, y = values, alpha = .2, color = dataset), position=position_jitter(0.04)) +
       #coord_cartesian(ylim =c(0.1, 1.2)) +
-      geom_hline(yintercept=mean(trans_sampledf_long()$values), linetype=3, color = "black") +
+      geom_hline(yintercept=mean(trans_sampledf_long()$values), linetype=2, color = "black") +
       labs(title = "Sample Data") +
       theme(legend.position = "none", axis.text.x=element_blank(),
             axis.ticks.x=element_blank())

@@ -34,30 +34,39 @@ ui <- navbarPage(theme = shinytheme("lumen"),
                             column(offset = 1, width = 6,
                                    p("Welcome! This interactive learning tool is brought to you by Duke Shiny-Ed. In this particular app 
                             you will be able to explore", tipify(strong("ANOVA", style = "color:#00B5E5"), 
-                                                                 title = "Hypothesis test which analyzes variance to make inferences about means. Tests $H_0$: $\\mu_1$ = $\\mu_2$ = ... = $\\mu_K$ and $H_1$: at least one of the means are different; not necessarily that all are unequal", 
+                                                                 title = "Hypothesis test which analyzes variance to make inferences about means. Tests the null that all group means are equal and the alternative that at least one of the means are different, not necessarily that all are unequal", 
                                                                  placement = "right", trigger = "hover"), 
                                      ", or Analysis of Variance. This app is designed to gradually introduce you to the different aspects of ANOVA and it concludes with a quiz so that you 
                             can test what you've learned! Hopefully, after using this
                             app, you will be able to:"),
                                    p("1. Examine how violations of the", tipify(strong("assumptions of ANOVA", style = "color:#00B5E5"),
-                                                                                title = "1)Independent observations. 2)Approximately normal population distributions within each group. 3)Approximately equal within group variances for all groups.", 
+                                                                                title = "1)Independent observations 2)Approximately normal population distributions within each group 3)Approximately equal within group variances for all groups", 
                                                                                 placement = "right", trigger = "hover"), 
                                      "affect the ANOVA test output"),
                                    p("2. Understand the relationship between the", tipify(strong("F-statistic", style = "color:#00B5E5"),
                                                                                           title = "text here",
                                                                                           placement = "bottom", trigger = "hover"), "and the ANOVA test output"),
                                    p("3. Predict how manipulation of between and withing group variances will affect the F-statistic
-                            and the ANOVA test output")),
-                            
-                            column(width = 4,
+                            and the ANOVA test output"),
+                                   br(),
                                    p("ANOVA is a method used in statistical anylsis to make inferences about numerical data. In particular 
                             ANOVA is used to question whether there is a meaningful difference between the groups in question. To
                             do this ANOVA tests the alternative hypothesis that at least one of the group means is truly different
                             from the others against the null hypothesis that there is no difference between the group means. In this sense, 
                             ANOVA can be thought of as generalizing the", tipify(strong("two sample t-test", style = "color:#00B5E5"),
                                                                                  title = "define t-test i.e assess associations between variables...",
-                                                                                 placement = "bottom", trigger = "hover"), 
-                                     "to more that two categories!"))
+                                                                                 placement = "right", trigger = "hover"),
+                                     "to more that two categories!"),
+                                     ),
+                            
+                            column(width = 5,
+                                   p("If you haven't already noticed, while interacting with this app you will routinely encounter text that
+                                     is highlighted blue like this:", tipify(el = strong(em("What's happening?", style = "color:#00B5E5; font-size:13px")),
+                                                                            title = "This is an example",
+                                                                            placement = "top", trigger = "hover"), 
+                                    "These are designed to help you navigate the material being presented. Hover over them to view definitions 
+                                    of commonly used terms and observations designed to guide you through the exploration!")
+                                   ),
                           ),
                           hr(),
                           
@@ -112,7 +121,8 @@ ui <- navbarPage(theme = shinytheme("lumen"),
                                           label = NULL,
                                           choices = c("Increased Between Group Variance" = "inc",
                                                       "Reduced Between Group Variance" = "dec"),
-                                          selected = "inc")),
+                                          selected = "inc")
+                              ),
                               
                               h3(strong("Shape")),
                               wellPanel(
@@ -157,8 +167,9 @@ ui <- navbarPage(theme = shinytheme("lumen"),
                             column(width = 3,
                                    h3(strong("Within group variance")),
                                    wellPanel(
-                                     p("Manipulate the spread of each density curve. Recall ANOVA assumes these variances are
-                                       approximately equal",
+                                     p("Manipulate the sliders to increase or decrease the within group variance of each curve 
+                                     by a factor of the slider value. This will alter the spread of each density curve. 
+                                     Recall ANOVA assumes these variances are approximately equal",
                                        style = "color:grey"),
                                      br(),
                                      
@@ -188,9 +199,7 @@ ui <- navbarPage(theme = shinytheme("lumen"),
                             column(width = 3,
                               h3(strong("Between Group Variance")),
                               wellPanel(
-                                tipify(el = p("Toggle between 'Reduced' and 'Increased' to translate the samples, altering the distance between thier medians", style = "color:grey"), 
-                                         title = "Notice how increasing the between group variance increases the F-stat and decreasing it decreases the F-stat", 
-                                         placement = "top", trigger = "hover"),
+                                p("Toggle between 'Reduced' and 'Increased' to translate the samples, altering the distance between thier medians", style = "color:grey"), 
                                 br(),
                               #sliderInput(inputId = "btwsd2",
                               #label = NULL,
@@ -199,14 +208,19 @@ ui <- navbarPage(theme = shinytheme("lumen"),
                                           label = NULL,
                                           choices = c("Increased Between Group Variance" = "inc",
                                                       "Reduced Between Group Variance" = "dec"),
-                                          selected = "dec")
+                                          selected = "dec"),
+                              tipify(el = p(em(strong("What's happening?")), style = "text-align:right; color:#00B5E5; font-size:12px"),
+                                      title = "Notice how increasing the between group variance increases the F-stat and decreasing it decreases the F-stat",
+                                      placement = "bottom", trigger = "hover")
                               ),
                               
                               h3(strong("Within group variance")),
                               wellPanel(
-                                tipify(el = p("Manipulate the spread of each sample. Recall ANOVA assumes these variances are approximately equal", style = "color:grey"), 
-                                       title = "Notice how decreasing within group variance generally increases the F-stat and increasing it generally decreases the F-stat", 
-                                       placement = "top", trigger = "hover"),
+                                p("Manipulate the sliders to increase or decrease the within group variance of each sample 
+                                              by a factor of the slider value. This will alter the spread of the samples' data points. 
+                                              Recall ANOVA assumes these variances are approximately equal", 
+                                              style = "color:grey"), 
+                            
                               br(),
                               sliderInput(inputId = "sd2.1",
                                           label = p("Sample from Curve 1", style = "color:red"),
@@ -216,7 +230,13 @@ ui <- navbarPage(theme = shinytheme("lumen"),
                                           min = 0.75, max = 1.25, value = 1),
                               sliderInput(inputId = "sd2.3",
                                           label = p("Sample from Curve 3", style = "color:blue"),
-                                          min = 0.75, max = 1.25, value = 1))
+                                          min = 0.75, max = 1.25, value = 1),
+                              fluidRow(
+                                column(offset = 6, width = 6,
+                                      tipify(el = p(em(strong("What's happening?")), style = "text-align:right; color:#00B5E5; font-size:12px"),
+                                     title = "Notice how decreasing within group variance generally increases the F-stat and increasing it generally decreases the F-stat",
+                                     placement = "top", trigger = "hover")))
+                              )
                             ),
                             
                             column(width = 6,

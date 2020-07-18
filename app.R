@@ -31,67 +31,77 @@ ui <- navbarPage(theme = shinytheme("lumen"),
                                  }
                                  ")),
                           fluidRow(
-                          column(offset = 1, width = 6,
-                          p("Welcome! This interactive learning tool is brought to you by Duke Shiny-Ed. In this particular app 
+                            column(offset = 1, width = 6,
+                                   p("Welcome! This interactive learning tool is brought to you by Duke Shiny-Ed. In this particular app 
                             you will be able to explore", tipify(strong("ANOVA", style = "color:#00B5E5"), 
                                                                  title = "Hypothesis test which analyzes variance to make inferences about means. Tests $H_0$: $\\mu_1$ = $\\mu_2$ = ... = $\\mu_K$ and $H_1$: at least one of the means are different; not necessarily that all are unequal", 
                                                                  placement = "right", trigger = "hover"), 
-                            ", or Analysis of Variance. This app is designed to gradually introduce you to the different aspects of ANOVA and it concludes with a quiz so that you 
+                                     ", or Analysis of Variance. This app is designed to gradually introduce you to the different aspects of ANOVA and it concludes with a quiz so that you 
                             can test what you've learned! Hopefully, after using this
                             app, you will be able to:"),
-                          p("1. Examine how violations of the", tipify(strong("assumptions of ANOVA"),
-                                                                       title = "1)Independent observations. 2)Approximately normal population distributions within each group. 3)Approximately equal within group variances for all groups.", 
-                                                                       placement = "right", trigger = "hover"), 
-                            "affect the ANOVA test output"),
-                          p("2. Understand the relationship between the", tipify(strong("F-statistic"),
-                                                                                 title = "text here",
-                                                                                 placement = "bottom", trigger = "hover"), "and the ANOVA test output"),
-                          p("3. Predict how manipulation of between and withing group variances will affect the F-statistic
+                                   p("1. Examine how violations of the", tipify(strong("assumptions of ANOVA"),
+                                                                                title = "1)Independent observations. 2)Approximately normal population distributions within each group. 3)Approximately equal within group variances for all groups.", 
+                                                                                placement = "right", trigger = "hover"), 
+                                     "affect the ANOVA test output"),
+                                   p("2. Understand the relationship between the", tipify(strong("F-statistic"),
+                                                                                          title = "text here",
+                                                                                          placement = "bottom", trigger = "hover"), "and the ANOVA test output"),
+                                   p("3. Predict how manipulation of between and withing group variances will affect the F-statistic
                             and the ANOVA test output")),
-                          
-                          column(width = 4,
-                            p("ANOVA is a method used in statistical anylsis to make inferences about numerical data. In particular 
+                            
+                            column(width = 4,
+                                   p("ANOVA is a method used in statistical anylsis to make inferences about numerical data. In particular 
                             ANOVA is used to question whether there is a meaningful difference between the groups in question. To
                             do this ANOVA tests the alternative hypothesis that at least one of the group means is truly different
                             from the others against the null hypothesis that there is no difference between the group means. In this sense, 
                             ANOVA can be thought of as generalizing the", tipify(strong("t-test", style = "color:#00B5E5"),
                                                                                  title = "define t-test i.e assess associations between variables...",
                                                                                  placement = "bottom", trigger = "hover"), 
-                            "to more that two categories of numerical data!"))
-                        ),
+                                     "to more that two categories of numerical data!"))
+                          ),
                           hr(),
                           
                           h1("Acknowledgements"),
                           p("contents"),
                           p("Created by Samantha Owusu-Antwi for 'Creating Interactive Learning Tools' Project, Summer 2020")),
                  
+  ##--------------------------------------------------------tab 1
                  tabPanel("Step 1: Create the Population", value = 1,
-                          sidebarLayout(
+                          fluidRow(
+                            column(offset = 2, width = 8, style="background-color:#F1F0F0; padding:20px; border-radius:10px",
+                                   "Info about first step i.e. null and laternatiev hypothesis; applicable assumption; any eqs?
+                                   Remember to clarify that in reality we can not manipulate population data like we are doing here
+                                   talk about how if assumptions are not met ANOVA conclusion may not be valid")
+                          ),
+                          
+                          br(),
+                          hr(),
+                          br(),
+                          
+                          fluidRow(
                             
-                            sidebarPanel(
-                              h3("Population Inputs"),
-                              p("Remember to clarify that in reality we can not manipulate population data like we are doing here", 
-                                style = "color:grey"),
-                              hr(),
-                              
+                            column(width = 3,
                               h3(strong("Between Group Variance")),
-                              p("Instructions", style = "color:grey"),
-                              br(),
-                              
+                              wellPanel(
+                                p("Toggle between 'Reduced' and 'Increased' to translate the population density curves, 
+                                  altering the distance between thier means", 
+                                  style = "color:grey"),
+                                br(),
                               #sliderInput(inputId = "btwsd1",
-                                          #label = NULL,
-                                          #min = 0, max = 1, value = 1, step = .001),
+                              #label = NULL,
+                              #min = 0, max = 1, value = 1, step = .001),
                               #toggle btw group variance
                               selectInput(inputId = "btwsd1",
                                           label = NULL,
                                           choices = c("Increased Between Group Variance" = "inc",
                                                       "Reduced Between Group Variance" = "dec"),
-                                          selected = "inc"),
-                              br(),
+                                          selected = "inc")),
                               
                               h3(strong("Shape")),
                               wellPanel(
-                                p("Instructions", style = "color:grey"),
+                                p("Manipulate the skew of each population density curve. Recall ANOVA assumes the 
+                                  population density of each group is approximately normal", 
+                                  style = "color:grey"),
                                 br(),       
                                 
                                 selectInput(inputId = "skew1", 
@@ -114,33 +124,38 @@ ui <- navbarPage(theme = shinytheme("lumen"),
                                             selected = "norm")),
                               br(),
                               
-                              h3(strong("Within group variance")),
-                              wellPanel(
-                                p("Instructions", style = "color:grey"),
-                                br(),
-                                
-                                sliderInput(inputId = "sd1.1",
-                                            label = p("Curve 1", style = "color:red"),
-                                            min = 0.75, max = 1.25, value = 1),
-                                sliderInput(inputId = "sd1.2",
-                                            label = p("Curve 2", style = "color:green"),
-                                            min = 0.75, max = 1.25, value = 1),
-                                sliderInput(inputId = "sd1.3",
-                                            label = p("Curve 3", style = "color:blue"),
-                                            min = 0.75, max = 1.25, value = 1)
-                              )
                             ),
                             
-                            mainPanel(
-                              
-                              fluidRow(column(width = 12, plotOutput(outputId = "curve"))),
-                              fluidRow( 
-                                verbatimTextOutput(outputId = "aovTest1"),
+                            column(width = 6,
+                              p(plotOutput(outputId = "curve")),
+                              p(verbatimTextOutput(outputId = "aovTest1")),
                                 br(),
                                 
-                                p("At the $\\alpha = .05$ level this F-stat corresponds to a p-value that suggests there is", 
-                                  textOutput(outputId = "concl1")))
-                            )
+                                p("At the $\\alpha = .05$ level this F-stat corresponds to a p-value that suggests there is:", 
+                                textOutput(outputId = "concl1")),
+                                br(),
+                                br(),
+                            ),
+                            
+                            column(width = 3,
+                                   h3(strong("Within group variance")),
+                                   wellPanel(
+                                     p("Meanipulate the spread of each density curve. Recall ANOVA assumes these variances are
+                                       approximately equal",
+                                       style = "color:grey"),
+                                     br(),
+                                     
+                                     sliderInput(inputId = "sd1.1",
+                                                 label = p("Curve 1", style = "color:red"),
+                                                 min = 0.75, max = 1.25, value = 1),
+                                     sliderInput(inputId = "sd1.2",
+                                                 label = p("Curve 2", style = "color:green"),
+                                                 min = 0.75, max = 1.25, value = 1),
+                                     sliderInput(inputId = "sd1.3",
+                                                 label = p("Curve 3", style = "color:blue"),
+                                                 min = 0.75, max = 1.25, value = 1)
+                                   )
+                                  )
                           )
                  ),
                  
@@ -157,8 +172,8 @@ ui <- navbarPage(theme = shinytheme("lumen"),
                               p("Instructions", style = "color:grey"),
                               br(),
                               #sliderInput(inputId = "btwsd2",
-                                          #label = NULL,
-                                          #min = 0, max = 1, value = 0, step = .001), ## <- set btwsd2 to a value that doesn't initilaly maniuplate sample data
+                              #label = NULL,
+                              #min = 0, max = 1, value = 0, step = .001), ## <- set btwsd2 to a value that doesn't initilaly maniuplate sample data
                               selectInput(inputId = "btwsd2",
                                           label = NULL,
                                           choices = c("Increased Between Group Variance" = "inc",
@@ -281,7 +296,7 @@ server <- function(input, output, session) {
         return(set1)
       }
     }
-      
+    
   }
   # difference between means detected at 0.0005 total
   

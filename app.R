@@ -6,6 +6,13 @@ library(ggplot2)
 library(broom)
 library(shinyBS)
 
+# add text at end for discussion of step down tests and bonferroni correction?
+# add text at beginning explaining why we don't just do pairwise test (family-wise error increases)
+# possible equations ot include, variance eqs, ANOVa model eq, reading ANOVA test table output
+
+# input to control sample size ?
+# button that leads straight to "insuff evidence" conclusion ?
+
 ui <- navbarPage(theme = shinytheme("lumen"),
                  
                  title = "ANOVA",
@@ -281,8 +288,8 @@ ui <- navbarPage(theme = shinytheme("lumen"),
                                   
                                   #F-sta equation
                                   p("$\\large{F = \\frac{{{s^2}_B}/ndf}{{{s^2}_W}/ddf}}$", style = "text-align:center"),
-                                  p("$\\bullet$ ${s^2}_B$ is the", strong("between groups variance"), br(),
-                                    "$\\bullet$ ${s^2}_W$ is the", strong("within groups variance"), br(),
+                                  p("$\\bullet$ ${s^2}_B$ is the between groups variance", br(),
+                                    "$\\bullet$ ${s^2}_W$ is the within groups variance", br(),
                                     "$\\bullet$ $ndf$ is the", tipify(strong("numerator degrees of freedom", style = "color:#00B5E5"),
                                                                       title = "The degrees of freedom corresponding to the between groups variance, calculated as total number of groups - 1",
                                                                       placement = "left", trigger = "hover"), br(),
@@ -293,7 +300,6 @@ ui <- navbarPage(theme = shinytheme("lumen"),
                                    
                                    p("Here the F-stat is:"),
                                    verbatimTextOutput(outputId = "aovTest2"),
-                                   br(),
                                    br())
                                    )
                             

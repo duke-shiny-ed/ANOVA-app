@@ -65,11 +65,15 @@ quiz(caption = "Question 1",
   question("Write question 1 part a here",
     answer("True", message = "Explain why this is not the correct answer"),
     answer("False", correct = TRUE),
-  ),
+  allow_retry = TRUE,
+  random_answer_order = TRUE
+    ),
   question("Write question 1 part b here",
     answer("True", correct = TRUE, message = "Explain why this is correct..."),
-    answer("False", message = "Explain why this is not the correct answer...")
-  )
+    answer("False", message = "Explain why this is not the correct answer..."),
+  allow_retry = TRUE,
+  random_answer_order = TRUE
+    )
 )
 ```
 

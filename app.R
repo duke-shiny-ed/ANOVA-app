@@ -39,11 +39,11 @@ ui <- navbarPage(theme = shinytheme("lumen"),
                                      ", or Analysis of Variance. This app is designed to gradually introduce you to the different aspects of ANOVA and it concludes with a quiz so that you 
                             can test what you've learned! Hopefully, after using this
                             app, you will be able to:"),
-                                   p("1. Examine how violations of the", tipify(strong("assumptions of ANOVA"),
+                                   p("1. Examine how violations of the", tipify(strong("assumptions of ANOVA", style = "color:#00B5E5"),
                                                                                 title = "1)Independent observations. 2)Approximately normal population distributions within each group. 3)Approximately equal within group variances for all groups.", 
                                                                                 placement = "right", trigger = "hover"), 
                                      "affect the ANOVA test output"),
-                                   p("2. Understand the relationship between the", tipify(strong("F-statistic"),
+                                   p("2. Understand the relationship between the", tipify(strong("F-statistic", style = "color:#00B5E5"),
                                                                                           title = "text here",
                                                                                           placement = "bottom", trigger = "hover"), "and the ANOVA test output"),
                                    p("3. Predict how manipulation of between and withing group variances will affect the F-statistic
@@ -54,10 +54,10 @@ ui <- navbarPage(theme = shinytheme("lumen"),
                             ANOVA is used to question whether there is a meaningful difference between the groups in question. To
                             do this ANOVA tests the alternative hypothesis that at least one of the group means is truly different
                             from the others against the null hypothesis that there is no difference between the group means. In this sense, 
-                            ANOVA can be thought of as generalizing the", tipify(strong("t-test", style = "color:#00B5E5"),
+                            ANOVA can be thought of as generalizing the", tipify(strong("two sample t-test", style = "color:#00B5E5"),
                                                                                  title = "define t-test i.e assess associations between variables...",
                                                                                  placement = "bottom", trigger = "hover"), 
-                                     "to more that two categories of numerical data!"))
+                                     "to more that two categories!"))
                           ),
                           hr(),
                           
@@ -69,9 +69,26 @@ ui <- navbarPage(theme = shinytheme("lumen"),
                  tabPanel("Step 1: Create the Population", value = 1,
                           fluidRow(
                             column(offset = 2, width = 8, style="background-color:#F1F0F0; padding:20px; border-radius:10px",
-                                   "Info about first step i.e. null and laternatiev hypothesis; applicable assumption; any eqs?
-                                   Remember to clarify that in reality we can not manipulate population data like we are doing here
-                                   talk about how if assumptions are not met ANOVA conclusion may not be valid")
+                                   p("ANOVA tests the following hypotheses:"),
+                                   #; padding:20px; border-radius:10px"
+                                   p("$H_0$: The means of all groups are equal $(\\mu_1 = \\mu_2 = ... = \\mu_K)$", 
+                                     br(),
+                                     "$H_1$: At least one of the means is different", style = "text-align:center"),
+                                   br(),
+                                   p("Below you have the opportunity to manipulate the skew,", tipify(strong("between group variance", style = "color:#00B5E5"),
+                                                                                                     title = "define btw var here",
+                                                                                                     placement = "top", trigger = "hover"), 
+                                   ", and the", tipify(strong("within group variances", style = "color:#00B5E5"),
+                                                      title = "define within var here",
+                                                      placement = "top", trigger = "hover"), "of the population data we have simulated. Normally, true population parameters 
+                                    are not known.", strong("Recall that ANOVA assumes each group's population density is approximately normal")) 
+                      #talk about how normal assumption is robust if sample ANOVA is relatively robust against departures from Normaltiy 
+                      #unless the sample sizes are are small within each group. Therefore, as long as the sample sizes in each group are l
+                      #arge enough, the p-values from ANOVA are still valid even if the distribution of the response in each group is 
+                      #extremely skewed or long-tailed. If asusmptions validated result may not be valid
+                                )
+                            #Info about first step; applicable assumption; any eqs?
+                            #talk about how if assumptions are not met ANOVA conclusion may not be valid"
                           ),
                           
                           br(),
@@ -140,7 +157,7 @@ ui <- navbarPage(theme = shinytheme("lumen"),
                             column(width = 3,
                                    h3(strong("Within group variance")),
                                    wellPanel(
-                                     p("Meanipulate the spread of each density curve. Recall ANOVA assumes these variances are
+                                     p("Manipulate the spread of each density curve. Recall ANOVA assumes these variances are
                                        approximately equal",
                                        style = "color:grey"),
                                      br(),
@@ -158,19 +175,23 @@ ui <- navbarPage(theme = shinytheme("lumen"),
                                   )
                           )
                  ),
-                 
+  
+  ##--------------------------------------------------------tab 2
                  tabPanel("Step 2: Use Samples to Visualize the F-Statistic", value = 2,
-                          sidebarLayout(
+                          fluidRow(
+                            column(offset = 2, width = 8, style="background-color:#F1F0F0; padding:20px; border-radius:10px")
+                            ),
+                          br(),
+                          hr(),
+                          fluidRow(
                             
-                            sidebarPanel(
-                              h3("Sample Inputs"),
-                              p("Remember to clarify that in reality we can't manipulate sample data like we are doing here", 
-                                style = "color:grey"),
-                              hr(),
-                              
+                            column(width = 3,
                               h3(strong("Between Group Variance")),
-                              p("Instructions", style = "color:grey"),
-                              br(),
+                              wellPanel(
+                                tipify(el = p("Toggle between 'Reduced' and 'Increased' to translate the samples, altering the distance between thier medians", style = "color:grey"), 
+                                         title = "Notice how increasing the between group variance increases the F-stat and decreasing it decreases the F-stat", 
+                                         placement = "top", trigger = "hover"),
+                                br(),
                               #sliderInput(inputId = "btwsd2",
                               #label = NULL,
                               #min = 0, max = 1, value = 0, step = .001), ## <- set btwsd2 to a value that doesn't initilaly maniuplate sample data
@@ -178,38 +199,51 @@ ui <- navbarPage(theme = shinytheme("lumen"),
                                           label = NULL,
                                           choices = c("Increased Between Group Variance" = "inc",
                                                       "Reduced Between Group Variance" = "dec"),
-                                          selected = "dec"),
-                              br(),
+                                          selected = "dec")
+                              ),
                               
                               h3(strong("Within group variance")),
-                              p("Instructions", style = "color:grey"),
+                              wellPanel(
+                                tipify(el = p("Manipulate the spread of each sample. Recall ANOVA assumes these variances are approximately equal", style = "color:grey"), 
+                                       title = "Notice how decreasing within group variance generally increases the F-stat and increasing it generally decreases the F-stat", 
+                                       placement = "top", trigger = "hover"),
                               br(),
                               sliderInput(inputId = "sd2.1",
-                                          label = p("Curve 1", style = "color:red"),
+                                          label = p("Sample from Curve 1", style = "color:red"),
                                           min = 0.75, max = 1.25, value = 1),
                               sliderInput(inputId = "sd2.2",
-                                          label = p("Curve 2", style = "color:green"),
+                                          label = p("Sample from Curve 2", style = "color:green"),
                                           min = 0.75, max = 1.25, value = 1),
                               sliderInput(inputId = "sd2.3",
-                                          label = p("Curve 3", style = "color:blue"),
-                                          min = 0.75, max = 1.25, value = 1)
+                                          label = p("Sample from Curve 3", style = "color:blue"),
+                                          min = 0.75, max = 1.25, value = 1))
                             ),
                             
-                            mainPanel(
+                            column(width = 6,
+                              br(),
+                              br(),
                               fluidRow(column(width = 12, plotOutput(outputId = "boxplot"))),
                               fluidRow(
-                                p("Non-reactive text explaining what F-stat is..."),
                                 br(),
-                                
-                                p("Indicate that below is the F-stat:"),
-                                verbatimTextOutput(outputId = "aovTest2"),
-                                br(),
-                                br(),
-                                
-                                p("At the $\\alpha = .05$ level this F-stat corresponds to a p-value that suggests there is",
-                                  textOutput(outputId = "concl2")))
-                              
-                            )
+                                p("At the $\\alpha = .05$ level this F-stat corresponds to a p-value that suggests there is:",
+                                  textOutput(outputId = "concl2"))
+                                )
+                             ),
+                            
+                            column(width = 3,
+                                h3(strong("What is the F-statistic?")),
+                                wellPanel(
+                                  p("F-stat equation"),
+                                  br(),
+                                   p("Non-reactive text explaining what F-stat is..."),
+                                   br(),
+                                   
+                                   p("Indicate that below is the F-stat:"),
+                                   verbatimTextOutput(outputId = "aovTest2"),
+                                   br(),
+                                   br())
+                                   )
+                            
                           )
                           
                  ),
@@ -381,13 +415,13 @@ server <- function(input, output, session) {
   trans_sampledf <- reactive({data.frame(sample1_trans(), sample2_trans(), sample3_trans())})
   trans_sampledf_long <- reactive({
     trans_sampledf() %>%
-      gather(key = dataset, value = values)
+      gather(key = sample, value = values)
   })
   
   output$boxplot <- renderPlot({
-    ggplot(data = trans_sampledf_long(), aes(x = dataset, y = values)) + 
-      geom_boxplot(aes(color = dataset)) +
-      geom_jitter(aes(x = dataset, y = values, alpha = .2, color = dataset), position=position_jitter(0.04)) +
+    ggplot(data = trans_sampledf_long(), aes(x = sample, y = values)) + 
+      geom_boxplot(aes(color = sample)) +
+      geom_jitter(aes(x = sample, y = values, alpha = .2, color = sample), position=position_jitter(0.04)) +
       #coord_cartesian(ylim =c(0.1, 1.2)) +
       geom_hline(yintercept=mean(trans_sampledf_long()$values), linetype=2, color = "black") +
       labs(title = "Sample Data") +
@@ -395,7 +429,7 @@ server <- function(input, output, session) {
             axis.ticks.x=element_blank())
   })
   
-  runTest2 <- reactive({aov(values ~ dataset, data = trans_sampledf_long())})
+  runTest2 <- reactive({aov(values ~ sample, data = trans_sampledf_long())})
   output$aovTest2 <- renderPrint ({
     print(summary(runTest2())[[1]][["F value"]][[1]])
   })

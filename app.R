@@ -13,6 +13,13 @@ library(shinyBS)
 # input to control sample size ?
 # button that leads straight to "insuff evidence" conclusion ?
 
+# Add toggle button to boxplots tab; to switch from (a) all info to 
+#(b) focusing just on the btw var (aka show medians, rep by point, and overall mean line ONLY) to
+#(c) focusing on w/in var (aka show points and median lines ONLY)
+#Then remove "What does this graph show"
+
+# maybe reiterate vocab on resources page
+
 ui <- navbarPage(theme = shinytheme("lumen"),
                  
                  title = "ANOVA",
@@ -51,7 +58,7 @@ ui <- navbarPage(theme = shinytheme("lumen"),
                                                                                 placement = "right", trigger = "hover"), 
                                      "affect the ANOVA test output"),
                                    p("2. Understand the relationship between the", tipify(strong("F-statistic", style = "color:#00B5E5"),
-                                                                                          title = "text here",
+                                                                                          title = "The F-stat is a ratio of the between and within groups variances. When F is large we are prompted to reject the null hypothesis and conclude that there is at least one difference between th egroup means",
                                                                                           placement = "bottom", trigger = "hover"), "and the ANOVA test output"),
                                    p("3. Predict how manipulation of between and withing group variances will affect the F-statistic
                             and the ANOVA test output"),
@@ -79,7 +86,8 @@ ui <- navbarPage(theme = shinytheme("lumen"),
                           
                           h1("Acknowledgements"),
                           p("contents"),
-                          p("Created by Samantha Owusu-Antwi for 'Creating Interactive Learning Tools' Project, Summer 2020")),
+                          br(), br(), br(), br(), br(), br(),
+                          p("Created by Samantha Owusu-Antwi for Duke University 'Creating Interactive Learning Tools' Project, Summer 2020", style = "text-align:center")),
                  
   ##--------------------------------------------------------tab 1
                  tabPanel("Step 1: Create the Population", value = 1,
@@ -96,8 +104,8 @@ ui <- navbarPage(theme = shinytheme("lumen"),
                                                                                                      placement = "top", trigger = "hover"), 
                                    ", and the", tipify(strong("within group variances", style = "color:#00B5E5"),
                                                       title = "ANOVA is concerend with two variances. This refers to how the individual observations of a group vary around the mean of that group",
-                                                      placement = "top", trigger = "hover"), "of the population data we have simulated. Normally, true population parameters 
-                                    are not known.", strong("Recall that ANOVA assumes each group's population density is approximately normal")) 
+                                                      placement = "top", trigger = "hover"), "of the population data we have simulated. These two variances are estimates of the population variance, $\\sigma^2$, 
+                                    if the null hypothesis is true. Normally, true population parameters are not known.", strong("ANOVA assumes each group's population density is approximately normal")) 
                     
                                 )
                             #Info about first step; applicable assumption; any eqs?
@@ -263,6 +271,11 @@ ui <- navbarPage(theme = shinytheme("lumen"),
                               br(),
                               fluidRow(column(width = 12, plotOutput(outputId = "boxplot"))),
                               fluidRow(
+                                fluidRow(
+                                  column(offset = 1, width = 4,
+                                         tipify(el = p(em(strong("What does the graph show?")), style = "text-align:left; color:#00B5E5; font-size:12px"),
+                                                title = "Here the between groups variance can be thought of as how the median of a boxplot varies from the overall mean, the dotted black line. The within groups variance can be thought of as how the datapoints of a sample varies from the median of that sample",
+                                                placement = "top", trigger = "hover"))),
                                 br(),
                                 p("At the $\\alpha = .05$ level this F-stat corresponds to a p-value that suggests there is:",
                                   textOutput(outputId = "concl2")),
@@ -288,8 +301,12 @@ ui <- navbarPage(theme = shinytheme("lumen"),
                                   
                                   #F-sta equation
                                   p("$\\large{F = \\frac{{{s^2}_B}/ndf}{{{s^2}_W}/ddf}}$", style = "text-align:center"),
-                                  p("$\\bullet$ ${s^2}_B$ is the between groups variance", br(),
-                                    "$\\bullet$ ${s^2}_W$ is the within groups variance", br(),
+                                  p("$\\bullet$ ${s^2}_B$ is the between groups variance", tipify(strong("*", style = "color:#00B5E5"),
+                                                                                                  title = "the between groups variance is proportional to F",
+                                                                                                  placement = "top", trigger = "hover"), br(),
+                                    "$\\bullet$ ${s^2}_W$ is the within groups variance", tipify(strong("*", style = "color:#00B5E5"),
+                                                                                                 title = "the within groups variance is inversely proportional to F",
+                                                                                                 placement = "top", trigger = "hover"), br(),
                                     "$\\bullet$ $ndf$ is the", tipify(strong("numerator degrees of freedom", style = "color:#00B5E5"),
                                                                       title = "The degrees of freedom corresponding to the between groups variance, calculated as total number of groups - 1",
                                                                       placement = "left", trigger = "hover"), br(),

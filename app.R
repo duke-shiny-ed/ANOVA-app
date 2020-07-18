@@ -53,9 +53,9 @@ ui <- navbarPage(theme = shinytheme("lumen"),
                             ANOVA is used to question whether there is a meaningful difference between the groups in question. To
                             do this ANOVA tests the alternative hypothesis that at least one of the group means is truly different
                             from the others against the null hypothesis that there is no difference between the group means. In this sense, 
-                            ANOVA can be thought of as generalizing the", tipify(strong("two sample t-test", style = "color:#00B5E5"),
+                            ANOVA can be thought of as generalizing the two sample", tipify(strong("t-test", style = "color:#00B5E5"),
                                                                                  title = "define t-test i.e assess associations between variables...",
-                                                                                 placement = "right", trigger = "hover"),
+                                                                                 placement = "bottom", trigger = "hover"),
                                      "to more that two categories!"),
                                      ),
                             
@@ -82,19 +82,16 @@ ui <- navbarPage(theme = shinytheme("lumen"),
                                    #; padding:20px; border-radius:10px"
                                    p("$H_0$: The means of all groups are equal $(\\mu_1 = \\mu_2 = ... = \\mu_K)$", 
                                      br(),
-                                     "$H_1$: At least one of the means is different", style = "text-align:center"),
+                                     "$H_1$: At least one of the means $(\\mu_i)$ is not equal to the others", style = "text-align:center"),
                                    br(),
                                    p("Below you have the opportunity to manipulate the skew,", tipify(strong("between group variance", style = "color:#00B5E5"),
-                                                                                                     title = "define btw var here",
+                                                                                                     title = "ANOVA is concerend with two variances. This refers to how group means vary around the overall mean",
                                                                                                      placement = "top", trigger = "hover"), 
                                    ", and the", tipify(strong("within group variances", style = "color:#00B5E5"),
-                                                      title = "define within var here",
+                                                      title = "ANOVA is concerend with two variances. This refers to how the individual observations of a group vary around the mean of that group",
                                                       placement = "top", trigger = "hover"), "of the population data we have simulated. Normally, true population parameters 
                                     are not known.", strong("Recall that ANOVA assumes each group's population density is approximately normal")) 
-                      #talk about how normal assumption is robust if sample ANOVA is relatively robust against departures from Normaltiy 
-                      #unless the sample sizes are are small within each group. Therefore, as long as the sample sizes in each group are l
-                      #arge enough, the p-values from ANOVA are still valid even if the distribution of the response in each group is 
-                      #extremely skewed or long-tailed. If asusmptions validated result may not be valid
+                    
                                 )
                             #Info about first step; applicable assumption; any eqs?
                             #talk about how if assumptions are not met ANOVA conclusion may not be valid"
@@ -190,7 +187,20 @@ ui <- navbarPage(theme = shinytheme("lumen"),
   ##--------------------------------------------------------tab 2
                  tabPanel("Step 2: Use Samples to Visualize the F-Statistic", value = 2,
                           fluidRow(
-                            column(offset = 2, width = 8, style="background-color:#F1F0F0; padding:20px; border-radius:10px")
+                            column(offset = 2, width = 8, 
+                              p(strong("ANOVA assumes approximate normality among groups."), "However ANOVA is relatively robust against
+                                departures from normality. In fact, as long as sample sizes are", tipify(el = strong("'large enough'", style = "color:#00B5E5"),
+                                                                                                        title = "in this case approximately greater than 10 in each group",
+                                                                                                        placement = "top", trigger = "hover"), "the conclusions
+                                of ANOVA may still be valid, even if the underlying population distributions are skewed"), br(),
+                              
+                              p(strong("ANOVA also assumes that groups have roughly equal variability."), "ANOVA is not robust against violations
+                                of this assumption and the results of ANOVA may not be valid if $s_{max} \\geq 2s_{min}$"),   
+                                   style="background-color:#F1F0F0; padding:20px; border-radius:10px")
+                            
+                            #change LaTeX size with $\\___{...}$
+                            
+                            #If other asusmptions validated result may not be valid
                             ),
                           br(),
                           hr(),
@@ -209,9 +219,11 @@ ui <- navbarPage(theme = shinytheme("lumen"),
                                           choices = c("Increased Between Group Variance" = "inc",
                                                       "Reduced Between Group Variance" = "dec"),
                                           selected = "dec"),
-                              tipify(el = p(em(strong("What's happening?")), style = "text-align:right; color:#00B5E5; font-size:12px"),
-                                      title = "Notice how increasing the between group variance increases the F-stat and decreasing it decreases the F-stat",
-                                      placement = "bottom", trigger = "hover")
+                              fluidRow(
+                                column(offset = 6, width = 6, 
+                                     tipify(el = p(em(strong("What's happening?")), style = "text-align:right; color:#00B5E5; font-size:12px"),
+                                            title = "Notice how increasing the between group variance increases the F-stat and decreasing it decreases the F-stat",
+                                            placement = "bottom", trigger = "hover")))
                               ),
                               
                               h3(strong("Within group variance")),
@@ -234,7 +246,7 @@ ui <- navbarPage(theme = shinytheme("lumen"),
                               fluidRow(
                                 column(offset = 6, width = 6,
                                       tipify(el = p(em(strong("What's happening?")), style = "text-align:right; color:#00B5E5; font-size:12px"),
-                                     title = "Notice how decreasing within group variance generally increases the F-stat and increasing it generally decreases the F-stat",
+                                     title = "Try moving the slider from one end to the other. Notice how decreasing within group variance generally increases the F-stat and increasing it generally decreases the F-stat",
                                      placement = "top", trigger = "hover")))
                               )
                             ),
@@ -246,19 +258,40 @@ ui <- navbarPage(theme = shinytheme("lumen"),
                               fluidRow(
                                 br(),
                                 p("At the $\\alpha = .05$ level this F-stat corresponds to a p-value that suggests there is:",
-                                  textOutput(outputId = "concl2"))
+                                  textOutput(outputId = "concl2")),
+                                fluidRow(
+                                  column(offset = 9, width = 3,
+                                       tipify(el = p(em(strong("What's happening?")), style = "text-align:right; color:#00B5E5; font-size:12px"),
+                                       title = "If the sample means are far apart there is evidence against the null hypothesis that the mean value of response is the same for all groups. But what is considered far appart? The F-stat quantifies this",
+                                       placement = "bottom", trigger = "hover")))
                                 )
                              ),
                             
                             column(width = 3,
                                 h3(strong("What is the F-statistic?")),
                                 wellPanel(
-                                  p("F-stat equation"),
+                                  #Non-reactive text explaining what F-stat is...
+                                  p("If the sample means vary around the overall mean more that the individual observations vary around
+                                     the sample means we have evidence that the corresponding popualtion means are different. We formally compare
+                                    these variances with the F-stat", br(), br(),
+                                    "If there is", tipify(el = strong("no treatment effect", style = "color:#00B5E5"),
+                                                          title = "No treatment effect implies that the null hypothesis, that the true mean is the same for all groups, is true",
+                                                          placement = "top", trigger = "hover"),
+                                    "the F-stat will be very close to 1"),
+                                  
+                                  #F-sta equation
+                                  p("$\\large{F = \\frac{{{s^2}_B}/ndf}{{{s^2}_W}/ddf}}$", style = "text-align:center"),
+                                  p("$\\bullet$ ${s^2}_B$ is the", strong("between groups variance"), br(),
+                                    "$\\bullet$ ${s^2}_W$ is the", strong("within groups variance"), br(),
+                                    "$\\bullet$ $ndf$ is the", tipify(strong("numerator degrees of freedom", style = "color:#00B5E5"),
+                                                                      title = "The degrees of freedom corresponding to the between groups variance, calculated as total number of groups - 1",
+                                                                      placement = "left", trigger = "hover"), br(),
+                                    "$\\bullet$ $ddf$ is the", tipify(strong("denominator degrees of freedom", style = "color:#00B5E5"),
+                                                                      title = "The degrees of freedom corresponding to the within groups variance, calculated as total number of observations - the number of groups",
+                                                                      placement = "left", trigger = "hover")),
                                   br(),
-                                   p("Non-reactive text explaining what F-stat is..."),
-                                   br(),
                                    
-                                   p("Indicate that below is the F-stat:"),
+                                   p("Here the F-stat is:"),
                                    verbatimTextOutput(outputId = "aovTest2"),
                                    br(),
                                    br())
@@ -268,10 +301,7 @@ ui <- navbarPage(theme = shinytheme("lumen"),
                           
                  ),
                  
-                 tabPanel("Glossary", value = 3,
-                          h1("Vocabulary"),
-                          p("contents"),
-                          br(),
+                 tabPanel("Resources Page", value = 3,
                           
                           h1("Equations"),
                           p("contents")

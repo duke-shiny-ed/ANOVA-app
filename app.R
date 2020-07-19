@@ -266,19 +266,32 @@ ui <- navbarPage(theme = shinytheme("lumen"),
                               br(),
                               fluidRow(
                                 tabsetPanel(
-                                  tabPanel("Whole Graph", column(width = 12, plotOutput(outputId = "boxplot"))),
-                                  tabPanel("Focus on Between Groups Variance", column(width = 12, plotOutput(outputId = "toggleBtw"))),
-                                  tabPanel("Focus on Within Groups Variance", column(width = 12, plotOutput(outputId = "toggleWin")))
+                                  tabPanel("Whole Graph", column(width = 12, plotOutput(outputId = "boxplot")),
+                                           fluidRow(
+                                             column(offset = 1, width = 4,
+                                                    tipify(el = p(em(strong("What does this graph show?")), style = "text-align:left; color:#00B5E5; font-size:12px"),
+                                                           title = "Here the between groups variance can be thought of as how the median of a boxplot varies from the overall mean, the solid black line. The within groups variance can be thought of as how the datapoints of a sample vary from the median of that sample.",
+                                                           placement = "top", trigger = "hover"))
+                                           )),
+                                  tabPanel("Focus on Between Groups Variance", column(width = 12, plotOutput(outputId = "toggleBtw")),
+                                           fluidRow(
+                                             column(offset = 1, width = 4,
+                                                    tipify(el = p(em(strong("What does this graph show?")), style = "text-align:left; color:#00B5E5; font-size:12px"),
+                                                           title = "Here the between groups variance can be thought of as how the median of a boxplot, represented by a point in this case, varies from the overall mean, the solid black line.",
+                                                           placement = "top", trigger = "hover"))
+                                           )),
+                                  tabPanel("Focus on Within Groups Variance", column(width = 12, plotOutput(outputId = "toggleWin")),
+                                           fluidRow(
+                                             column(offset = 1, width = 4,
+                                                    tipify(el = p(em(strong("What does this graph show?")), style = "text-align:left; color:#00B5E5; font-size:12px"),
+                                                           title = "Here the within groups variance can be thought of as how the datapoints of a sample vary from the median of that sample, the corresponding solid lines.",
+                                                           placement = "top", trigger = "hover"))
+                                           )
                                   )
+                                )
                                 ),
                               fluidRow(
-                                fluidRow(
-                                  column(offset = 1, width = 4,
-                                         tipify(el = p(em(strong("What do these graphs show?")), style = "text-align:left; color:#00B5E5; font-size:12px"),
-                                                title = "Here the between groups variance can be thought of as how the median of a boxplot varies from the overall mean, the dotted black line. The within groups variance can be thought of as how the datapoints of a sample varies from the median of that sample. toggle btw focus modes to see...",
-                                                placement = "top", trigger = "hover"))
-                                  ),
-                                br(),
+                                p(),
                                 p("At the $\\alpha = .05$ level this F-stat corresponds to a p-value that suggests there is:",
                                   textOutput(outputId = "concl2")),
                                 fluidRow(

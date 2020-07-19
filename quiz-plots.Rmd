@@ -1,0 +1,92 @@
+---
+title: "quiz-plots"
+author: "Samantha Owusu"
+date: "7/18/2020"
+output: html_document
+---
+
+## Plan
+```{r dataset}
+library(tidyverse)
+head(mtcars)
+diamonds[1:8,]
+
+str(diamonds)
+?diamonds
+
+diamonds.long <- diamonds %>%
+  filter(color == "D" | color == "E" | color == "F" | color == "G") %>%
+  filter(cut == "Very Good", clarity == "IF" | clarity == "VVS1" | clarity == "VVS2") %>%
+  filter(table == 50:59) %>%
+  select(depth, color, clarity)
+diamonds.long
+```
+Is there really a difference in the depth of the top three clear diamond groups (of best 4 colors)?
+
+y-axis : depth
+x-axis: IF, VVS1, VVS2
+4 plots: color
+
+carat == 0.3, cut == "Very Good"
+
+## Plot
+```{r, plot}
+#with facet
+
+#library(tidy)
+#diamonds.long <- diamonds %>%
+  #filter(color == "D" | color == "E" | color == "F" | color == "G") %>%
+  #filter(cut == "Very Good", clarity == "IF" | clarity == "VVS1" | clarity == "VVS2") %>%
+  #filter(table == 50:59) %>%
+  #select(depth, color, clarity)
+library(ggplot2)
+ggplot(data = diamonds.long, aes(y = depth)) + 
+  geom_boxplot(aes(color = clarity)) +
+  facet_grid(. ~color) +
+  theme(axis.text.x = element_blank())
+
+
+## w/out facet
+diamonds.D <- diamonds.long %>%
+  filter(color == "D")
+diamonds.E <- diamonds.long %>%
+  filter(color == "E")
+diamonds.F <- diamonds.long %>%
+  filter(color == "F")
+diamonds.G <- diamonds.long %>%
+  filter(color == "G")
+
+ggplot(data = diamonds.D, aes(y = depth)) + 
+  geom_boxplot(aes(color = clarity)) +
+  theme(axis.text.x=element_blank()) +
+  ggtitle("Color D") 
+ggplot(data = diamonds.E, aes(y = depth)) + 
+  geom_boxplot(aes(color = clarity)) +
+  theme(axis.text.x=element_blank()) +
+  ggtitle("Color E") 
+ggplot(data = diamonds.F, aes(y = depth)) + 
+  geom_boxplot(aes(color = clarity)) +
+  theme(axis.text.x=element_blank()) +
+  ggtitle("Color F") 
+ggplot(data = diamonds.D, aes(y = depth)) + 
+  geom_boxplot(aes(color = clarity)) +
+  theme(axis.text.x=element_blank()) +
+  ggtitle("Color G") 
+
+```
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+

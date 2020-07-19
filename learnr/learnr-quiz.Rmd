@@ -58,7 +58,7 @@ grade_result(
 
 *Have the user answer a group of questions after examining image of boxplots and predicting/comparing F-stats; effectively rank them i.e. F-stat_1 > F-stat_2, True or False*
 
-![](images:/boxplots.png)
+![](images/boxplots.png){width=80%}
 
 Some questions to verify that you understand the purposes of various base and recommended R packages:
 

@@ -332,30 +332,11 @@ ui <- navbarPage(theme = shinytheme("lumen"),
                  
                  ##---------------------------------------------------------quiz on boxplots comparing F-stats  
                  tabPanel("Quiz", value = 4,
-                          img(src = "...png", width = "200", height = "100"),
-                          p("Explain what image is showing. i.e. what the boxplots represent"),
-                          br(),
-                          
-                          radioButtons(inputId = "q1",
-                                       label = "1. Write question here",
-                                       choices = c("True", "False"),
-                                       selected = "_None"),
-                          br(),
-                          
-                          radioButtons(inputId = "q2",
-                                       label = "2. Write question here",
-                                       choices = c("True", "False"),
-                                       selected = "_None"),
-                          br(),                     
-                          
-                          radioButtons(inputId = "q3",
-                                       label = "3. Write question here",
-                                       choices = c("True", "False"),
-                                       selected = "_None"),
-                          
-                          actionButton(inputId = "submit",
-                                       label = "Submit"),
-                          textOutput(outputId = "answers")
+                          fluidRow(
+                            #tags$iframe(src = "shiny apps.io link to quiz",
+                                        #width = "1000", height = "1500",
+                                        #frameBorder="0")
+                          )
                  )
                  
                  

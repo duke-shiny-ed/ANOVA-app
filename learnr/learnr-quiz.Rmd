@@ -40,7 +40,7 @@ print("")
 #write model solution code
 summary(aov(y ~ x, data = data))
 ```
-```{r use aov()-check}
+```{r use_aov-check}
 #what the user receives if the code is correct
 grade_code("This code is correct...")
 

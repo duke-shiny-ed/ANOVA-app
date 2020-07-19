@@ -13,6 +13,11 @@ library(shinyBS)
 # input to control sample size ?
 # button that leads straight to "insuff evidence" conclusion ?
 
+# Add toggle button to boxplots tab; to switch from (a) all info to 
+#(b) focusing just on the btw var (aka show medians, rep by point, and overall mean line ONLY) to
+#(c) focusing on w/in var (aka show points and median lines ONLY)
+#Then remove "What does this graph show"
+
 # maybe reiterate vocab on resources page
 
 ui <- navbarPage(theme = shinytheme("lumen"),
@@ -264,34 +269,14 @@ ui <- navbarPage(theme = shinytheme("lumen"),
                             column(width = 6,
                               br(),
                               br(),
+                              fluidRow(column(width = 12, plotOutput(outputId = "boxplot"))),
                               fluidRow(
-                                tabsetPanel(
-                                  tabPanel("Whole Graph", column(width = 12, plotOutput(outputId = "boxplot")),
-                                           fluidRow(
-                                             column(offset = 1, width = 4,
-                                                    tipify(el = p(em(strong("What does this graph show?")), style = "text-align:left; color:#00B5E5; font-size:12px"),
-                                                           title = "Here the between groups variance can be thought of as how the median of a boxplot varies from the overall mean, the solid black line. The within groups variance can be thought of as how the datapoints of a sample vary from the median of that sample.",
-                                                           placement = "top", trigger = "hover"))
-                                           )),
-                                  tabPanel("Focus on Between Groups Variance", column(width = 12, plotOutput(outputId = "toggleBtw")),
-                                           fluidRow(
-                                             column(offset = 1, width = 4,
-                                                    tipify(el = p(em(strong("What does this graph show?")), style = "text-align:left; color:#00B5E5; font-size:12px"),
-                                                           title = "Here the between groups variance can be thought of as how the median of a boxplot, represented by a point in this case, varies from the overall mean, the solid black line.",
-                                                           placement = "top", trigger = "hover"))
-                                           )),
-                                  tabPanel("Focus on Within Groups Variance", column(width = 12, plotOutput(outputId = "toggleWin")),
-                                           fluidRow(
-                                             column(offset = 1, width = 4,
-                                                    tipify(el = p(em(strong("What does this graph show?")), style = "text-align:left; color:#00B5E5; font-size:12px"),
-                                                           title = "Here the within groups variance can be thought of as how the datapoints of a sample vary from the median of that sample, the corresponding solid lines.",
-                                                           placement = "top", trigger = "hover"))
-                                           )
-                                  )
-                                )
-                                ),
-                              fluidRow(
-                                p(),
+                                fluidRow(
+                                  column(offset = 1, width = 4,
+                                         tipify(el = p(em(strong("What does the graph show?")), style = "text-align:left; color:#00B5E5; font-size:12px"),
+                                                title = "Here the between groups variance can be thought of as how the median of a boxplot varies from the overall mean, the dotted black line. The within groups variance can be thought of as how the datapoints of a sample varies from the median of that sample",
+                                                placement = "top", trigger = "hover"))),
+                                br(),
                                 p("At the $\\alpha = .05$ level this F-stat corresponds to a p-value that suggests there is:",
                                   textOutput(outputId = "concl2")),
                                 fluidRow(
@@ -493,28 +478,6 @@ server <- function(input, output, session) {
       geom_jitter(aes(x = sample, y = values, alpha = .2, color = sample), position=position_jitter(0.04)) +
       #coord_cartesian(ylim =c(0.1, 1.2)) +
       geom_hline(yintercept=mean(trans_sampledf_long()$values), linetype=2, color = "black") +
-      labs(title = "Sample Data") +
-      theme(legend.position = "none", axis.text.x=element_blank(),
-            axis.ticks.x=element_blank())
-  })
-  
-  output$toggleBtw <- renderPlot({
-    ggplot(data = trans_sampledf_long(), aes(x = sample, y = values)) +
-      stat_summary(fun.y = median, fun.ymin = median, fun.ymax = median,
-                   geom = "point", shape=16, size=5, aes(color = sample)) +
-      #coord_cartesian(ylim =c(0.1, 1.2)) +
-      geom_hline(yintercept=mean(trans_sampledf_long()$values), linetype=1, color = "black") +
-      labs(title = "Sample Data") +
-      theme(legend.position = "none", axis.text.x=element_blank(),
-            axis.ticks.x=element_blank())
-  })
-  
-  output$toggleWin <- renderPlot({
-    ggplot(data = trans_sampledf_long(), aes(x = sample, y = values)) + 
-      geom_jitter(aes(x = sample, y = values, alpha = .2, color = sample), position=position_jitter(0.04)) +
-      stat_summary(fun.y = median, fun.ymin = median, fun.ymax = median,
-                   geom = "crossbar", width = 0.5, aes(color = sample)) +
-      #coord_cartesian(ylim =c(0.1, 1.2)) +
       labs(title = "Sample Data") +
       theme(legend.position = "none", axis.text.x=element_blank(),
             axis.ticks.x=element_blank())

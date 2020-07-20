@@ -157,7 +157,7 @@ ui <- navbarPage(theme = shinytheme("lumen"),
                                    #p(verbatimTextOutput(outputId = "aovTest")),
                                    #move assumptions static text here
                                    fluidRow(
-                                     column(width = 12, style="background-color:#F7F7F7; padding:20px; border-radius:5px; border: 1px solid #BBBBBB",
+                                     column(width = 12, style="background-color:#F7F7F7; padding:20px; border-radius:5px; border: 1px solid #C6C5C5",
                                        p(strong("ANOVA assumes:"), br(),
                                          "1. Independent Observations", br(),
                                          "2. Approximately normal population distributions within each group", br(),
@@ -269,6 +269,8 @@ ui <- navbarPage(theme = shinytheme("lumen"),
                                    br(),
                                    br(),
                                    fluidRow(
+                                     numericInput("n", "Choose a sample size", 
+                                                  min = 10, max = 10000, value = 100),
                                      tabsetPanel(
                                        tabPanel("Whole Graph", column(width = 12, plotOutput(outputId = "boxplot")),
                                                 fluidRow(
@@ -304,7 +306,7 @@ ui <- navbarPage(theme = shinytheme("lumen"),
                                        column(offset = 9, width = 3,
                                               tipify(el = p(em(strong("What's happening?")), style = "text-align:right; color:#00B5E5; font-size:12px"),
                                                      title = "If the sample means are far apart there is evidence against the null hypothesis that the mean value of response is the same for all groups. But what is considered far appart? The F-stat quantifies this",
-                                                     placement = "bottom", trigger = "hover")))
+                                                     placement = "top", trigger = "hover")))
                                    )
                             ),
                            
@@ -471,29 +473,32 @@ server <- function(input, output, session) {
   #pop_means <- reactive({ddply(popdf_long, "dataset", summarize, means = mean(values))})
   
   output$curve <- renderPlot({
-    ggplot(data = popdf_long()) +
-      geom_density(aes(x=values, color = dataset)) +
-      #geom_vline(data = pop_means(), aes(xintercept=pop_means()means, color = dataset),
-                 #linetype=2, size=0.8) +
+    #pop_means <- ddply(popdf_long, "dataset", summarize, means = mean(values))
+    #ggplot(data = popdf_long(), aes(x = values, color = dataset)) + 
+      #geom_density(data = popdf_long(), aes(x = values, color = dataset)) +
+      #geom_vline(data = pop_means, aes(xintercept = means, color = dataset))
+    ggplot(data = popdf_long(), aes(x=values, color = dataset)) +
+      geom_density() +
       coord_cartesian(xlim = c(-.125, 1.25), ylim = c(0,8)) +
       ggtitle("Population Distributions") +
       theme(legend.position = "none", 
             axis.text.x=element_blank(), axis.ticks.x=element_blank(), 
             axis.text.y=element_blank(), axis.ticks.y=element_blank(),
             axis.title.x=element_blank(), axis.title.y=element_blank()) 
+    
   })
-  
+ 
   sample1 <- reactive({
     set.seed(1)
-    sample(pop1_trans(), size = 100, replace = TRUE)
+    sample(pop1_trans(), size = input$n, replace = TRUE)
   })
   sample2 <- reactive({
     set.seed(1)
-    sample(pop2_trans(), size = 100, replace = TRUE)
+    sample(pop2_trans(), size = input$n, replace = TRUE)
   })
   sample3 <- reactive({
     set.seed(1)
-    sample(pop3_trans(), size = 100, replace = TRUE)
+    sample(pop3_trans(), size = input$n, replace = TRUE)
   })
   
   sampledf <- reactive({data.frame(sample1(), sample2(), sample3())})

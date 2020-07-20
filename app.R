@@ -103,16 +103,13 @@ ui <- navbarPage(theme = shinytheme("lumen"),
                                     if the null hypothesis is true. Normally, true population parameters are not known.", strong("ANOVA assumes each group's population density is approximately normal")) 
                                    
                             )
-                            #Info about first step; applicable assumption; any eqs?
-                            #talk about how if assumptions are not met ANOVA conclusion may not be valid"
+                            
                           ),
                           
                           br(),
                           hr(),
-                          br(),
                           
                           fluidRow(
-                            
                             column(width = 3,
                                    h3(strong("Between Group Variance")),
                                    wellPanel(
@@ -130,48 +127,7 @@ ui <- navbarPage(theme = shinytheme("lumen"),
                                                              "Reduced Between Group Variance" = "dec"),
                                                  selected = "inc")
                                    ),
-                                   
-                                   h3(strong("Shape")),
-                                   wellPanel(
-                                     p("Manipulate the skew of each population density curve. Recall ANOVA assumes the 
-                                  population density of each group is approximately normal", 
-                                       style = "color:grey"),
-                                     br(),       
-                                     
-                                     selectInput(inputId = "skew1", 
-                                                 label = p("Curve 1", style = "color:red"),
-                                                 choices = c("Normal" = "norm",
-                                                             "Right Skewed" = "rskew",
-                                                             "Left Skewed" = "lskew"),
-                                                 selected = "norm"),
-                                     selectInput(inputId = "skew2", 
-                                                 label = p("Curve 2", style = "color:green"),
-                                                 choices = c("Normal" = "norm",
-                                                             "Right Skewed" = "rskew",
-                                                             "Left Skewed" = "lskew"),
-                                                 selected = "norm"),
-                                     selectInput(inputId = "skew3", 
-                                                 label = p("Curve 3", style = "color:blue"),
-                                                 choices = c("Normal" = "norm",
-                                                             "Right Skewed" = "rskew",
-                                                             "Left Skewed" = "lskew"),
-                                                 selected = "norm")),
-                                   br(),
-                                   
-                            ),
-                            
-                            column(width = 6,
-                                   p(plotOutput(outputId = "curve")),
-                                   p(verbatimTextOutput(outputId = "aovTest1")),
-                                   br(),
-                                   
-                                   p("At the $\\alpha = .05$ level this F-stat corresponds to a p-value that suggests there is:", 
-                                     textOutput(outputId = "concl1")),
-                                   br(),
-                                   br(),
-                            ),
-                            
-                            column(width = 3,
+                                   ## put w/in groups var input group here
                                    h3(strong("Within group variance")),
                                    wellPanel(
                                      p("Manipulate the sliders to increase or decrease the within group variance of each curve 
@@ -181,16 +137,57 @@ ui <- navbarPage(theme = shinytheme("lumen"),
                                      br(),
                                      
                                      sliderInput(inputId = "sd1.1",
-                                                 label = p("Curve 1", style = "color:red"),
+                                                 label = p("Group 1", style = "color:red"),
                                                  min = 0.75, max = 1.25, value = 1),
                                      sliderInput(inputId = "sd1.2",
-                                                 label = p("Curve 2", style = "color:green"),
+                                                 label = p("Group 2", style = "color:green"),
                                                  min = 0.75, max = 1.25, value = 1),
                                      sliderInput(inputId = "sd1.3",
-                                                 label = p("Curve 3", style = "color:blue"),
+                                                 label = p("Group 3", style = "color:blue"),
                                                  min = 0.75, max = 1.25, value = 1)
-                                   )
-                            )
+                                   ),
+                                   br(),
+                                   
+                            ),
+                            
+                            column(width = 6,
+                                   br(),
+                                   p(plotOutput(outputId = "curve")),
+                                   p(verbatimTextOutput(outputId = "aovTest1")),
+                                   br(),
+                                   
+                                   p("At the $\\alpha = .05$ level this F-stat corresponds to a p-value that suggests there is:", 
+                                     textOutput(outputId = "concl1")),
+                                   br(),
+                                   br(),
+                            ),
+                            ## put shape input group here
+                            column(width = 3,
+                                   h3(strong("Shape")),
+                                   wellPanel(
+                                     p("Manipulate the skew of each population density curve. Recall ANOVA assumes the 
+                                  population density of each group is approximately normal", 
+                                       style = "color:grey"),
+                                     br(),       
+                                     
+                                     selectInput(inputId = "skew1", 
+                                                 label = p("Group 1", style = "color:red"),
+                                                 choices = c("Normal" = "norm",
+                                                             "Right Skewed" = "rskew",
+                                                             "Left Skewed" = "lskew"),
+                                                 selected = "norm"),
+                                     selectInput(inputId = "skew2", 
+                                                 label = p("Group 2", style = "color:green"),
+                                                 choices = c("Normal" = "norm",
+                                                             "Right Skewed" = "rskew",
+                                                             "Left Skewed" = "lskew"),
+                                                 selected = "norm"),
+                                     selectInput(inputId = "skew3", 
+                                                 label = p("Group 3", style = "color:blue"),
+                                                 choices = c("Normal" = "norm",
+                                                             "Right Skewed" = "rskew",
+                                                             "Left Skewed" = "lskew"),
+                                                 selected = "norm")))
                           )
                  ),
                  
@@ -215,7 +212,6 @@ ui <- navbarPage(theme = shinytheme("lumen"),
                           br(),
                           hr(),
                           fluidRow(
-                            
                             column(width = 3,
                                    h3(strong("Between Group Variance")),
                                    wellPanel(
@@ -228,7 +224,7 @@ ui <- navbarPage(theme = shinytheme("lumen"),
                                                  label = NULL,
                                                  choices = c("Increased Between Group Variance" = "inc",
                                                              "Reduced Between Group Variance" = "dec"),
-                                                 selected = "dec"),
+                                                 selected = "inc"),
                                      fluidRow(
                                        column(offset = 6, width = 6, 
                                               tipify(el = p(em(strong("What's happening?")), style = "text-align:right; color:#00B5E5; font-size:12px"),
@@ -245,13 +241,13 @@ ui <- navbarPage(theme = shinytheme("lumen"),
                                      
                                      br(),
                                      sliderInput(inputId = "sd2.1",
-                                                 label = p("Sample from Curve 1", style = "color:red"),
+                                                 label = p("Group 1", style = "color:red"),
                                                  min = 0.75, max = 1.25, value = 1),
                                      sliderInput(inputId = "sd2.2",
-                                                 label = p("Sample from Curve 2", style = "color:green"),
+                                                 label = p("Group 2", style = "color:green"),
                                                  min = 0.75, max = 1.25, value = 1),
                                      sliderInput(inputId = "sd2.3",
-                                                 label = p("Sample from Curve 3", style = "color:blue"),
+                                                 label = p("Group 3", style = "color:blue"),
                                                  min = 0.75, max = 1.25, value = 1),
                                      fluidRow(
                                        column(offset = 6, width = 6,
@@ -301,7 +297,7 @@ ui <- navbarPage(theme = shinytheme("lumen"),
                                                      placement = "bottom", trigger = "hover")))
                                    )
                             ),
-                            
+                           
                             column(width = 3,
                                    h3(strong("What is the F-statistic?")),
                                    wellPanel(
@@ -314,7 +310,7 @@ ui <- navbarPage(theme = shinytheme("lumen"),
                                                              placement = "top", trigger = "hover"),
                                        "the F-stat will be very close to 1"),
                                      
-                                     #F-sta equation
+                                     #F-stat equation
                                      p("$\\large{F = \\frac{{{s^2}_B}/ndf}{{{s^2}_W}/ddf}}$", style = "text-align:center"),
                                      p("$\\bullet$ ${s^2}_B$ is the between groups variance", tipify(strong("*", style = "color:#00B5E5"),
                                                                                                      title = "the between groups variance is proportional to F",
@@ -359,6 +355,55 @@ ui <- navbarPage(theme = shinytheme("lumen"),
 
 
 server <- function(input, output, session) {
+  ##--------------------------------------------------------------Fluid Sidebar
+  ## Btw var slider
+  observeEvent(input$btwsd1, {
+    if(input$btwsd2 != input$btwsd1) {
+      updateSliderInput(session, "btwsd2", value = input$btwsd1)
+    }
+  })
+  observeEvent(input$btwsd2, {
+    if(input$btwsd1 != input$btwsd2) {
+      updateSliderInput(session, "btwsd1", value = input$btwsd2)
+    }
+  })
+  
+  ## Within var Curve 1 slider
+  observeEvent(input$sd1.1, {
+    if(input$sd2.1 != input$sd1.1) {
+      updateSliderInput(session, "sd2.1", value = input$sd1.1)
+    }
+  })
+  observeEvent(input$sd2.1, {
+    if(input$sd1.1 != input$sd2.1) {
+      updateSliderInput(session, "sd1.1", value = input$sd2.1)
+    }
+  })
+  
+  
+  ## Within var Curve 2 slider
+  observeEvent(input$sd1.2, {
+    if(input$sd2.2 != input$sd1.2) {
+      updateSliderInput(session, "sd2.2", value = input$sd1.2)
+    }
+  })
+  observeEvent(input$sd2.2, {
+    if(input$sd1.2 != input$sd2.2) {
+      updateSliderInput(session, "sd1.2", value = input$sd2.2)
+    }
+  })
+  
+  ## Within var Curve 3 slider
+  observeEvent(input$sd1.3, {
+    if(input$sd2.3 != input$sd1.3) {
+      updateSliderInput(session, "sd2.3", value = input$sd1.3)
+    }
+  })
+  observeEvent(input$sd2.3, {
+    if(input$sd1.3 != input$sd2.3) {
+      updateSliderInput(session, "sd1.3", value = input$sd2.3)
+    }
+  })
   ##--------------------------------------------------------------Assumptions Tab
   pop_dist <- function(skew, within, n) {
     if(skew == "norm") {
@@ -418,7 +463,10 @@ server <- function(input, output, session) {
       geom_density(aes(x=values, color = dataset)) +
       coord_cartesian(xlim = c(-.125, 1.25), ylim = c(0,8)) +
       ggtitle("Population Distributions") +
-      theme(legend.position = "none") 
+      theme(legend.position = "none", 
+            axis.text.x=element_blank(), axis.ticks.x=element_blank(), 
+            axis.text.y=element_blank(), axis.ticks.y=element_blank(),
+            axis.title.x=element_blank(), axis.title.y=element_blank()) 
   })
   
   sample1 <- reactive({

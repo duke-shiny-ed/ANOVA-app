@@ -5,6 +5,7 @@ library(tidyr)
 library(ggplot2)
 library(broom)
 library(shinyBS)
+library(plyr)
 
 # add text at end for discussion of step down tests and bonferroni correction?
 # add text at beginning explaining why we don't just do pairwise test (family-wise error increases)
@@ -99,7 +100,7 @@ ui <- navbarPage(theme = shinytheme("lumen"),
                                                                                                       placement = "top", trigger = "hover"), 
                                      ", and the", tipify(strong("within group variances", style = "color:#00B5E5"),
                                                          title = "ANOVA is concerend with two variances. This refers to how the individual observations of a group vary around the mean of that group",
-                                                         placement = "top", trigger = "hover"), "of the population data we have simulated. These two variances are estimates of the population variance, $\\sigma^2$, 
+                                                         placement = "top", trigger = "hover"), "of the population data we will be working with. These two variances are estimates of the population variance, $\\sigma^2$, 
                                     if the null hypothesis is true. Normally, true population parameters are not known.", strong("ANOVA assumes each group's population density is approximately normal")) 
                                    
                             )
@@ -201,6 +202,7 @@ ui <- navbarPage(theme = shinytheme("lumen"),
                  tabPanel("Step 2: Use Samples to Visualize the F-Statistic", value = 2,
                           fluidRow(
                             column(offset = 2, width = 8, 
+                                   p("Now that out population data is set, let's examine the samples taken from each population."),
                                    p(strong("ANOVA assumes approximate normality among groups."), "However ANOVA is relatively robust against
                                 departures from normality. In fact, as long as sample sizes are", tipify(el = strong("'large enough'", style = "color:#00B5E5"),
                                                                                                          title = "in this case approximately greater than 10 in each group",
@@ -466,9 +468,13 @@ server <- function(input, output, session) {
       gather(key = dataset, value = values)
   })
   
+  #pop_means <- reactive({ddply(popdf_long, "dataset", summarize, means = mean(values))})
+  
   output$curve <- renderPlot({
     ggplot(data = popdf_long()) +
       geom_density(aes(x=values, color = dataset)) +
+      #geom_vline(data = pop_means(), aes(xintercept=pop_means()means, color = dataset),
+                 #linetype=2, size=0.8) +
       coord_cartesian(xlim = c(-.125, 1.25), ylim = c(0,8)) +
       ggtitle("Population Distributions") +
       theme(legend.position = "none", 

@@ -153,7 +153,7 @@ ui <- navbarPage(theme = shinytheme("lumen"),
                             column(width = 6,
                                    br(),
                                    p(plotOutput(outputId = "curve")),
-                                   p(verbatimTextOutput(outputId = "aovTest1")),
+                                   p(verbatimTextOutput(outputId = "aovTest")),
                                    br(),
                                    
                                    p("At the $\\alpha = .05$ level this F-stat corresponds to a p-value that suggests there is:", 
@@ -327,7 +327,7 @@ ui <- navbarPage(theme = shinytheme("lumen"),
                                      br(),
                                      
                                      p("Here the F-stat is:"),
-                                     verbatimTextOutput(outputId = "aovTest2"),
+                                     verbatimTextOutput(outputId = "FTest"),
                                      br())
                             )
                             
@@ -488,96 +488,65 @@ server <- function(input, output, session) {
       gather(key = dataset, value = values)
   })
   
-  runTest1 <- reactive({aov(values ~ dataset, data = sampledf_long())})
-  output$aovTest1 <- renderPrint ({
-    print(summary(runTest1()))
+  runTest <- reactive({aov(values ~ dataset, data = sampledf_long())})
+  output$aovTest <- renderPrint ({
+    print(summary(runTest()))
   })
   
   
   output$concl1 <- renderText({
-    if(tidy(runTest1())$p.value[1] < 0.05) {
-      print("sufficient evidence to conclude that there is at least one difference between the group means.")
+    if(tidy(runTest())$p.value[1] < 0.05) {
+      return("sufficient evidence to conclude that there is at least one difference between the group means.")
     } else {
-      print("insufficent evidence to conclude that there is at least one difference between the group means.")
+      return("insufficent evidence to conclude that there is at least one difference between the group means.")
     }
   })
   
-  ##--------------------------------------------------------------F-Stat Tab
-  ##recall that sample1, sample2, sample3 already defined 
-  translate_sample <- function(set1, set2, set3, within, between) {
-    if(between == "inc") {
-      if(mean(set1) > mean(set2) & mean(set1) > mean(set3)) {
-        return(set1 * within + 0.15)
-      } else if(mean(set1) < mean(set2) & mean(set1) < mean(set3)) {
-        return(set1 * within - 0.15)
-      } else {
-        return(set1 * within)
-      }
-    } else if(between == "dec"){
-      if(mean(set1) > mean(set2) & mean(set1) > mean(set3)) {
-        return(set1 * within)
-      } else if(mean(set1) < mean(set2) & mean(set1) < mean(set3)) {
-        return(set1 * within)
-      } else {
-        return(set1 * within)
-      }
-    }
-    
-  }
-  
-  sample1_trans <- reactive({translate_sample(set1 = sample1(), set2 = sample2(), set3 = sample3(), within = input$sd2.1, between = input$btwsd2)})
-  sample2_trans <- reactive({translate_sample(set1 = sample2(), set2 = sample3(), set3 = sample1(), within = input$sd2.2, between = input$btwsd2)})
-  sample3_trans <- reactive({translate_sample(set1 = sample3(), set2 = sample1(), set3 = sample2(), within = input$sd2.3, between = input$btwsd2)})
-  
-  trans_sampledf <- reactive({data.frame(sample1_trans(), sample2_trans(), sample3_trans())})
-  trans_sampledf_long <- reactive({
-    trans_sampledf() %>%
-      gather(key = sample, value = values)
-  })
-  
+  ##--------------------------------------------------------------F-Stat Tab; CHANGE THIS CODE TO WORK WITH FLUID INPUTS
+  ##recall that sample1, sample2, sample3 already defined; also dataset with all is sampledf_long()
+ 
   output$boxplot <- renderPlot({
-    ggplot(data = trans_sampledf_long(), aes(x = sample, y = values)) + 
-      geom_boxplot(aes(color = sample)) +
-      geom_jitter(aes(x = sample, y = values, alpha = .2, color = sample), position=position_jitter(0.04)) +
+    ggplot(data = sampledf_long(), aes(x = dataset, y = values)) + 
+      geom_boxplot(aes(color = dataset)) +
+      geom_jitter(aes(x = dataset, y = values, alpha = .2, color = dataset), position=position_jitter(0.04)) +
       #coord_cartesian(ylim =c(0.1, 1.2)) +
-      geom_hline(yintercept=mean(trans_sampledf_long()$values), linetype=2, color = "black") +
+      geom_hline(yintercept=mean(sampledf_long()$values), linetype=2, color = "black") +
       labs(title = "Sample Data") +
       theme(legend.position = "none", axis.text.x=element_blank(),
             axis.ticks.x=element_blank())
   })
   
   output$toggleBtw <- renderPlot({
-    ggplot(data = trans_sampledf_long(), aes(x = sample, y = values)) +
+    ggplot(data = sampledf_long(), aes(x = dataset, y = values)) +
       stat_summary(fun.y = median, fun.ymin = median, fun.ymax = median,
-                   geom = "point", shape=16, size=5, aes(color = sample)) +
+                   geom = "point", shape=16, size=5, aes(color = dataset)) +
       #coord_cartesian(ylim =c(0.1, 1.2)) +
-      geom_hline(yintercept=mean(trans_sampledf_long()$values), linetype=1, color = "black") +
+      geom_hline(yintercept=mean(sampledf_long()$values), linetype=1, color = "black") +
       labs(title = "Sample Data") +
       theme(legend.position = "none", axis.text.x=element_blank(),
             axis.ticks.x=element_blank())
   })
   
   output$toggleWin <- renderPlot({
-    ggplot(data = trans_sampledf_long(), aes(x = sample, y = values)) + 
-      geom_jitter(aes(x = sample, y = values, alpha = .2, color = sample), position=position_jitter(0.04)) +
+    ggplot(data = sampledf_long(), aes(x = dataset, y = values)) + 
+      geom_jitter(aes(x = dataset, y = values, alpha = .2, color = dataset), position=position_jitter(0.04)) +
       stat_summary(fun.y = median, fun.ymin = median, fun.ymax = median,
-                   geom = "crossbar", width = 0.5, aes(color = sample)) +
+                   geom = "crossbar", width = 0.5, aes(color = dataset)) +
       #coord_cartesian(ylim =c(0.1, 1.2)) +
       labs(title = "Sample Data") +
       theme(legend.position = "none", axis.text.x=element_blank(),
             axis.ticks.x=element_blank())
   })
   
-  runTest2 <- reactive({aov(values ~ sample, data = trans_sampledf_long())})
-  output$aovTest2 <- renderPrint ({
-    print(summary(runTest2())[[1]][["F value"]][[1]])
+  output$FTest <- renderPrint ({
+    print(summary(runTest())[[1]][["F value"]][[1]])
   })
   
   output$concl2 <- renderText({
-    if(tidy(runTest2())$p.value[1] < 0.05) {
-      print("sufficient evidence to conclude that there is at least one difference between the group means.")
+    if(tidy(runTest())$p.value[1] < 0.05) {
+      return("sufficient evidence to conclude that there is at least one difference between the group means.")
     } else {
-      print("insufficent evidence to conclude that there is at least one difference between the group means.")
+      return("insufficent evidence to conclude that there is at least one difference between the group means.")
     }
   })
 }

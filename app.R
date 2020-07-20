@@ -11,7 +11,6 @@ library(plyr)
 # add text at beginning explaining why we don't just do pairwise test (family-wise error increases)
 # possible equations ot include, variance eqs, ANOVa model eq, reading ANOVA test table output
 
-# input to control sample size ?
 # button that leads straight to "insuff evidence" conclusion ?
 
 # maybe reiterate vocab on resources page
@@ -20,7 +19,6 @@ ui <- navbarPage(theme = shinytheme("lumen"),
                  
                  title = "ANOVA",
                  tabPanel("About",
-                          h1("About the App"),
                           withMathJax(),
                           tags$script(
                             "MathJax.Hub.Config({
@@ -41,7 +39,13 @@ ui <- navbarPage(theme = shinytheme("lumen"),
                                  }
                                  ")),
                           fluidRow(
-                            column(offset = 1, width = 6,
+                            column(offset = 1, width = 5,
+                                   h2("About the App")),
+                            column(width = 5,
+                                   h2("An Introduction to ANOVA"))
+                          ),
+                          fluidRow(
+                            column(offset = 1, width = 5,
                                    p("Welcome! This interactive learning tool is brought to you by Duke Shiny-Ed. In this particular app 
                             you will be able to explore", tipify(strong("ANOVA", style = "color:#00B5E5"), 
                                                                  title = "Hypothesis test which analyzes variance to make inferences about means. Tests the null that all group means are equal and the alternative that at least one of the means are different, not necessarily that all are unequal", 
@@ -59,30 +63,41 @@ ui <- navbarPage(theme = shinytheme("lumen"),
                                    p("3. Predict how manipulation of between and withing group variances will affect the F-statistic
                             and the ANOVA test output"),
                                    br(),
+                                   ## put more general info here
+                                   p("If you haven't already noticed, while interacting with this app you will routinely encounter text that
+                                     is highlighted blue like this:", tipify(el = strong(em("What's happening?", style = "color:#00B5E5; font-size:13px")),
+                                                                             title = "This is an example! Hover over any text highlighted in blue like this to view helpful information",
+                                                                             placement = "top", trigger = "hover"), 
+                                     "These are designed to help you navigate the material being presented. Hover over them to view definitions 
+                                    of commonly used terms and observations designed to guide you through the exploration!")
+                                   
+                            ),
+                            ## put intro to ANOVA info here
+                            column(width = 5,
                                    p("ANOVA is a method used in statistical anylsis to make inferences about numerical data. In particular 
                             ANOVA is used to question whether there is a meaningful difference between the groups in question. To
                             do this ANOVA tests the alternative hypothesis that at least one of the group means is truly different
                             from the others against the null hypothesis that there is no difference between the group means. In this sense, 
                             ANOVA can be thought of as generalizing the two sample", tipify(strong("t-test", style = "color:#00B5E5"),
-                                                                                            title = "define t-test i.e assess associations between variables...",
-                                                                                            placement = "bottom", trigger = "hover"),
+                                                                                            title = "A hypothesis test used to compare two means",
+                                                                                            placement = "top", trigger = "hover"),
                                      "to more that two categories!"),
-                            ),
-                            
-                            column(width = 5,
-                                   p("If you haven't already noticed, while interacting with this app you will routinely encounter text that
-                                     is highlighted blue like this:", tipify(el = strong(em("What's happening?", style = "color:#00B5E5; font-size:13px")),
-                                                                             title = "This is an example",
-                                                                             placement = "top", trigger = "hover"), 
-                                     "These are designed to help you navigate the material being presented. Hover over them to view definitions 
-                                    of commonly used terms and observations designed to guide you through the exploration!")
+                                   p("So why don't we just use the two sample t-test multiple times? Conclusions drawn from repetitive pairwise testing 
+                                     can be misleading. In particular this practice will lead to an inflated", tipify(strong("'family-wise'", style = "color:#00B5E5"),
+                                                                                                                      title = "The probability that we fail to arrive at the correct conclusion at least once when we conduct multiple pairwise tests.",
+                                                                                                                      placement = "bottom", trigger = "hover"), 
+                                     "error rate. In other words if you test anything enough times you're bound reach the wrong conclusion! So we generally wait until 
+                                     after ANOVA suggests there is at least one difference among the groups being studied before conducting these pairwise 
+                                     tests, while", tipify(strong("correcting", style = "color:#00B5E5"),
+                                                           title = "Refers to the Bonferroni correction where the significance level, alpha, is divided by the total number of pairwise tests to be performed before it is used."), 
+                                     "for the family-wise error rate, to determine where exactly the difference lies.")
                             ),
                           ),
                           hr(),
                           
-                          h1("Acknowledgements"),
+                          h2("Acknowledgements"),
                           p("contents"),
-                          br(), br(), br(), br(), br(), br(),
+                          br(), br(), br(), br(), br(), br(), br(), br(), br(),
                           p("Created by Samantha Owusu-Antwi for Duke University 'Creating Interactive Learning Tools' Project, Summer 2020", style = "text-align:center")),
                  
                  ##--------------------------------------------------------tab 1
@@ -96,7 +111,7 @@ ui <- navbarPage(theme = shinytheme("lumen"),
                                      "$H_1$: At least one of the means $(\\mu_i)$ is not equal to the others", style = "text-align:center"),
                                    br(),
                                    p("Below you have the opportunity to manipulate the skew,", tipify(strong("between group variance", style = "color:#00B5E5"),
-                                                                                                      title = "ANOVA is concerend with two variances. This refers to how group means vary around the overall mean",
+                                                                                                      title = "ANOVA is concerned with two variances. This refers to how group means vary around the overall mean",
                                                                                                       placement = "top", trigger = "hover"), 
                                      ", and the", tipify(strong("within group variances", style = "color:#00B5E5"),
                                                          title = "ANOVA is concerend with two variances. This refers to how the individual observations of a group vary around the mean of that group",

@@ -153,11 +153,17 @@ ui <- navbarPage(theme = shinytheme("lumen"),
                             column(width = 6,
                                    br(),
                                    p(plotOutput(outputId = "curve")),
-                                   p(verbatimTextOutput(outputId = "aovTest")),
-                                   br(),
-                                   
-                                   p("At the $\\alpha = .05$ level this F-stat corresponds to a p-value that suggests there is:", 
-                                     textOutput(outputId = "concl1")),
+                                   #p(verbatimTextOutput(outputId = "aovTest")),
+                                   #move assumptions static text here
+                                   fluidRow(
+                                     column(width = 12, style="background-color:#F7F7F7; padding:20px; border-radius:5px; border: 1px solid #BBBBBB",
+                                       p(strong("ANOVA assumes:"), br(),
+                                         "1. Independent Observations", br(),
+                                         "2. Approximately normal population distributions within each group", br(),
+                                         "3. Approximately equal within group variances for all groups"))
+                                     ),
+                                   #p("At the $\\alpha = .05$ level this F-stat corresponds to a p-value that suggests there is:", 
+                                     #textOutput(outputId = "concl1")),
                                    br(),
                                    br(),
                             ),
@@ -287,9 +293,11 @@ ui <- navbarPage(theme = shinytheme("lumen"),
                                      )
                                    ),
                                    fluidRow(
+                                     p(verbatimTextOutput(outputId = "aovTest")),
+                                     ##move aovTest output here
                                      p(),
                                      p("At the $\\alpha = .05$ level this F-stat corresponds to a p-value that suggests there is:",
-                                       textOutput(outputId = "concl2")),
+                                       textOutput(outputId = "concl")),
                                      fluidRow(
                                        column(offset = 9, width = 3,
                                               tipify(el = p(em(strong("What's happening?")), style = "text-align:right; color:#00B5E5; font-size:12px"),
@@ -488,21 +496,7 @@ server <- function(input, output, session) {
       gather(key = dataset, value = values)
   })
   
-  runTest <- reactive({aov(values ~ dataset, data = sampledf_long())})
-  output$aovTest <- renderPrint ({
-    print(summary(runTest()))
-  })
-  
-  
-  output$concl1 <- renderText({
-    if(tidy(runTest())$p.value[1] < 0.05) {
-      return("sufficient evidence to conclude that there is at least one difference between the group means.")
-    } else {
-      return("insufficent evidence to conclude that there is at least one difference between the group means.")
-    }
-  })
-  
-  ##--------------------------------------------------------------F-Stat Tab; CHANGE THIS CODE TO WORK WITH FLUID INPUTS
+  ##--------------------------------------------------------------F-Stat Tab
   ##recall that sample1, sample2, sample3 already defined; also dataset with all is sampledf_long()
  
   output$boxplot <- renderPlot({
@@ -538,11 +532,15 @@ server <- function(input, output, session) {
             axis.ticks.x=element_blank())
   })
   
+  runTest <- reactive({aov(values ~ dataset, data = sampledf_long())})
+  output$aovTest <- renderPrint ({
+    print(summary(runTest()))
+  })
   output$FTest <- renderPrint ({
     print(summary(runTest())[[1]][["F value"]][[1]])
   })
   
-  output$concl2 <- renderText({
+  output$concl <- renderText({
     if(tidy(runTest())$p.value[1] < 0.05) {
       return("sufficient evidence to conclude that there is at least one difference between the group means.")
     } else {

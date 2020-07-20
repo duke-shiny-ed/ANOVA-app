@@ -154,6 +154,14 @@ ui <- navbarPage(theme = shinytheme("lumen"),
                             column(width = 6,
                                    br(),
                                    p(plotOutput(outputId = "curve")),
+                                   ## add "what does graph show?" here
+                                   fluidRow(
+                                     column(width = 4,
+                                            tipify(el = p(em(strong("What does this graph show?")), style = "text-align:left; color:#00B5E5; font-size:12px"),
+                                                   title = "These are the population distributions of the response variable of interest. The vertical dotted lines are the mean values of the response for the corresponding groups. Using ANOVA we will be exploring if there is a significant difference in these means.",
+                                                   placement = "top", trigger = "hover"))
+                                   ),
+                                   p(),
                                    #p(verbatimTextOutput(outputId = "aovTest")),
                                    #move assumptions static text here
                                    fluidRow(
@@ -202,7 +210,7 @@ ui <- navbarPage(theme = shinytheme("lumen"),
                  tabPanel("Step 2: Use Samples to Visualize the F-Statistic", value = 2,
                           fluidRow(
                             column(offset = 2, width = 8, 
-                                   p("Now that out population data is set, let's examine the samples taken from each population."),
+                                   p("Now that out population data is set, let's examine the random samples taken from the populations."),
                                    p(strong("ANOVA assumes approximate normality among groups."), "However ANOVA is relatively robust against
                                 departures from normality. In fact, as long as sample sizes are", tipify(el = strong("'large enough'", style = "color:#00B5E5"),
                                                                                                          title = "in this case approximately greater than 10 in each group",
@@ -242,7 +250,7 @@ ui <- navbarPage(theme = shinytheme("lumen"),
                                    
                                    h3(strong("Within group variance")),
                                    wellPanel(
-                                     p("Manipulate the sliders to increase or decrease the within group variance of each sample 
+                                     p("Manipulate the sliders to increase or decrease the within group variance of each sample's population 
                                               by a factor of the slider value. This will alter the spread of the samples' data points. 
                                               Recall ANOVA assumes these variances are approximately equal", 
                                        style = "color:grey"), 
@@ -270,30 +278,31 @@ ui <- navbarPage(theme = shinytheme("lumen"),
                                    br(),
                                    fluidRow(
                                      numericInput("n", "Choose a sample size", 
-                                                  min = 10, max = 10000, value = 100),
+                                                  min = 10, max = 20000, value = 100),
                                      tabsetPanel(
                                        tabPanel("Whole Graph", column(width = 12, plotOutput(outputId = "boxplot")),
                                                 fluidRow(
                                                   column(offset = 1, width = 4,
                                                          tipify(el = p(em(strong("What does this graph show?")), style = "text-align:left; color:#00B5E5; font-size:12px"),
-                                                                title = "Here the between groups variance can be thought of as how the median of a boxplot varies from the overall mean, the solid black line. The within groups variance can be thought of as how the datapoints of a sample vary from the median of that sample.",
-                                                                placement = "top", trigger = "hover"))
-                                                )),
-                                       tabPanel("Focus on Between Groups Variance", column(width = 12, plotOutput(outputId = "toggleBtw")),
-                                                fluidRow(
-                                                  column(offset = 1, width = 4,
-                                                         tipify(el = p(em(strong("What does this graph show?")), style = "text-align:left; color:#00B5E5; font-size:12px"),
-                                                                title = "Here the between groups variance can be thought of as how the median of a boxplot, represented by a point in this case, varies from the overall mean, the solid black line.",
+                                                                title = "These graphs all depict parts of the sample distributions. Here the between groups variance can be thought of as how the median of a boxplot varies from the overall mean, the solid black line. The within groups variance can be thought of as how the datapoints of a sample vary from the median of that sample.",
                                                                 placement = "top", trigger = "hover"))
                                                 )),
                                        tabPanel("Focus on Within Groups Variance", column(width = 12, plotOutput(outputId = "toggleWin")),
                                                 fluidRow(
                                                   column(offset = 1, width = 4,
                                                          tipify(el = p(em(strong("What does this graph show?")), style = "text-align:left; color:#00B5E5; font-size:12px"),
-                                                                title = "Here the within groups variance can be thought of as how the datapoints of a sample vary from the median of that sample, the corresponding solid lines.",
+                                                                title = "These graphs all depict parts of the sample distributions. Here the within groups variance can be thought of as how the datapoints of a sample vary from the median of that sample, the corresponding solid lines.",
                                                                 placement = "top", trigger = "hover"))
                                                 )
-                                       )
+                                       ),
+                                       
+                                       tabPanel("Focus on Between Groups Variance", column(width = 12, plotOutput(outputId = "toggleBtw")),
+                                                fluidRow(
+                                                  column(offset = 1, width = 4,
+                                                         tipify(el = p(em(strong("What does this graph show?")), style = "text-align:left; color:#00B5E5; font-size:12px"),
+                                                                title = "These graphs all depict parts of the sample distributions. Here the between groups variance can be thought of as how the median of a boxplot, represented by a point in this case, varies from the overall mean, the solid black line.",
+                                                                placement = "top", trigger = "hover"))
+                                                ))
                                      )
                                    ),
                                    fluidRow(
@@ -470,18 +479,16 @@ server <- function(input, output, session) {
       gather(key = dataset, value = values)
   })
   
-  #pop_means <- reactive({ddply(popdf_long, "dataset", summarize, means = mean(values))})
+  pop_means <- reactive({ddply(popdf_long(), "dataset", summarize, means = mean(values))})
   
   output$curve <- renderPlot({
-    #pop_means <- ddply(popdf_long, "dataset", summarize, means = mean(values))
-    #ggplot(data = popdf_long(), aes(x = values, color = dataset)) + 
-      #geom_density(data = popdf_long(), aes(x = values, color = dataset)) +
-      #geom_vline(data = pop_means, aes(xintercept = means, color = dataset))
     ggplot(data = popdf_long(), aes(x=values, color = dataset)) +
       geom_density() +
       coord_cartesian(xlim = c(-.125, 1.25), ylim = c(0,8)) +
+      geom_vline(data = pop_means(), aes(xintercept = means, color = dataset),
+                 linetype = 2, size = 0.8) +
       ggtitle("Population Distributions") +
-      theme(legend.position = "none", 
+      theme(legend.position = "none", plot.title = element_text(size = "14"),
             axis.text.x=element_blank(), axis.ticks.x=element_blank(), 
             axis.text.y=element_blank(), axis.ticks.y=element_blank(),
             axis.title.x=element_blank(), axis.title.y=element_blank()) 
@@ -516,9 +523,9 @@ server <- function(input, output, session) {
       geom_jitter(aes(x = dataset, y = values, alpha = .2, color = dataset), position=position_jitter(0.04)) +
       #coord_cartesian(ylim =c(0.1, 1.2)) +
       geom_hline(yintercept=mean(sampledf_long()$values), linetype=2, color = "black") +
-      labs(title = "Sample Data") +
-      theme(legend.position = "none", axis.text.x=element_blank(),
-            axis.ticks.x=element_blank())
+      labs(title = "Sample Distributions", x = "Sample", y = "Values") +
+      theme(legend.position = "none",  plot.title = element_text(size = "14"),
+            axis.text.x=element_blank(), axis.ticks.x=element_blank())
   })
   
   output$toggleBtw <- renderPlot({
@@ -527,9 +534,9 @@ server <- function(input, output, session) {
                    geom = "point", shape=16, size=5, aes(color = dataset)) +
       #coord_cartesian(ylim =c(0.1, 1.2)) +
       geom_hline(yintercept=mean(sampledf_long()$values), linetype=1, color = "black") +
-      labs(title = "Sample Data") +
-      theme(legend.position = "none", axis.text.x=element_blank(),
-            axis.ticks.x=element_blank())
+      labs(title = "Sample Distributions", x = "Sample", y = "Values") +
+      theme(legend.position = "none", plot.title = element_text(size = "14"),
+            axis.text.x=element_blank(), axis.ticks.x=element_blank())
   })
   
   output$toggleWin <- renderPlot({
@@ -538,9 +545,9 @@ server <- function(input, output, session) {
       stat_summary(fun.y = median, fun.ymin = median, fun.ymax = median,
                    geom = "crossbar", width = 0.5, aes(color = dataset)) +
       #coord_cartesian(ylim =c(0.1, 1.2)) +
-      labs(title = "Sample Data") +
-      theme(legend.position = "none", axis.text.x=element_blank(),
-            axis.ticks.x=element_blank())
+      labs(title = "Sample Distributions", x = "Sample", y = "Values") +
+      theme(legend.position = "none", plot.title = element_text(size = "14"),
+            axis.text.x=element_blank(), axis.ticks.x=element_blank())
   })
   
   runTest <- reactive({aov(values ~ dataset, data = sampledf_long())})

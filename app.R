@@ -183,8 +183,8 @@ ui <- navbarPage(theme = shinytheme("lumen"),
                                      column(width = 12, style="background-color:#F7F7F7; padding:20px; border-radius:5px; border: 1px solid #C6C5C5",
                                        p(strong("ANOVA assumes:"), br(),
                                          "1. Independent Observations", br(),
-                                         "2. Approximately normal population distributions within each group", br(),
-                                         "3. Approximately equal within group variances for all groups"))
+                                         "2. Approximately normal population distributions within each group", uiOutput("assumption1"), br(),
+                                         "3. Approximately equal within group variances for all groups", uiOutput("assumption2")))
                                      ),
                                    #p("At the $\\alpha = .05$ level this F-stat corresponds to a p-value that suggests there is:", 
                                      #textOutput(outputId = "concl1")),
@@ -233,7 +233,8 @@ ui <- navbarPage(theme = shinytheme("lumen"),
                                 of ANOVA may still be valid, even if the underlying population distributions are skewed"), br(),
                                    
                                    p(strong("ANOVA also assumes that groups have roughly equal variability."), "ANOVA is not robust against violations
-                                of this assumption and the results of ANOVA may not be valid if $s_{max} \\geq 2s_{min}$"),   
+                                of this assumption and the results of ANOVA may not be valid if $s_{max} \\geq 2s_{min}$, or if the maximum group variance is
+                                     greater than or equal to double the minimum group variance"),   
                                    style="background-color:#F1F0F0; padding:20px; border-radius:10px")
                             
                             #change LaTeX size with $\\___{...}$
@@ -293,7 +294,7 @@ ui <- navbarPage(theme = shinytheme("lumen"),
                                    br(),
                                    fluidRow(
                                      numericInput("n", "Choose a sample size", 
-                                                  min = 10, max = 20000, value = 100),
+                                                  min = 2, max = 20000, value = 100, step = 1),
                                      tabsetPanel(
                                        tabPanel("Whole Graph", column(width = 12, plotOutput(outputId = "boxplot")),
                                                 fluidRow(
@@ -440,7 +441,7 @@ server <- function(input, output, session) {
       updateSliderInput(session, "sd1.3", value = input$sd2.3)
     }
   })
-  ##--------------------------------------------------------------Assumptions Tab
+  ##--------------------------------------------------------------Population Tab
   pop_dist <- function(skew, within, n) {
     if(skew == "norm") {
       set.seed(n)
@@ -529,9 +530,27 @@ server <- function(input, output, session) {
       gather(key = dataset, value = values)
   })
   
-  ##--------------------------------------------------------------F-Stat Tab
+  ##--------------------------------------------------------------Samples Tab
   ##recall that sample1, sample2, sample3 already defined; also dataset with all is sampledf_long()
- 
+  
+  #Assumes approximate normality
+  output$assumption1 <- renderUI({
+    if(input$n >= 10) {
+      return(strong("This assumption is currently met because the selected sample size,", paste(input$n), ", is greater than or equal to 10"))
+    } else { #n < 10
+      if(input$skew1 != "norm" | input$skew2 != "norm" | input$skew3 != "norm") {
+        return("This assumption is currently NOT met because the selected sample size is less than 10 and one or more of the
+               population distributions is skewed")
+      } else {
+        return("This assumption is currently NOT met because the selected sample size is less than 10")
+      }
+    }
+    
+  })
+  
+  rank(s1 = sample1(), s2 = sample2(), s3 = sample3())
+  
+  
   output$boxplot <- renderPlot({
     ggplot(data = sampledf_long(), aes(x = dataset, y = values)) + 
       geom_boxplot(aes(color = dataset)) +

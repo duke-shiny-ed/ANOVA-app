@@ -182,8 +182,8 @@ ui <- navbarPage(theme = shinytheme("lumen"),
                                    fluidRow(
                                      column(width = 12, style="background-color:#F7F7F7; padding:20px; border-radius:5px; border: 1px solid #C6C5C5",
                                        p(strong("ANOVA assumes:"), br(),
-                                         "1. Independent Observations", br(),
-                                         "2. Approximately normal population distributions within each group", uiOutput("assumption1"), br(),
+                                         "1. Independent Observations", p(), p(),
+                                         "2. Approximately normal population distributions within each group", uiOutput("assumption1"),
                                          "3. Approximately equal within group variances for all groups", uiOutput("assumption2")))
                                      ),
                                    #p("At the $\\alpha = .05$ level this F-stat corresponds to a p-value that suggests there is:", 
@@ -536,13 +536,14 @@ server <- function(input, output, session) {
   #Assumes approximate normality
   output$assumption1 <- renderUI({
     if(input$n >= 10) {
-      return(strong("This assumption is currently met because the selected sample size,", paste(input$n), ", is greater than or equal to 10"))
+      return(p("This assumption is currently met because the selected sample size,", paste(input$n), ", is greater than or equal to 10",
+                    style = "color:#20C100"))
     } else { #n < 10
       if(input$skew1 != "norm" | input$skew2 != "norm" | input$skew3 != "norm") {
-        return("This assumption is currently NOT met because the selected sample size is less than 10 and one or more of the
-               population distributions is skewed")
+        return(p("This assumption is currently NOT met because the selected sample size is less than 10 and one or more of the
+               population distributions is skewed", style = "color:#C10000"))
       } else {
-        return("This assumption is currently NOT met because the selected sample size is less than 10")
+        return(p("This assumption is currently NOT met because the selected sample size is less than 10", style = "color:#C10000"))
       }
     }
     
@@ -555,9 +556,11 @@ server <- function(input, output, session) {
       v3 <- reactive({var(s3)})
       
       if(v1() < (v3() * 2)) {
-        return("This assumption is met because the maximum within groups variance is less than double the minimum within groups variance")
+        return(p("This assumption is currently met because the maximum within groups variance is less 
+               than double the minimum within groups variance", style = "color:#20C100"))
       } else {
-        return("This assumption is NOT met because the maximum within groups variance is greater than or equal to double the minimum within groups variance")
+        return(p("This assumption is currently NOT met because the maximum within groups variance is greater than 
+               or equal to double the minimum within groups variance", style = "color:#C10000"))
       }
     }
     if(var(s1) > var(s2) & var(s1) > var(s3) & var(s3) > var(s2)) {
@@ -566,9 +569,11 @@ server <- function(input, output, session) {
       v3 <- reactive({var(s2)})
       
       if(v1() < (v3() * 2)) {
-        return("This assumption is met because the maximum within groups variance is less than double the minimum within groups variance")
+        return(p("This assumption is currently met because the maximum within groups variance is less 
+               than double the minimum within groups variance", style = "color:#20C100"))
       } else {
-        return("This assumption is NOT met because the maximum within groups variance is greater than or equal to double the minimum within groups variance")
+        return(p("This assumption is currently NOT met because the maximum within groups variance is greater than 
+               or equal to double the minimum within groups variance", style = "color:#C10000"))
       }
     }
     
@@ -580,9 +585,11 @@ server <- function(input, output, session) {
       v3 <- reactive({var(s3)})
       
       if(v1() < (v3() * 2)) {
-        return("This assumption is met because the maximum within groups variance is less than double the minimum within groups variance")
+        return(p("This assumption is currently met because the maximum within groups variance is less 
+               than double the minimum within groups variance", style = "color:#20C100"))
       } else {
-        return("This assumption is NOT met because the maximum within groups variance is greater than or equal to double the minimum within groups variance")
+        return(p("This assumption is currently NOT met because the maximum within groups variance is greater than 
+               or equal to double the minimum within groups variance", style = "color:#C10000"))
       }
     }
     if(var(s2) > var(s1) & var(s2) > var(s3) & var(s3) > var(s1)) {
@@ -591,9 +598,11 @@ server <- function(input, output, session) {
       v3 <- reactive({var(s1)})
       
       if(v1() < (v3() * 2)) {
-        return("This assumption is met because the maximum within groups variance is less than double the minimum within groups variance")
+        return(p("This assumption is currently met because the maximum within groups variance is less 
+               than double the minimum within groups variance", style = "color:#20C100"))
       } else {
-        return("This assumption is NOT met because the maximum within groups variance is greater than or equal to double the minimum within groups variance")
+        return(p("This assumption is NOT met because the maximum within groups variance is greater than 
+               or equal to double the minimum within groups variance", style = "color:#C10000"))
       }
     }
     
@@ -605,9 +614,11 @@ server <- function(input, output, session) {
       v3 <- reactive({var(s2)})
       
       if(v1() < (v3() * 2)) {
-        return("This assumption is met because the maximum within groups variance is less than double the minimum within groups variance")
+        return(p("This assumption is currently met because the maximum within groups variance is less 
+               than double the minimum within groups variance", style = "color:#20C100"))
       } else {
-        return("This assumption is NOT met because the maximum within groups variance is greater than or equal to double the minimum within groups variance")
+        return(p("This assumption is NOT met because the maximum within groups variance is greater than 
+               or equal to double the minimum within groups variance", style = "color:#C10000"))
       }
     }
     if(var(s3) > var(s1) & var(s3) > var(s2) & var(s2) > var(s1)) {
@@ -616,9 +627,11 @@ server <- function(input, output, session) {
       v3 <- reactive({var(s1)})
       
       if(v1() < (v3() * 2)) {
-        return("This assumption is met because the maximum within groups variance is less than double the minimum within groups variance")
+        return(p("This assumption is currently met because the maximum within groups variance is less 
+               than double the minimum within groups variance", style = "color:#20C100"))
       } else {
-        return("This assumption is NOT met because the maximum within groups variance is greater than or equal to double the minimum within groups variance")
+        return(p("This assumption is NOT met because the maximum within groups variance is greater than 
+               or equal to double the minimum within groups variance", style = "color:#C10000"))
       }
     }
     

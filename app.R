@@ -548,7 +548,85 @@ server <- function(input, output, session) {
     
   })
   
-  rank(s1 = sample1(), s2 = sample2(), s3 = sample3())
+  rank <- function(s1, s2, s3) {
+    if(var(s1) > var(s2) & var(s1) > var(s3) & var(s2) > var(s3)) {
+      v1 <- reactive({var(s1)})
+      v2 <- reactive({var(s2)})
+      v3 <- reactive({var(s3)})
+      
+      if(v1() < (v3() * 2)) {
+        return("This assumption is met because the maximum within groups variance is less than double the minimum within groups variance")
+      } else {
+        return("This assumption is NOT met because the maximum within groups variance is greater than or equal to double the minimum within groups variance")
+      }
+    }
+    if(var(s1) > var(s2) & var(s1) > var(s3) & var(s3) > var(s2)) {
+      v1 <- reactive({var(s1)})
+      v2 <- reactive({var(s3)})
+      v3 <- reactive({var(s2)})
+      
+      if(v1() < (v3() * 2)) {
+        return("This assumption is met because the maximum within groups variance is less than double the minimum within groups variance")
+      } else {
+        return("This assumption is NOT met because the maximum within groups variance is greater than or equal to double the minimum within groups variance")
+      }
+    }
+    
+    
+    
+    if(var(s2) > var(s1) & var(s2) > var(s3) & var(s1) > var(s3)) {
+      v1 <- reactive({var(s2)})
+      v2 <- reactive({var(s1)})
+      v3 <- reactive({var(s3)})
+      
+      if(v1() < (v3() * 2)) {
+        return("This assumption is met because the maximum within groups variance is less than double the minimum within groups variance")
+      } else {
+        return("This assumption is NOT met because the maximum within groups variance is greater than or equal to double the minimum within groups variance")
+      }
+    }
+    if(var(s2) > var(s1) & var(s2) > var(s3) & var(s3) > var(s1)) {
+      v1 <- reactive({var(s2)})
+      v2 <- reactive({var(s3)})
+      v3 <- reactive({var(s1)})
+      
+      if(v1() < (v3() * 2)) {
+        return("This assumption is met because the maximum within groups variance is less than double the minimum within groups variance")
+      } else {
+        return("This assumption is NOT met because the maximum within groups variance is greater than or equal to double the minimum within groups variance")
+      }
+    }
+    
+    
+    
+    if(var(s3) > var(s1) & var(s3) > var(s2) & var(s1) > var(s2)) {
+      v1 <- reactive({var(s3)})
+      v2 <- reactive({var(s1)})
+      v3 <- reactive({var(s2)})
+      
+      if(v1() < (v3() * 2)) {
+        return("This assumption is met because the maximum within groups variance is less than double the minimum within groups variance")
+      } else {
+        return("This assumption is NOT met because the maximum within groups variance is greater than or equal to double the minimum within groups variance")
+      }
+    }
+    if(var(s3) > var(s1) & var(s3) > var(s2) & var(s2) > var(s1)) {
+      v1 <- reactive({var(s3)})
+      v2 <- reactive({var(s2)})
+      v3 <- reactive({var(s1)})
+      
+      if(v1() < (v3() * 2)) {
+        return("This assumption is met because the maximum within groups variance is less than double the minimum within groups variance")
+      } else {
+        return("This assumption is NOT met because the maximum within groups variance is greater than or equal to double the minimum within groups variance")
+      }
+    }
+    
+  }
+  
+  output$assumption2 <- renderUI ({
+    rank(s1 = sample1(), s2 = sample2(), s3 = sample3())
+  })
   
   
   output$boxplot <- renderPlot({

@@ -15,8 +15,8 @@ str(diamonds)
 ?diamonds
 
 diamonds.long <- diamonds %>%
-  filter(color == "D" | color == "E" | color == "F" | color == "G") %>%
-  filter(cut == "Very Good", clarity == "IF" | clarity == "VVS1" | clarity == "VVS2") %>%
+  filter(color == "E" | color == "F" | color == "G") %>%
+  filter(cut == "Very Good", clarity == "VS1" | clarity == "VVS1" | clarity == "VVS2") %>%
   filter(table == 50:59) %>%
   select(depth, color, clarity)
 diamonds.long
@@ -55,11 +55,22 @@ diamonds.F <- diamonds.long %>%
   filter(color == "F")
 diamonds.G <- diamonds.long %>%
   filter(color == "G")
+diamonds.G
+nrow(diamonds.D)
+nrow(diamonds.E)
+nrow(diamonds.F)
+nrow(diamonds.G)
 
-ggplot(data = diamonds.D, aes(y = depth)) + 
+ggplot(data = diamonds.D[sample(x = nrow(diamonds.D), size = 25),], aes(y = depth)) + 
   geom_boxplot(aes(color = clarity)) +
   theme(axis.text.x=element_blank()) +
   ggtitle("Color D") 
+
+set.seed(1)
+diamonds.E <- diamonds.E[sample(x = nrow(diamonds.E), size = 50),]
+diamonds.F <- diamonds.F[sample(x = nrow(diamonds.E), size = 50),]
+diamonds.G <- diamonds.G[sample(x = nrow(diamonds.E), size = 50),]
+
 ggplot(data = diamonds.E, aes(y = depth)) + 
   geom_boxplot(aes(color = clarity)) +
   theme(axis.text.x=element_blank()) +
@@ -67,23 +78,88 @@ ggplot(data = diamonds.E, aes(y = depth)) +
 ggplot(data = diamonds.F, aes(y = depth)) + 
   geom_boxplot(aes(color = clarity)) +
   theme(axis.text.x=element_blank()) +
-  ggtitle("Color F") 
-ggplot(data = diamonds.D, aes(y = depth)) + 
+  ggtitle("Color F")
+ggplot(data = diamonds.G, aes(y = depth)) + 
   geom_boxplot(aes(color = clarity)) +
   theme(axis.text.x=element_blank()) +
   ggtitle("Color G") 
 
+?diamonds
 ```
 
-  
+##Make my own rnorm data
+Plants grown with two different new fertilizers and 1 (control) with just standard soil. Heights recorded as difference/comparison to standard height of _________. We want to know if difference
+Population = 100; sampled 50 plots
+```{r, data}
+# Location 1
+Location.A <- matrix(rep("A", times = 150), ncol = 1)
+#head(Location.A)
+set.seed(1)
+control.A <- matrix(rnorm(n = 50, sd = .8), ncol = 1)
+treat1.A <- matrix(rnorm(n = 50, sd = .82), ncol = 1)
+treat2.A <- matrix(rnorm(n = 50, sd =.98), ncol = 1)
+
+# Location 2
+Location.B <- matrix(rep("B", times = 150), ncol = 1)
+set.seed(2)
+control.B <- matrix(rnorm(n = 50, sd = .69), ncol = 1)
+treat1.B <- matrix(rnorm(n = 50, sd = .76), ncol = 1)
+treat2.B <- matrix(rnorm(n = 50, sd =.78), ncol = 1)
+
+# Location 3
+Location.C <- matrix(rep("C", times = 150), ncol = 1)
+set.seed(3)
+control.C <- matrix(rnorm(n = 50, sd = .8), ncol = 1)
+treat1.C <- matrix(rnorm(n = 50, sd = .86), ncol = 1)
+treat2.C <- matrix(rnorm(n = 50, sd =.83), ncol = 1)
 
 
+#Make Location Column
+Location <- rbind(Location.A, Location.B, Location.C)
+Location
+
+#Make Treatment Column
+TreatmentA <- matrix(rep(c("Control", "Treatment 1", "Treatment 2"), each = 50), ncol = 1)
+TreatmentB <- matrix(rep(c("Control", "Treatment 1", "Treatment 2"), each = 50), ncol = 1)
+TreatmentC <- matrix(rep(c("Control", "Treatment 1", "Treatment 2"), each = 50), ncol = 1)
+Treatment <- rbind(TreatmentA, TreatmentB, TreatmentC)
+Treatment
+
+#Make values column
+Value <- rbind(control.A, treat1.A, treat2.A, 
+               control.B, treat1.B, treat2.B,
+               control.C, treat1.C, treat2.C)
+head(Value)
 
 
+# Make dataframe
+PlantHeights <- data.frame(Location, Treatment, Value)
+head(PlantHeights)
+
+write.csv(PlantHeights, "PlantHeights.csv")
+```
 
 
+## Is github data accessible?
+```{r load-data}
+library(downloader) 
+url <- "https://raw.githubusercontent.com/sowusu08/ANOVA-PlantHeights-Data/master/Data/PlantHeights.csv"
+filename <- "PlantHeights.csv" 
+download(url, destfile=filename)
 
+PlantHeights <- read.csv("PlantHeights.csv")
+head(PlantHeights)
+```
 
+## Making boxplots for plant data
+```{r, plants-boxplots}
+library(ggplot2)
+ggplot(data = PlantHeights, aes(y = Value)) + 
+  geom_boxplot(aes(color = Treatment)) +
+  facet_grid(. ~Location) +
+  theme(axis.text.x = element_blank())
+
+```
 
 
 

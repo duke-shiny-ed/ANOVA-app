@@ -118,12 +118,35 @@ $(document).ready(function () {
 
 <div id="section-topic-1" class="section level2">
 <h2>Topic 1</h2>
-<p><em>Goal: Practice running aov(…); interpret summary() output table; identify F-stat and p-value from summary() output and come to basic conclusion</em></p>
-<div id="section-exercise" class="section level3">
-<h3>Exercise</h3>
+<p><em>Have the user answer a group of questions after examining image of boxplots and predicting/comparing F-stats; effectively rank them i.e. F-stat_1 &gt; F-stat_2, True or False</em></p>
+<p><img src="images/boxplots.png" style="width:80.0%" /></p>
+<p>Some questions to verify that you understand the purposes of various base and recommended R packages:</p>
+<p><div class="panel-heading tutorial-quiz-title">Question 1</div><div class="panel panel-default">
+<div data-label="quiz-1-1" class="tutorial-question panel-body">
+<div id="quiz-1-1-answer_container" class="shiny-html-output"></div>
+<div id="quiz-1-1-message_container" class="shiny-html-output"></div>
+<div id="quiz-1-1-action_button_container" class="shiny-html-output"></div>
+<script>if (Tutorial.triggerMathJax) Tutorial.triggerMathJax()</script>
+</div>
+</div><div class="panel panel-default">
+<div data-label="quiz-1-2" class="tutorial-question panel-body">
+<div id="quiz-1-2-answer_container" class="shiny-html-output"></div>
+<div id="quiz-1-2-message_container" class="shiny-html-output"></div>
+<div id="quiz-1-2-action_button_container" class="shiny-html-output"></div>
+<script>if (Tutorial.triggerMathJax) Tutorial.triggerMathJax()</script>
+</div>
+</div></p>
+</div>
+<div id="section-topic-2" class="section level2">
+<h2>Topic 2</h2>
+<p><em>Goal: Practice running aov(…); interpret summary() output table; identify F-stat and p-value from summary() output and come to basic conclusion</em> WOrking with the same dataset, examine if the diamonds grouped Color “D”, supposedly the best color, have different densities…</p>
+<div id="section-exercise-1" class="section level3">
+<h3>Exercise 1</h3>
+<p>Is there a difference in mpg of mazdas and hornets</p>
 Write question here
 <div class="tutorial-exercise" data-label="use_aov" data-caption="Code" data-completion="1" data-diagnostics="1" data-startover="1" data-lines="7">
-<pre class="text"><code>#empty code chunk for user to enter answer (remove this comment before deploy)
+<pre class="text"><code>#The following dataframe will be used for Exercise 1
+automobiles
 
 #Start your code below!
 
@@ -149,36 +172,13 @@ grade_result(
   fail_if(~ identical(.result, ...), &quot;Incorrect,...&quot;)
 )</code></pre>
 </div>
-</div>
-</div>
-<div id="section-topic-2" class="section level2">
-<h2>Topic 2</h2>
-<div id="section-quiz" class="section level3">
-<h3>Quiz</h3>
-<p><em>Have the user answer a group of questions after examining image of boxplots and predicting/comparing F-stats; effectively rank them i.e. F-stat_1 &gt; F-stat_2, True or False</em></p>
-<p><img src="images/boxplots.png" style="width:80.0%" /></p>
-<p>Some questions to verify that you understand the purposes of various base and recommended R packages:</p>
-<p><div class="panel-heading tutorial-quiz-title">Question 1</div><div class="panel panel-default">
-<div data-label="quiz-1-1" class="tutorial-question panel-body">
-<div id="quiz-1-1-answer_container" class="shiny-html-output"></div>
-<div id="quiz-1-1-message_container" class="shiny-html-output"></div>
-<div id="quiz-1-1-action_button_container" class="shiny-html-output"></div>
-<script>if (Tutorial.triggerMathJax) Tutorial.triggerMathJax()</script>
-</div>
-</div><div class="panel panel-default">
-<div data-label="quiz-1-2" class="tutorial-question panel-body">
-<div id="quiz-1-2-answer_container" class="shiny-html-output"></div>
-<div id="quiz-1-2-message_container" class="shiny-html-output"></div>
-<div id="quiz-1-2-action_button_container" class="shiny-html-output"></div>
-<script>if (Tutorial.triggerMathJax) Tutorial.triggerMathJax()</script>
-</div>
-</div></p>
 
 <script type="application/shiny-prerendered" data-context="server-start">
 library(learnr)
 
 knitr::opts_chunk$set(echo = FALSE)
 
+#knitr::opts_chunk$set(exercise.checker = gradethis::grade_learnr)
 tutorial_options(exercise.checker = gradethis::grade_learnr)
 </script>
  
@@ -193,18 +193,18 @@ session$onSessionEnded(function() {
 </script>
  
 <script type="application/shiny-prerendered" data-context="server">
+learnr:::question_prerendered_chunk(structure(list(type = "learnr_radio", label = "quiz-1-1", question = structure("Write question 1 part a here", html = TRUE, class = c("html", "character")), answers = list(structure(list(id = "lnr_ans_c1def14",     option = "True", value = "True", label = structure("True", html = TRUE, class = c("html",     "character")), correct = FALSE, message = structure("Explain why this is not the correct answer", html = TRUE, class = c("html",     "character"))), class = c("tutorial_question_answer", "tutorial_quiz_answer")), structure(list(id = "lnr_ans_e78c25c", option = "False",     value = "False", label = structure("False", html = TRUE, class = c("html",     "character")), correct = TRUE, message = NULL), class = c("tutorial_question_answer", "tutorial_quiz_answer"))), button_labels = list(submit = structure("Submit Answer", html = TRUE, class = c("html", "character")), try_again = structure("Try Again", html = TRUE, class = c("html", "character"))), messages = list(correct = structure("Correct!", html = TRUE, class = c("html", "character")), try_again = structure("Incorrect", html = TRUE, class = c("html", "character")), incorrect = structure("Incorrect", html = TRUE, class = c("html", "character")), message = NULL, post_message = NULL), ids = list(    answer = "quiz-1-1-answer", question = "quiz-1-1"), loading = structure("<strong>Loading:<\u002fstrong> \nWrite question 1 part a here\n<br/><br/><br/>", html = TRUE, class = c("html", "character")), random_answer_order = TRUE, allow_retry = TRUE,     seed = 1301994123.89371, options = list()), class = c("learnr_radio", "tutorial_question")))
+</script>
+ 
+<script type="application/shiny-prerendered" data-context="server">
+learnr:::question_prerendered_chunk(structure(list(type = "learnr_radio", label = "quiz-1-2", question = structure("Write question 1 part b here", html = TRUE, class = c("html", "character")), answers = list(structure(list(id = "lnr_ans_c006f6d",     option = "True", value = "True", label = structure("True", html = TRUE, class = c("html",     "character")), correct = TRUE, message = structure("Explain why this is correct...", html = TRUE, class = c("html",     "character"))), class = c("tutorial_question_answer", "tutorial_quiz_answer")), structure(list(id = "lnr_ans_77c4f08", option = "False",     value = "False", label = structure("False", html = TRUE, class = c("html",     "character")), correct = FALSE, message = structure("Explain why this is not the correct answer...", html = TRUE, class = c("html",     "character"))), class = c("tutorial_question_answer", "tutorial_quiz_answer"))), button_labels = list(submit = structure("Submit Answer", html = TRUE, class = c("html", "character")), try_again = structure("Try Again", html = TRUE, class = c("html", "character"))), messages = list(correct = structure("Correct!", html = TRUE, class = c("html", "character")), try_again = structure("Incorrect", html = TRUE, class = c("html", "character")), incorrect = structure("Incorrect", html = TRUE, class = c("html", "character")), message = NULL, post_message = NULL), ids = list(    answer = "quiz-1-2-answer", question = "quiz-1-2"), loading = structure("<strong>Loading:<\u002fstrong> \nWrite question 1 part b here\n<br/><br/><br/>", html = TRUE, class = c("html", "character")), random_answer_order = TRUE, allow_retry = TRUE,     seed = 2032202174.55368, options = list()), class = c("learnr_radio", "tutorial_question")))
+</script>
+ 
+<script type="application/shiny-prerendered" data-context="server">
 `tutorial-exercise-use_aov-result` <- learnr:::setup_exercise_handler(reactive(req(input$`tutorial-exercise-use_aov-code-editor`)), session)
 output$`tutorial-exercise-use_aov-output` <- renderUI({
   `tutorial-exercise-use_aov-result`()
 })
-</script>
- 
-<script type="application/shiny-prerendered" data-context="server">
-learnr:::question_prerendered_chunk(structure(list(type = "learnr_radio", label = "quiz-1-1", question = structure("Write question 1 part a here", html = TRUE, class = c("html", "character")), answers = list(structure(list(id = "lnr_ans_7822f6e",     option = "True", value = "True", label = structure("True", html = TRUE, class = c("html",     "character")), correct = FALSE, message = structure("Explain why this is not the correct answer", html = TRUE, class = c("html",     "character"))), class = c("tutorial_question_answer", "tutorial_quiz_answer")), structure(list(id = "lnr_ans_2423e77", option = "False",     value = "False", label = structure("False", html = TRUE, class = c("html",     "character")), correct = TRUE, message = NULL), class = c("tutorial_question_answer", "tutorial_quiz_answer"))), button_labels = list(submit = structure("Submit Answer", html = TRUE, class = c("html", "character")), try_again = structure("Try Again", html = TRUE, class = c("html", "character"))), messages = list(correct = structure("Correct!", html = TRUE, class = c("html", "character")), try_again = structure("Incorrect", html = TRUE, class = c("html", "character")), incorrect = structure("Incorrect", html = TRUE, class = c("html", "character")), message = NULL, post_message = NULL), ids = list(    answer = "quiz-1-1-answer", question = "quiz-1-1"), loading = structure("<strong>Loading:<\u002fstrong> \nWrite question 1 part a here\n<br/><br/><br/>", html = TRUE, class = c("html", "character")), random_answer_order = TRUE, allow_retry = TRUE,     seed = 440434987.794906, options = list()), class = c("learnr_radio", "tutorial_question")))
-</script>
- 
-<script type="application/shiny-prerendered" data-context="server">
-learnr:::question_prerendered_chunk(structure(list(type = "learnr_radio", label = "quiz-1-2", question = structure("Write question 1 part b here", html = TRUE, class = c("html", "character")), answers = list(structure(list(id = "lnr_ans_2b1a3fb",     option = "True", value = "True", label = structure("True", html = TRUE, class = c("html",     "character")), correct = TRUE, message = structure("Explain why this is correct...", html = TRUE, class = c("html",     "character"))), class = c("tutorial_question_answer", "tutorial_quiz_answer")), structure(list(id = "lnr_ans_4bce735", option = "False",     value = "False", label = structure("False", html = TRUE, class = c("html",     "character")), correct = FALSE, message = structure("Explain why this is not the correct answer...", html = TRUE, class = c("html",     "character"))), class = c("tutorial_question_answer", "tutorial_quiz_answer"))), button_labels = list(submit = structure("Submit Answer", html = TRUE, class = c("html", "character")), try_again = structure("Try Again", html = TRUE, class = c("html", "character"))), messages = list(correct = structure("Correct!", html = TRUE, class = c("html", "character")), try_again = structure("Incorrect", html = TRUE, class = c("html", "character")), incorrect = structure("Incorrect", html = TRUE, class = c("html", "character")), message = NULL, post_message = NULL), ids = list(    answer = "quiz-1-2-answer", question = "quiz-1-2"), loading = structure("<strong>Loading:<\u002fstrong> \nWrite question 1 part b here\n<br/><br/><br/>", html = TRUE, class = c("html", "character")), random_answer_order = TRUE, allow_retry = TRUE,     seed = 743037298.153996, options = list()), class = c("learnr_radio", "tutorial_question")))
 </script>
  <!--html_preserve-->
 <script type="application/shiny-prerendered" data-context="dependencies">

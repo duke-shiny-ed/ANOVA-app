@@ -10,18 +10,46 @@ library(learnr)
 
 knitr::opts_chunk$set(echo = FALSE)
 
+#knitr::opts_chunk$set(exercise.checker = gradethis::grade_learnr)
 tutorial_options(exercise.checker = gradethis::grade_learnr)
 ```
 
 
 ## Topic 1
-*Goal: Practice running aov(...); interpret summary() output table; identify F-stat and p-value from summary() output and come to basic conclusion*
 
-### Exercise
+*Have the user answer a group of questions after examining image of boxplots and predicting/comparing F-stats; effectively rank them i.e. F-stat_1 > F-stat_2, True or False*
+
+![](images/boxplots.png){width=80%}
+
+Some questions to verify that you understand the purposes of various base and recommended R packages:
+
+```{r quiz-1, echo=FALSE}
+quiz(caption = "Question 1",
+  question("Write question 1 part a here",
+    answer("True", message = "Explain why this is not the correct answer"),
+    answer("False", correct = TRUE),
+  allow_retry = TRUE,
+  random_answer_order = TRUE
+  ),
+  question("Write question 1 part b here",
+    answer("True", correct = TRUE, message = "Explain why this is correct..."),
+    answer("False", message = "Explain why this is not the correct answer..."),
+  allow_retry = TRUE,
+  random_answer_order = TRUE
+  )
+)
+```
+
+## Topic 2
+*Goal: Practice running aov(...); interpret summary() output table; identify F-stat and p-value from summary() output and come to basic conclusion* WOrking with the same dataset, examine if the diamonds grouped Color "D", supposedly the best color, have different densities... 
+
+### Exercise 1
+Is there a difference in mpg of mazdas and hornets
 
 Write question here
 ```{r use_aov, exercise=TRUE, exercise.lines = 7}
-#empty code chunk for user to enter answer (remove this comment before deploy)
+#The following dataframe will be used for Exercise 1
+automobiles
 
 #Start your code below!
 
@@ -52,30 +80,4 @@ grade_result(
 
 ```
 
-## Topic 2
-
-### Quiz
-
-*Have the user answer a group of questions after examining image of boxplots and predicting/comparing F-stats; effectively rank them i.e. F-stat_1 > F-stat_2, True or False*
-
-![](images/boxplots.png){width=80%}
-
-Some questions to verify that you understand the purposes of various base and recommended R packages:
-
-```{r quiz-1, echo=FALSE}
-quiz(caption = "Question 1",
-  question("Write question 1 part a here",
-    answer("True", message = "Explain why this is not the correct answer"),
-    answer("False", correct = TRUE),
-  allow_retry = TRUE,
-  random_answer_order = TRUE
-  ),
-  question("Write question 1 part b here",
-    answer("True", correct = TRUE, message = "Explain why this is correct..."),
-    answer("False", message = "Explain why this is not the correct answer..."),
-  allow_retry = TRUE,
-  random_answer_order = TRUE
-  )
-)
-```
 

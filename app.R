@@ -437,25 +437,39 @@ ui <- navbarPage(theme = shinytheme("lumen"),
                             ),
                           
                           fluidRow(
-                            column(offset = 2, width = 8,
-                                   h3("The 'Source' column clarifies the source of the variance in question"),
-                                   h4("$\\bullet$ Sometimes the grouping variable is written in place of 
-                                      'Between' and 'Residuals' is written in place of 'Within'"),
-                                   br(),
+                            column(offset = 2, width = 4,
+                                   h4(em("Values in the 'Source' column clarify the source of the variance in question")),
+                                   h4("$\\bullet$ The name of the grouping variable may be used in place of the 'Between' label"),
+                                   h4("$\\bullet$ The word 'Residuals' may be used in place of the 'Within' label")),
                                    
-                                   h3("df refers to the degrees of freedom"),
-                                   h4("$\\bullet$ $ndf = K - 1$"),
-                                   h4("$\\bullet$ $ddf = n - K$"),
-                                   h4("Where $n$ is the total number of samples and $K$ is the total number of groups"),
-                                   br(),
-                                   
-                                   h4("${s_B}^{2}$ is the between groups variance, the sum of the squared differences of 
-                                      the observations from the overall mean"),
-                                   h4("${s_W}^{2}$ is a pooled estimated of the within groups variances, the sum of the squared differences between
-                                   the observations of a given grop and that group's mean."),
+                            column(width = 4, 
+                                  h4(em("The Mean Sq Between is an estimate of the variance of the group means
+                                          from the overall mean"),
+                                      h4(em("The Mean Sq Within is an estimate of $\\sigma^{2}$, the inherent variability in 
+                                          each group's population")),
+                                      h4("$\\bullet$ ${s_B}^{2}$ is the between groups variance"),
+                                      h4("$\\bullet$ ${s_W}^{2}$ is a pooled estimated of the within groups variances")
+                                      )
                                    )
                           ),
+                          br(), br(),
+                                   
+                             fluidRow(
+                               column(offset = 2, width = 4,
+                                      h4(em("'df' refers to the degrees of freedom")),
+                                      h4("$\\bullet$ $ndf = K - 1$"),
+                                      h4("$\\bullet$ $ddf = n - K$"),
+                                      h4("Where $n$ is the total number of samples and $K$ is the total number of groups")
+                                      ),
+                               column(width = 4,
+                                      h4("$\\bullet$ $F_{obs}$ is equal to the ratio of the 'Between' Mean Sq value 
+                                      to the 'Within' Mean Sq value"),
+                                      h4("$\\bullet$ The null hypothesis is rejected if $p_{obs}$, the p-value corresponding to $F_{obs}$,
+                                         is less than $\\alpha$")
+                               )
+                          ),
                           br(), br(), br(), br(), br()
+                          
                  ),
                  
                  

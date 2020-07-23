@@ -92,22 +92,22 @@ Plants grown with two different new fertilizers and 1 (control) with just standa
 Population = 100; sampled 50 plots
 ```{r, data}
 # Location 1
-Location.A <- matrix(rep("A", times = 150), ncol = 1)
+Location.A <- matrix(rep("Location A", times = 150), ncol = 1)
 #head(Location.A)
 set.seed(1)
 control.A <- matrix(rnorm(n = 50, sd = .8), ncol = 1)
 treat1.A <- matrix(rnorm(n = 50, sd = .82), ncol = 1)
-treat2.A <- matrix(rnorm(n = 50, sd =.98), ncol = 1)
+treat2.A <- matrix(rnorm(n = 50, sd =.83), ncol = 1)
 
 # Location 2
-Location.B <- matrix(rep("B", times = 150), ncol = 1)
+Location.B <- matrix(rep("Location B", times = 150), ncol = 1)
 set.seed(2)
 control.B <- matrix(rnorm(n = 50, sd = .69), ncol = 1)
 treat1.B <- matrix(rnorm(n = 50, sd = .76), ncol = 1)
 treat2.B <- matrix(rnorm(n = 50, sd =.78), ncol = 1)
 
 # Location 3
-Location.C <- matrix(rep("C", times = 150), ncol = 1)
+Location.C <- matrix(rep("LocationC", times = 150), ncol = 1)
 set.seed(3)
 control.C <- matrix(rnorm(n = 50, sd = .8), ncol = 1)
 treat1.C <- matrix(rnorm(n = 50, sd = .86), ncol = 1)
@@ -136,7 +136,7 @@ head(Value)
 PlantHeights <- data.frame(Location, Treatment, Value)
 head(PlantHeights)
 
-write.csv(PlantHeights, "PlantHeights.csv")
+#write.csv(PlantHeights, "PlantHeights.csv")
 ```
 
 
@@ -161,7 +161,19 @@ ggplot(data = PlantHeights, aes(y = Value)) +
 
 ```
 
+## Run aov()
+```{r, aov}
+PlantHeights
 
+LocationC <- PlantHeights %>%
+  filter(Location == "C")
+
+LocationC
+summary(aov(Value ~ Treatment, data = LocationC))
+
+
+
+```
 
 
 

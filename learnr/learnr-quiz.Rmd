@@ -7,11 +7,22 @@ description: "Practice what you've learned (learning goal 3)"
 
 ```{r setup, include=FALSE}
 library(learnr)
+library(gradethis)
 
 knitr::opts_chunk$set(echo = FALSE)
-
-#knitr::opts_chunk$set(exercise.checker = gradethis::grade_learnr)
 tutorial_options(exercise.checker = gradethis::grade_learnr)
+
+
+library(downloader) 
+library(dplyr)
+url <- "https://raw.githubusercontent.com/sowusu08/ANOVA-PlantHeights-Data/master/Data/PlantHeights.csv"
+filename <- "PlantHeights.csv" 
+download(url, destfile=filename)
+
+PlantHeights <- read.csv("PlantHeights.csv")
+LocationC <- PlantHeights %>%
+  filter(Location == "C")
+  
 ```
 
 
@@ -60,40 +71,62 @@ quiz(caption = "Indicate whether the following statements regarding the boxplots
 
 
 ## Topic 2
-*Goal: Practice running aov(...); interpret summary() output table; identify F-stat and p-value from summary() output and come to basic conclusion* WOrking with the same dataset, examine if the diamonds grouped Color "D", supposedly the best color, have different densities... 
+Using the data set referenced in the previous topic, PlantHeight, complete the following exercise.
 
-Write question here
-```{r use_aov, exercise=TRUE, exercise.lines = 7}
-#The following dataframe will be used for Exercise 1
-automobiles
+Examine the data collected for Location C. Run an ANOVA test in R at the $\alpha = .05$ level. 
+```{r grade_code, exercise=TRUE, exercise.lines = 12}
+# Run the following line of code to view the Location C data, extracted from the PlantHeight dataframe, that will be used for this exercise 
+LocationC
 
-#Start your code below!
+# Run your ANOVA test below!
 
-#Print your conclusion in quotes. Is there sufficient or insufficient evidence to conclude...
-print("")
 
 ```
 
-```{r use_aov-hint}
-#write hint
+```{r grade_code-hint}
+# To print the summary of an ANOVA test run in R, use the following general formula
+
+# NOT RUN
+summary(aov(ResponseVariable ~ GroupingVariable, data = dat))
+
+# For information on how to read and interpret this output check out the Resouces tab!
 ```
 
-*Use check chunk to create a function which explains answer; not just provides answer*
-*Note must use -solution chunk with grade_code()*
-```{r use_aov-solution}
-#write model solution code
-summary(aov(y ~ x, data = data))
-```
-```{r use_aov-check}
-#what the user receives if the code is correct
-grade_code("This code is correct...")
+```{r grade_code-solution}
+# Run the following line of code to view the Location C data, extracted from the PlantHeight dataframe, that will be used for this exercise 
+LocationC
 
-grade_result(
-  pass_if(~ identical(.result, print("sufficient")), "Correct, ..."),
-  fail_if(~ identical(.result, ...), "Incorrect, ..."),
-  fail_if(~ identical(.result, ...), "Incorrect,...")
+# Run your ANOVA test below!
+summary(aov(Value ~ Treatment, data = LocationC))
+
+```
+```{r grade_code-check}
+grade_code("This code is correct. The general formula for printing the output of an ANOVA test in R is summary(aov(ResponseVariable ~ GroupingVariable, data = dat))")
+```
+
+
+Based on the test output is there sufficient evidence to conclude that there is at least one difference between the group means? Enter Yes or No.
+```{r text_box, echo = FALSE}
+question_text(
+  "Type your conclusion below:",
+  answer("no", message = "Recall that if $p_{obs}$, the number listed under Pr(>F), is less than the alpha value
+         there is sufficient evidence to conclude that there is at least one difference between the group means. 
+         However, $p_{obs}$ is 0.469 in this case and greater than the alpha value."),
+  answer("NO", message = "Recall that if $p_{obs}$, the number listed under Pr(>F), is less than the alpha value
+         there is sufficient evidence to conclude that there is at least one difference between the group means. 
+         However, $p_{obs}$ is 0.469 in this case and greater than the alpha value."),
+  answer("No", message = "Recall that if $p_{obs}$, the number listed under Pr(>F), is less than the alpha value
+         there is sufficient evidence to conclude that there is at least one difference between the group means. 
+         However, $p_{obs}$ is 0.469 in this case and greater than the alpha value."),
+  answer("yes", correct = TRUE, message = "The p-value corresponding to the F-stat is 0.469. This is greater than the
+         alpha value, .05. Therefore there is NOT sufficient evidence to conclude that there is 
+         at least one difference between the group means."),
+  answer("Yes", correct = TRUE, message = "The p-value corresponding to the F-stat is 0.469. This is greater than the
+         alpha value, .05. Therefore there is NOT sufficient evidence to conclude that there is 
+         at least one difference between the group means."),
+  answer("YES", correct = TRUE, message = "The p-value corresponding to the F-stat is 0.469. This is greater than the
+         alpha value, .05. Therefore there is NOT sufficient evidence to conclude that there is 
+         at least one difference between the group means."),
+  allow_retry = TRUE
 )
-
 ```
-
-

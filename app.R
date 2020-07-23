@@ -273,7 +273,14 @@ ui <- navbarPage(theme = shinytheme("lumen"),
                                               "3. Approximately equal within group variances for all groups", uiOutput("assumption3")))
                                      
                                    )
-                            )
+                                   
+                            ),
+                            column(width = 3,
+                                   
+                                            verbatimTextOutput("sumstats")
+                                   
+                                   
+                                   )
                             
                           )
                           
@@ -316,7 +323,8 @@ ui <- navbarPage(theme = shinytheme("lumen"),
                                        column(offset = 9, width = 3,
                                               tipify(el = p(em(strong("What's happening?")), style = "text-align:right; color:#00B5E5; font-size:12px"),
                                                      title = "If the sample means are far apart there is evidence against the null hypothesis that the mean value of response is the same for all groups. But what is considered far appart? The F-stat quantifies this",
-                                                     placement = "top", trigger = "hover")))
+                                                     placement = "top", trigger = "hover"))),
+                                     uiOutput("valid")
                                    )
                             ),
                            
@@ -462,7 +470,7 @@ ui <- navbarPage(theme = shinytheme("lumen"),
                  tabPanel("Quiz", value = 4,
                           fluidRow(
                             tags$iframe(src = "https://samanthaowusu.shinyapps.io/ANOVA-quiz/",
-                                        width = "1500", height = "1500",
+                                        width = "1500", height = "1000",
                                         frameBorder="0")
                           )
                  )
@@ -717,6 +725,19 @@ server <- function(input, output, session) {
             axis.text.x=element_blank(), axis.ticks.x=element_blank())
   })
   
+  stats <- reactive({c(mean(sample1()), var(sample1()),
+             mean(sample2()), var(sample2()),
+             mean(sample3()), var(sample3()))})
+  
+  output$sumstats <- renderPrint({
+    matrix <- matrix(stats(), ncol = 2)
+    rownames(matrix) <- c("Sample 1", "Sample 2", "Sample 3")
+    colnames(matrix) <- c("mean", "variance")
+    
+    return(matrix)
+  
+  })
+  
   runTest <- reactive({aov(values ~ dataset, data = sampledf_long())})
   output$aovTest <- renderPrint ({
     print(summary(runTest()))
@@ -730,6 +751,14 @@ server <- function(input, output, session) {
       return("sufficient evidence to conclude that there is at least one difference between the group means.")
     } else {
       return("insufficent evidence to conclude that there is at least one difference between the group means.")
+    }
+  })
+  
+  output$valid <- renderUI({
+    if(grepl(pattern = ".*is currently met", 
+             x = rank(s1 = sample1(), s2 = sample2(), s3 = sample3())) == FALSE) {
+      return(p("CAUTION: Since the assumption that the within group variances are approximately equal is not currently met,
+             the output of this ANOVA test may not be valid.", style = "color:#C10000"))
     }
   })
 }

@@ -476,9 +476,9 @@ ui <- navbarPage(theme = shinytheme("lumen"),
                  ##---------------------------------------------------------quiz on boxplots comparing F-stats  
                  tabPanel("Quiz", value = 4,
                           fluidRow(
-                            #tags$iframe(src = "shiny apps.io link to quiz",
-                            #width = "1000", height = "1500",
-                            #frameBorder="0")
+                            tags$iframe(src = "https://samanthaowusu.shinyapps.io/ANOVA-quiz/",
+                            width = "1500", height = "1500",
+                            frameBorder="0")
                           )
                  )
                  

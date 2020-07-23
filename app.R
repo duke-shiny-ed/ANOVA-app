@@ -101,7 +101,7 @@ ui <- navbarPage(theme = shinytheme("lumen"),
                           p("Created by Samantha Owusu-Antwi for Duke University 'Creating Interactive Learning Tools' Project, Summer 2020", style = "text-align:center")),
                  
                  ##--------------------------------------------------------tab 1
-                 tabPanel("Step 1: Create the Population", value = 1,
+                 tabPanel("Step 1: Identify the Population", value = 1,
                           fluidRow(
                             column(offset = 2, width = 8, style="background-color:#F1F0F0; padding:20px; border-radius:10px",
                                    p("ANOVA tests the following hypotheses:"),
@@ -176,18 +176,7 @@ ui <- navbarPage(theme = shinytheme("lumen"),
                                                    title = "These are the population distributions of the response variable of interest. The vertical dotted lines are the mean values of the response for the corresponding groups. Using ANOVA we will be exploring if there is a significant difference in these means.",
                                                    placement = "top", trigger = "hover"))
                                    ),
-                                   p(),
-                                   #p(verbatimTextOutput(outputId = "aovTest")),
-                                   #move assumptions static text here
-                                   fluidRow(
-                                     column(width = 12, style="background-color:#F7F7F7; padding:20px; border-radius:5px; border: 1px solid #C6C5C5",
-                                       p(strong("ANOVA assumes:"), br(),
-                                         "1. Independent Observations", p(), p(),
-                                         "2. Approximately normal population distributions within each group", uiOutput("assumption1"),
-                                         "3. Approximately equal within group variances for all groups", uiOutput("assumption2")))
-                                     ),
-                                   #p("At the $\\alpha = .05$ level this F-stat corresponds to a p-value that suggests there is:", 
-                                     #textOutput(outputId = "concl1")),
+                                   
                                    br(),
                                    br(),
                             ),
@@ -220,9 +209,8 @@ ui <- navbarPage(theme = shinytheme("lumen"),
                                                  selected = "norm")))
                           )
                  ),
-                 
-                 ##--------------------------------------------------------tab 2
-                 tabPanel("Step 2: Use Samples to Visualize the F-Statistic", value = 2,
+                 ##--------------------------------------------------------tab2
+                 tabPanel("Step 2: Draw the Samples", value = 2,
                           fluidRow(
                             column(offset = 2, width = 8, 
                                    p("Now that out population data is set, let's examine the random samples taken from the populations."),
@@ -244,57 +232,12 @@ ui <- navbarPage(theme = shinytheme("lumen"),
                           br(),
                           hr(),
                           fluidRow(
-                            column(width = 3,
-                                   h3(strong("Between Group Variance")),
-                                   wellPanel(
-                                     p("Toggle between 'Reduced' and 'Increased' to translate the samples, altering the distance between thier medians", style = "color:grey"), 
-                                     br(),
-                                     #sliderInput(inputId = "btwsd2",
-                                     #label = NULL,
-                                     #min = 0, max = 1, value = 0, step = .001), ## <- set btwsd2 to a value that doesn't initilaly maniuplate sample data
-                                     selectInput(inputId = "btwsd2",
-                                                 label = NULL,
-                                                 choices = c("Increased Between Group Variance" = "inc",
-                                                             "Reduced Between Group Variance" = "dec"),
-                                                 selected = "inc"),
-                                     fluidRow(
-                                       column(offset = 6, width = 6, 
-                                              tipify(el = p(em(strong("What's happening?")), style = "text-align:right; color:#00B5E5; font-size:12px"),
-                                                     title = "Notice how increasing the between group variance increases the F-stat and decreasing it decreases the F-stat",
-                                                     placement = "bottom", trigger = "hover")))
-                                   ),
-                                   
-                                   h3(strong("Within group variance")),
-                                   wellPanel(
-                                     p("Manipulate the sliders to increase or decrease the within group variance of each sample's population 
-                                              by a factor of the slider value. This will alter the spread of the samples' data points. 
-                                              Recall ANOVA assumes these variances are approximately equal", 
-                                       style = "color:grey"), 
-                                     
-                                     br(),
-                                     sliderInput(inputId = "sd2.1",
-                                                 label = p("Group 1", style = "color:red"),
-                                                 min = 0.75, max = 1.25, value = 1),
-                                     sliderInput(inputId = "sd2.2",
-                                                 label = p("Group 2", style = "color:green"),
-                                                 min = 0.75, max = 1.25, value = 1),
-                                     sliderInput(inputId = "sd2.3",
-                                                 label = p("Group 3", style = "color:blue"),
-                                                 min = 0.75, max = 1.25, value = 1),
-                                     fluidRow(
-                                       column(offset = 6, width = 6,
-                                              tipify(el = p(em(strong("What's happening?")), style = "text-align:right; color:#00B5E5; font-size:12px"),
-                                                     title = "Try moving the slider from one end to the other. Notice how decreasing within group variance generally increases the F-stat and increasing it generally decreases the F-stat",
-                                                     placement = "top", trigger = "hover")))
-                                   )
-                            ),
-                            
-                            column(width = 6,
+                            column(offset = 2, width = 6,
                                    br(),
                                    br(),
                                    fluidRow(
-                                     numericInput("n", "Choose a sample size", 
-                                                  min = 2, max = 20000, value = 100, step = 1),
+                                     numericInput("n", "Choose a sample size between 2 and 200", 
+                                                  min = 2, max = 200, value = 100, step = 1),
                                      tabsetPanel(
                                        tabPanel("Whole Graph", column(width = 12, plotOutput(outputId = "boxplot")),
                                                 fluidRow(
@@ -322,8 +265,50 @@ ui <- navbarPage(theme = shinytheme("lumen"),
                                      )
                                    ),
                                    fluidRow(
+                                     column(width = 12, style="background-color:#F7F7F7; padding:20px; border-radius:5px; border: 1px solid #C6C5C5",
+                                            p(strong("ANOVA assumes:"), p(),
+                                              "1. Independent Observations", p("This assumption is currently met becasue ehe sample size is 
+                                                                               less than 10% of the population", style = "color:#20C100"),
+                                              "2. Approximately normal population distributions within each group", uiOutput("assumption2"),
+                                              "3. Approximately equal within group variances for all groups", uiOutput("assumption3")))
+                                     
+                                   )
+                            )
+                            
+                          )
+                          
+                 ),
+                 
+                 ##--------------------------------------------------------tab 3
+                 tabPanel("Step 3: ANOVA Test", value = 2,
+                          fluidRow(
+                            column(offset = 2, width = 8, style="background-color:#F1F0F0; padding:20px; border-radius:10px",
+                                   p("Recall ANOVA tests the following hypotheses:"),
+                                   p("$H_0$: The means of all groups are equal $(\\mu_1 = \\mu_2 = ... = \\mu_K)$", 
+                                     br(),
+                                     "$H_1$: At least one of the means $(\\mu_i)$ is not equal to the others", style = "text-align:center"),
+                                   br(),
+                                   p("Below you will find the results of our ANOVA test, run on the data you manipulated in the previous
+                                     steps")
+                             )
+                          ),
+                          br(),
+                          hr(),
+                          fluidRow(
+                            column(offset = 2, width = 6,
+                                   br(),
+                                   br(),
+                                   fluidRow(
+                                     column(width = 12, plotOutput(outputId = "boxplot2")),
+                                                fluidRow(
+                                                  column(offset = 1, width = 4,
+                                                         tipify(el = p(em(strong("What does this graph show?")), style = "text-align:left; color:#00B5E5; font-size:12px"),
+                                                                title = "These graphs all depict parts of the sample distributions. Here the between groups variance can be thought of as how the median of a boxplot varies from the overall mean, the solid black line. The within groups variance can be thought of as how the datapoints of a sample vary from the median of that sample.",
+                                                                placement = "top", trigger = "hover"))
+                                                )
+                                   ),
+                                   fluidRow(
                                      p(verbatimTextOutput(outputId = "aovTest")),
-                                     ##move aovTest output here
                                      p(),
                                      p("At the $\\alpha = .05$ level this F-stat corresponds to a p-value that suggests there is:",
                                        textOutput(outputId = "concl")),
@@ -338,7 +323,6 @@ ui <- navbarPage(theme = shinytheme("lumen"),
                             column(width = 3,
                                    h3(strong("What is the F-statistic?")),
                                    wellPanel(
-                                     #Non-reactive text explaining what F-stat is...
                                      p("If the sample means vary around the overall mean more that the individual observations vary around
                                      the sample means we have evidence that the corresponding popualtion means are different. We formally compare
                                     these variances with the F-stat", br(), br(),
@@ -347,7 +331,7 @@ ui <- navbarPage(theme = shinytheme("lumen"),
                                                              placement = "top", trigger = "hover"),
                                        "the F-stat will be very close to 1"),
                                      
-                                     #F-stat equation
+                                     
                                      p("$\\large{F = \\frac{{{s^2}_B}/ndf}{{{s^2}_W}/ddf}}$", style = "text-align:center"),
                                      p("$\\bullet$ ${s^2}_B$ is the between groups variance", tipify(strong("*", style = "color:#00B5E5"),
                                                                                                      title = "the between groups variance is proportional to F",
@@ -372,6 +356,7 @@ ui <- navbarPage(theme = shinytheme("lumen"),
                           
                  ),
                  
+              
                  tabPanel("Resources", value = 3,
                           
                           h1("Equations"),
@@ -476,9 +461,9 @@ ui <- navbarPage(theme = shinytheme("lumen"),
                  ##---------------------------------------------------------quiz on boxplots comparing F-stats  
                  tabPanel("Quiz", value = 4,
                           fluidRow(
-                            #tags$iframe(src = "shiny apps.io link to quiz",
-                            #width = "1000", height = "1500",
-                            #frameBorder="0")
+                            tags$iframe(src = "https://samanthaowusu.shinyapps.io/ANOVA-quiz/",
+                                        width = "1500", height = "1500",
+                                        frameBorder="0")
                           )
                  )
                  
@@ -487,55 +472,6 @@ ui <- navbarPage(theme = shinytheme("lumen"),
 
 
 server <- function(input, output, session) {
-  ##--------------------------------------------------------------Fluid Sidebar
-  ## Btw var slider
-  observeEvent(input$btwsd1, {
-    if(input$btwsd2 != input$btwsd1) {
-      updateSliderInput(session, "btwsd2", value = input$btwsd1)
-    }
-  })
-  observeEvent(input$btwsd2, {
-    if(input$btwsd1 != input$btwsd2) {
-      updateSliderInput(session, "btwsd1", value = input$btwsd2)
-    }
-  })
-  
-  ## Within var Curve 1 slider
-  observeEvent(input$sd1.1, {
-    if(input$sd2.1 != input$sd1.1) {
-      updateSliderInput(session, "sd2.1", value = input$sd1.1)
-    }
-  })
-  observeEvent(input$sd2.1, {
-    if(input$sd1.1 != input$sd2.1) {
-      updateSliderInput(session, "sd1.1", value = input$sd2.1)
-    }
-  })
-  
-  
-  ## Within var Curve 2 slider
-  observeEvent(input$sd1.2, {
-    if(input$sd2.2 != input$sd1.2) {
-      updateSliderInput(session, "sd2.2", value = input$sd1.2)
-    }
-  })
-  observeEvent(input$sd2.2, {
-    if(input$sd1.2 != input$sd2.2) {
-      updateSliderInput(session, "sd1.2", value = input$sd2.2)
-    }
-  })
-  
-  ## Within var Curve 3 slider
-  observeEvent(input$sd1.3, {
-    if(input$sd2.3 != input$sd1.3) {
-      updateSliderInput(session, "sd2.3", value = input$sd1.3)
-    }
-  })
-  observeEvent(input$sd2.3, {
-    if(input$sd1.3 != input$sd2.3) {
-      updateSliderInput(session, "sd1.3", value = input$sd2.3)
-    }
-  })
   ##--------------------------------------------------------------Population Tab
   pop_dist <- function(skew, within, n) {
     if(skew == "norm") {
@@ -627,9 +563,9 @@ server <- function(input, output, session) {
   
   ##--------------------------------------------------------------Samples Tab
   ##recall that sample1, sample2, sample3 already defined; also dataset with all is sampledf_long()
-  
+
   #Assumes approximate normality
-  output$assumption1 <- renderUI({
+  output$assumption2 <- renderUI({
     if(input$n >= 10) {
       return(p("This assumption is currently met because the selected sample size,", paste(input$n), ", is greater than or equal to 10",
                     style = "color:#20C100"))
@@ -732,7 +668,7 @@ server <- function(input, output, session) {
     
   }
   
-  output$assumption2 <- renderUI ({
+  output$assumption3 <- renderUI ({
     rank(s1 = sample1(), s2 = sample2(), s3 = sample3())
   })
   
@@ -767,6 +703,17 @@ server <- function(input, output, session) {
       #coord_cartesian(ylim =c(0.1, 1.2)) +
       labs(title = "Sample Distributions", x = "Sample", y = "Values") +
       theme(legend.position = "none", plot.title = element_text(size = "14"),
+            axis.text.x=element_blank(), axis.ticks.x=element_blank())
+  })
+  
+  output$boxplot2 <- renderPlot({
+    ggplot(data = sampledf_long(), aes(x = dataset, y = values)) + 
+      geom_boxplot(aes(color = dataset)) +
+      geom_jitter(aes(x = dataset, y = values, alpha = .2, color = dataset), position=position_jitter(0.04)) +
+      #coord_cartesian(ylim =c(0.1, 1.2)) +
+      geom_hline(yintercept=mean(sampledf_long()$values), linetype=2, color = "black") +
+      labs(title = "Sample Distributions", x = "Sample", y = "Values") +
+      theme(legend.position = "none",  plot.title = element_text(size = "14"),
             axis.text.x=element_blank(), axis.ticks.x=element_blank())
   })
   

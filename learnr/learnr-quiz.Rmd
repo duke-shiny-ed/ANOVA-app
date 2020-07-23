@@ -16,35 +16,51 @@ tutorial_options(exercise.checker = gradethis::grade_learnr)
 
 
 ## Topic 1
+A recent study tested the effectiveness of two new pre-market fertilizers. To test them (a) 100 corn plants were grown with a fertilizer already in the market (the control), (b) 100 plants were grown with the first new fertilizer (Treatment 1), and (c) 100 plants were grown with the second new fertilizer (Treatment 2). Of theses 300 plants, 50 plants were randomly sampled from each treatment group. Just before harvesting, the stalks of the randomly sampled corn plants were measured and the differences between their heights and the standard stalk height of a healthy corn plant were recorded. 
 
-*Have the user answer a group of questions after examining image of boxplots and predicting/comparing F-stats; effectively rank them i.e. F-stat_1 > F-stat_2, True or False*
+The researchers then repeated the same procedure at two other locations. The PlantHeight data set contains the results of this study. The boxplots below summarize these results.
 
 ![](images/boxplots.png){width=80%}
 
-Some questions to verify that you understand the purposes of various base and recommended R packages:
 
 ```{r quiz-1, echo=FALSE}
-quiz(caption = "Question 1",
-  question("Write question 1 part a here",
-    answer("True", message = "Explain why this is not the correct answer"),
-    answer("False", correct = TRUE),
+quiz(caption = "Indicate whether the following statements regarding the boxplots are true or false. Assume all assumptions of ANOVA are met.",
+  question("Assuming the pooled estimates of the within groups variances of Location B and Location C data are
+           approximately the same, we would expect the $F_{obs}$ of the Location B data to be smaller than the $F_{obs}$ of the Location C data",
+    answer("True", message = "Under these circumstances we would expect the $F_{obs}$ of the Location B 
+           data to be larger because the between groups variance of the Location B data appears to be larger.
+           Recall that the F-stat is proportional to the between groups variance."),
+    answer("False", correct = TRUE,
+                    message = "We are assuming the pooled pooled estimates of the within groups variances are equal. Remember
+            that the F-stat is proportional to the between groups variance. So we would expect that the data which appears to have the 
+            larger between groups variance will have the larger $F_{obs}$"),
   allow_retry = TRUE,
-  random_answer_order = TRUE
-  ),
-  question("Write question 1 part b here",
-    answer("True", correct = TRUE, message = "Explain why this is correct..."),
-    answer("False", message = "Explain why this is not the correct answer..."),
+  random_answer_order = TRUE),
+  
+  question("It appears that the between groups variance of the Location A data is less than the between groups variance of the Location B data",
+    answer("True", correct = TRUE, message = "In this case we can consider the between groups variance to be how the medians of the boxplots in one plot 
+            vary from an overall mean line of that plot. It appears that the medians of the Location B plot are more varied around the overall mean line."),
+    answer("False", message = "In this case we can consider the between groups variance to be how the medians of the boxplots in one plot 
+            vary from an overall mean line of that plot. It appears that the medians of the Location A plot are less varied around the overall mean line."),
   allow_retry = TRUE,
-  random_answer_order = TRUE
-  )
+  random_answer_order = TRUE),
+  
+  question("It appears that the pooled estimate of the within groups variances of the Location A data is less 
+           than the pooled estimate of the within groups variances of the Location B data",
+    answer("False", correct = TRUE, message = "In this case we can consider the IQR to be a good estimate of the within groups variances.
+           In general the boxplots of the Location B data appear to be wider that the boxplots of the Location C data."),
+    answer("True", message = "In this case we can consider the IQR to be a good estimate of the within groups variances.
+           In general the boxplots of the Location A data don't appear to be as wide as the boxplots of the Location C data."),
+  allow_retry = TRUE,
+  random_answer_order = TRUE)
+
 )
 ```
 
+
+
 ## Topic 2
 *Goal: Practice running aov(...); interpret summary() output table; identify F-stat and p-value from summary() output and come to basic conclusion* WOrking with the same dataset, examine if the diamonds grouped Color "D", supposedly the best color, have different densities... 
-
-### Exercise 1
-Is there a difference in mpg of mazdas and hornets
 
 Write question here
 ```{r use_aov, exercise=TRUE, exercise.lines = 7}

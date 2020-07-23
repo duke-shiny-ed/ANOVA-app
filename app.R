@@ -126,6 +126,7 @@ ui <- navbarPage(theme = shinytheme("lumen"),
                           hr(),
                           
                           fluidRow(
+                            
                             column(width = 3,
                                    h3(strong("Between Group Variance")),
                                    wellPanel(
@@ -133,55 +134,14 @@ ui <- navbarPage(theme = shinytheme("lumen"),
                                   altering the distance between thier means", 
                                        style = "color:grey"),
                                      br(),
-                                     #sliderInput(inputId = "btwsd1",
-                                     #label = NULL,
-                                     #min = 0, max = 1, value = 1, step = .001),
-                                     #toggle btw group variance
+                                     
                                      selectInput(inputId = "btwsd1",
                                                  label = NULL,
                                                  choices = c("Increased Between Group Variance" = "inc",
                                                              "Reduced Between Group Variance" = "dec"),
                                                  selected = "inc")
                                    ),
-                                   ## put w/in groups var input group here
-                                   h3(strong("Within group variance")),
-                                   wellPanel(
-                                     p("Manipulate the sliders to increase or decrease the within group variance of each curve 
-                                     by a factor of the slider value. This will alter the spread of each density curve. 
-                                     Recall ANOVA assumes these variances are approximately equal",
-                                       style = "color:grey"),
-                                     br(),
-                                     
-                                     sliderInput(inputId = "sd1.1",
-                                                 label = p("Group 1", style = "color:red"),
-                                                 min = 0.75, max = 1.25, value = 1),
-                                     sliderInput(inputId = "sd1.2",
-                                                 label = p("Group 2", style = "color:green"),
-                                                 min = 0.75, max = 1.25, value = 1),
-                                     sliderInput(inputId = "sd1.3",
-                                                 label = p("Group 3", style = "color:blue"),
-                                                 min = 0.75, max = 1.25, value = 1)
-                                   ),
-                                   br(),
-                                   
-                            ),
-                            
-                            column(width = 6,
-                                   br(),
-                                   p(plotOutput(outputId = "curve")),
-                                   ## add "what does graph show?" here
-                                   fluidRow(
-                                     column(width = 4,
-                                            tipify(el = p(em(strong("What does this graph show?")), style = "text-align:left; color:#00B5E5; font-size:12px"),
-                                                   title = "These are the population distributions of the response variable of interest. The vertical dotted lines are the mean values of the response for the corresponding groups. Using ANOVA we will be exploring if there is a significant difference in these means.",
-                                                   placement = "top", trigger = "hover"))
-                                   ),
-                                   
-                                   br(),
-                                   br(),
-                            ),
-                            ## put shape input group here
-                            column(width = 3,
+                                   ## put shape input group here
                                    h3(strong("Shape")),
                                    wellPanel(
                                      p("Manipulate the skew of each population density curve. Recall ANOVA assumes the 
@@ -206,7 +166,42 @@ ui <- navbarPage(theme = shinytheme("lumen"),
                                                  choices = c("Normal" = "norm",
                                                              "Right Skewed" = "rskew",
                                                              "Left Skewed" = "lskew"),
-                                                 selected = "norm")))
+                                                 selected = "norm")),
+                                   br(), br()
+                                   
+                            ),
+                            
+                            column(width = 6,
+                                   br(),
+                                   p(plotOutput(outputId = "curve")),
+                                   fluidRow(
+                                     column(width = 4,
+                                            tipify(el = p(em(strong("What does this graph show?")), style = "text-align:left; color:#00B5E5; font-size:12px"),
+                                                   title = "These are the population distributions of the response variable of interest. The vertical dotted lines are the mean values of the response for the corresponding groups. Using ANOVA we will be exploring if there is a significant difference in these means.",
+                                                   placement = "bottom", trigger = "hover"))
+                                   )
+                                   
+                            ),
+                            ## put w/in input group here
+                            column(width = 3,
+                                   h3(strong("Within group variance")),
+                                   wellPanel(
+                                     p("Manipulate the sliders to increase or decrease the within group variance of each curve 
+                                     by a factor of the slider value. This will alter the spread of each density curve. 
+                                     Recall ANOVA assumes these variances are approximately equal",
+                                       style = "color:grey"),
+                                     br(),
+                                     
+                                     sliderInput(inputId = "sd1.1",
+                                                 label = p("Group 1", style = "color:red"),
+                                                 min = 0.75, max = 1.25, value = 1),
+                                     sliderInput(inputId = "sd1.2",
+                                                 label = p("Group 2", style = "color:green"),
+                                                 min = 0.75, max = 1.25, value = 1),
+                                     sliderInput(inputId = "sd1.3",
+                                                 label = p("Group 3", style = "color:blue"),
+                                                 min = 0.75, max = 1.25, value = 1)
+                                   ),)
                           )
                  ),
                  ##--------------------------------------------------------tab2
@@ -224,20 +219,26 @@ ui <- navbarPage(theme = shinytheme("lumen"),
                                 of this assumption and the results of ANOVA may not be valid if $s_{max} \\geq 2s_{min}$, or if the maximum group variance is
                                      greater than or equal to double the minimum group variance"),   
                                    style="background-color:#F1F0F0; padding:20px; border-radius:10px")
-                            
-                            #change LaTeX size with $\\___{...}$
-                            
-                            #If other asusmptions validated result may not be valid
                           ),
                           br(),
                           hr(),
+                          
                           fluidRow(
-                            column(offset = 2, width = 6,
-                                   br(),
-                                   br(),
-                                   fluidRow(
-                                     numericInput("n", "Choose a sample size between 2 and 200", 
-                                                  min = 2, max = 200, value = 100, step = 1),
+                            column(width = 3,
+                                   br(), br(), br(), br(), 
+                                  
+                                   h3(strong("ANOVA Assumptions")),
+                                      wellPanel(
+                                             "1. Independent Observations", p("This assumption is currently met because the sample size is 
+                                                                               less than 10% of the population", style = "color:#20C100"),
+                                             "2. Approximately normal population distributions within each group", uiOutput("assumption2"),
+                                             "3. Approximately equal within group variances for all groups", uiOutput("assumption3")
+                                             )
+                                   ),
+                            
+                            column(width = 6,
+                                   numericInput("n", label = "Choose a sample size between 2 and 200",
+                                                min = 2, max = 200, value = 100, step = 1),
                                      tabsetPanel(
                                        tabPanel("Whole Graph", column(width = 12, plotOutput(outputId = "boxplot")),
                                                 fluidRow(
@@ -245,14 +246,17 @@ ui <- navbarPage(theme = shinytheme("lumen"),
                                                          tipify(el = p(em(strong("What does this graph show?")), style = "text-align:left; color:#00B5E5; font-size:12px"),
                                                                 title = "These graphs all depict parts of the sample distributions. Here the between groups variance can be thought of as how the median of a boxplot varies from the overall mean, the solid black line. The within groups variance can be thought of as how the datapoints of a sample vary from the median of that sample.",
                                                                 placement = "top", trigger = "hover"))
-                                                )),
+                                                ),
+                                                br(), br(), br(), br()
+                                                ),
                                        tabPanel("Focus on Within Groups Variance", column(width = 12, plotOutput(outputId = "toggleWin")),
                                                 fluidRow(
                                                   column(offset = 1, width = 4,
                                                          tipify(el = p(em(strong("What does this graph show?")), style = "text-align:left; color:#00B5E5; font-size:12px"),
                                                                 title = "These graphs all depict parts of the sample distributions. Here the within groups variance can be thought of as how the datapoints of a sample vary from the median of that sample, the corresponding solid lines.",
                                                                 placement = "top", trigger = "hover"))
-                                                )
+                                                ),
+                                                br(), br(), br(), br()
                                        ),
                                        
                                        tabPanel("Focus on Between Groups Variance", column(width = 12, plotOutput(outputId = "toggleBtw")),
@@ -261,73 +265,36 @@ ui <- navbarPage(theme = shinytheme("lumen"),
                                                          tipify(el = p(em(strong("What does this graph show?")), style = "text-align:left; color:#00B5E5; font-size:12px"),
                                                                 title = "These graphs all depict parts of the sample distributions. Here the between groups variance can be thought of as how the median of a boxplot, represented by a point in this case, varies from the overall mean, the solid black line.",
                                                                 placement = "top", trigger = "hover"))
-                                                ))
+                                                ),
+                                                br(), br(), br(), br())
                                      )
-                                   ),
-                                   fluidRow(
-                                     column(width = 12, style="background-color:#F7F7F7; padding:20px; border-radius:5px; border: 1px solid #C6C5C5",
-                                            p(strong("ANOVA assumes:"), p(),
-                                              "1. Independent Observations", p("This assumption is currently met becasue ehe sample size is 
-                                                                               less than 10% of the population", style = "color:#20C100"),
-                                              "2. Approximately normal population distributions within each group", uiOutput("assumption2"),
-                                              "3. Approximately equal within group variances for all groups", uiOutput("assumption3")))
-                                     
-                                   )
+                                   
                                    
                             ),
                             column(width = 3,
-                                   
-                                            verbatimTextOutput("sumstats")
-                                   
-                                   
-                                   )
-                            
-                          )
+                                   br(), br(), br(), br(),
+                              h3(strong("Summary Statistics")),
+                              verbatimTextOutput("sumstats"))
+                    )
+            ),
                           
-                 ),
                  
                  ##--------------------------------------------------------tab 3
                  tabPanel("Step 3: ANOVA Test", value = 2,
                           fluidRow(
                             column(offset = 2, width = 8, style="background-color:#F1F0F0; padding:20px; border-radius:10px",
-                                   p("Recall ANOVA tests the following hypotheses:"),
+                                   p("Below you will find the results of the ANOVA test run on the data you manipulated in the previous
+                                     steps"),
+                                   p(strong("Recall ANOVA tests the following hypotheses:")),
                                    p("$H_0$: The means of all groups are equal $(\\mu_1 = \\mu_2 = ... = \\mu_K)$", 
                                      br(),
-                                     "$H_1$: At least one of the means $(\\mu_i)$ is not equal to the others", style = "text-align:center"),
-                                   br(),
-                                   p("Below you will find the results of our ANOVA test, run on the data you manipulated in the previous
-                                     steps")
+                                     "$H_1$: At least one of the means $(\\mu_i)$ is not equal to the others", style = "text-align:center")
+                                   
                              )
                           ),
                           br(),
                           hr(),
                           fluidRow(
-                            column(offset = 2, width = 6,
-                                   br(),
-                                   br(),
-                                   fluidRow(
-                                     column(width = 12, plotOutput(outputId = "boxplot2")),
-                                                fluidRow(
-                                                  column(offset = 1, width = 4,
-                                                         tipify(el = p(em(strong("What does this graph show?")), style = "text-align:left; color:#00B5E5; font-size:12px"),
-                                                                title = "These graphs all depict parts of the sample distributions. Here the between groups variance can be thought of as how the median of a boxplot varies from the overall mean, the solid black line. The within groups variance can be thought of as how the datapoints of a sample vary from the median of that sample.",
-                                                                placement = "top", trigger = "hover"))
-                                                )
-                                   ),
-                                   fluidRow(
-                                     p(verbatimTextOutput(outputId = "aovTest")),
-                                     p(),
-                                     p("At the $\\alpha = .05$ level this F-stat corresponds to a p-value that suggests there is:",
-                                       textOutput(outputId = "concl")),
-                                     fluidRow(
-                                       column(offset = 9, width = 3,
-                                              tipify(el = p(em(strong("What's happening?")), style = "text-align:right; color:#00B5E5; font-size:12px"),
-                                                     title = "If the sample means are far apart there is evidence against the null hypothesis that the mean value of response is the same for all groups. But what is considered far appart? The F-stat quantifies this",
-                                                     placement = "top", trigger = "hover"))),
-                                     uiOutput("valid")
-                                   )
-                            ),
-                           
                             column(width = 3,
                                    h3(strong("What is the F-statistic?")),
                                    wellPanel(
@@ -345,20 +312,45 @@ ui <- navbarPage(theme = shinytheme("lumen"),
                                                                                                      title = "the between groups variance is proportional to F",
                                                                                                      placement = "top", trigger = "hover"), br(),
                                        "$\\bullet$ ${s^2}_W$ is a pooled estimate of the within groups variances", tipify(strong("*", style = "color:#00B5E5"),
-                                                                                                    title = "the within groups variance is inversely proportional to F",
-                                                                                                    placement = "top", trigger = "hover"), br(),
+                                                                                                                          title = "the within groups variance is inversely proportional to F",
+                                                                                                                          placement = "right", trigger = "hover"), br(),
                                        "$\\bullet$ $ndf$ is the", tipify(strong("numerator degrees of freedom", style = "color:#00B5E5"),
                                                                          title = "The degrees of freedom corresponding to the between groups variance, calculated as total number of groups - 1",
-                                                                         placement = "left", trigger = "hover"), br(),
+                                                                         placement = "top", trigger = "hover"), br(),
                                        "$\\bullet$ $ddf$ is the", tipify(strong("denominator degrees of freedom", style = "color:#00B5E5"),
                                                                          title = "The degrees of freedom corresponding to the within groups variance, calculated as total number of observations - the number of groups",
-                                                                         placement = "left", trigger = "hover")),
+                                                                         placement = "bottom", trigger = "hover")),
                                      br(),
                                      
                                      p("Here the F-stat is:"),
                                      verbatimTextOutput(outputId = "FTest"),
                                      br())
-                            )
+                            ),
+                            
+                            column(width = 6,
+                                   br(),
+                                   br(),
+                                   plotOutput(outputId = "boxplot2"),
+                                   
+                                   p(verbatimTextOutput(outputId = "aovTest")),
+                                   fluidRow(
+                                     column(offset = 9, width = 3,
+                                            tipify(el = p(em(strong("What's happening?")), style = "text-align:right; color:#00B5E5; font-size:12px"),
+                                                   title = "If the sample means are far apart there is evidence against the null hypothesis that the mean value of response is the same for all groups. But what is considered far appart? The F-stat quantifies this",
+                                                   placement = "top", trigger = "hover"))),
+                                   br(), br(), br(), br()
+                                   
+                                   
+                            ),
+                            
+                            column(width = 3,
+                                   h3(strong("Conclusion")),
+                                   wellPanel(
+                                     p("At the $\\alpha = .05$ level this F-stat corresponds to a p-value that suggests there is:",
+                                       textOutput(outputId = "concl")),
+                                     uiOutput("valid")
+                                   )
+                                   )
                             
                           )
                           
@@ -437,7 +429,7 @@ ui <- navbarPage(theme = shinytheme("lumen"),
                                    
                             column(width = 4, 
                                   h4(em("The Mean Sq Between is an estimate of the variance of the group means
-                                          from the overall mean"),
+                                        from the overall mean"),
                                       h4(em("The Mean Sq Within is an estimate of $\\sigma^{2}$, the inherent variability in 
                                           each group's population")),
                                       h4("$\\bullet$ ${s_B}^{2}$ is the between groups variance"),
@@ -539,7 +531,7 @@ server <- function(input, output, session) {
   output$curve <- renderPlot({
     ggplot(data = popdf_long(), aes(x=values, color = dataset)) +
       geom_density() +
-      coord_cartesian(xlim = c(-.125, 1.25), ylim = c(0,8)) +
+      coord_cartesian(xlim = c(-.125, 1.25), ylim = c(0,10)) +
       geom_vline(data = pop_means(), aes(xintercept = means, color = dataset),
                  linetype = 2, size = 0.8) +
       ggtitle("Population Distributions") +

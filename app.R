@@ -210,9 +210,9 @@ ui <- navbarPage(theme = shinytheme("lumen"),
                             column(offset = 2, width = 8, 
                                    p("Now that out population data is set, let's examine the random samples taken from the populations."),
                                    p(strong("ANOVA assumes approximate normality among groups."), "However ANOVA is relatively robust against
-                                departures from normality. In fact, as long as sample sizes are", tipify(el = strong("'large enough'", style = "color:#00B5E5"),
+                                departures from normality. In fact, as long as sample sizes are '", tipify(el = strong("large enough", style = "color:#00B5E5"),
                                                                                                          title = "in this case approximately greater than 10 in each group",
-                                                                                                         placement = "top", trigger = "hover"), "the conclusions
+                                                                                                         placement = "top", trigger = "hover"), "' the conclusions
                                 of ANOVA may still be valid, even if the underlying population distributions are skewed"), br(),
                                    
                                    p(strong("ANOVA also assumes that groups have roughly equal variability."), "ANOVA is not robust against violations
@@ -346,8 +346,15 @@ ui <- navbarPage(theme = shinytheme("lumen"),
                             column(width = 3,
                                    h3(strong("Conclusion")),
                                    wellPanel(
-                                     p("At the $\\alpha = .05$ level this F-stat corresponds to a p-value that suggests there is:",
-                                       textOutput(outputId = "concl")),
+                                     p("At the $\\alpha = .05$ level this F-stat corresponds to a p-value that suggests there is",
+                                       textOutput(outputId = "concl", inline = TRUE)),
+                                     fluidRow(
+                                       column(offset = 5, width = 7,
+                                              tipify(el = p(em(strong("What's happening?")), style = "text-align:right; color:#00B5E5; font-size:12px"),
+                                              title = "When the p-value is less than alpha we reject the null in favor of the alternative hypothesis. When the p-value is greater than alpha we fail to reject the the null hypothesis",
+                                              placement = "bottom", trigger = "hover")
+                                            )
+                                       ),
                                      uiOutput("valid")
                                    )
                                    )
@@ -740,9 +747,9 @@ server <- function(input, output, session) {
   
   output$concl <- renderText({
     if(tidy(runTest())$p.value[1] < 0.05) {
-      return("sufficient evidence to conclude that there is at least one difference between the group means.")
+      return("sufficient evidence to conclude there is at least one difference between the group means.")
     } else {
-      return("insufficent evidence to conclude that there is at least one difference between the group means.")
+      return("insufficent evidence to conclude there is at least one difference between the group means.")
     }
   })
   

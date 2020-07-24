@@ -157,7 +157,12 @@ ui <- navbarPage(theme = shinytheme("lumen"),
                                                  label = NULL,
                                                  choices = c("Increased Between Group Variance" = "inc",
                                                              "Reduced Between Group Variance" = "dec"),
-                                                 selected = "inc")
+                                                 selected = "inc"),
+                                     fluidRow(
+                                       column(offset = 6, width = 6, 
+                                              tipify(el = p(em(strong("What's happening?")), style = "text-align:right; color:#00B5E5; font-size:12px"),
+                                                     title = "Increasing the between group variance increases the F-stat and reducing it decreases the F-stat (seen on Step 3 tab).",
+                                                     placement = "bottom", trigger = "hover")))
                                    ),
                                    ## put shape input group here
                                    h3(strong("Shape")),

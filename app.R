@@ -111,7 +111,8 @@ ui <- navbarPage(theme = shinytheme("lumen"),
                                      em("Presentation by Dr. Tackett"))
                             )
                            ),
-                          br(),
+                          br(), br(),
+                          
                           p("Special thank you to Dr. Yue Jiang for introducing me to ANOVA and describing it in a way that would eventually inspire this app."),
                           br(), br(), br(), br(), br(), br(),
                           
@@ -474,6 +475,7 @@ ui <- navbarPage(theme = shinytheme("lumen"),
                                       h4("Where $n$ is the total number of samples and $K$ is the total number of groups")
                                       ),
                                column(width = 4,
+                                      br(),
                                       h4("$\\bullet$ $F_{obs}$ is equal to the ratio of the 'Between' Mean Sq value 
                                       to the 'Within' Mean Sq value"),
                                       h4("$\\bullet$ The null hypothesis is rejected if $p_{obs}$, the p-value corresponding to $F_{obs}$,

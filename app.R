@@ -161,7 +161,7 @@ ui <- navbarPage(theme = shinytheme("lumen"),
                                      fluidRow(
                                        column(offset = 6, width = 6, 
                                               tipify(el = p(em(strong("What's happening?")), style = "text-align:right; color:#00B5E5; font-size:12px"),
-                                                     title = "Increasing the between group variance increases the F-stat and reducing it decreases the F-stat (seen on Step 3 tab).",
+                                                     title = "Increasing the between group variance increases the F-stat and reducing it decreases the F-stat. The F-stat for this data can be found on the Stpe 3 tab",
                                                      placement = "bottom", trigger = "hover")))
                                    ),
                                    ## put shape input group here
@@ -223,8 +223,13 @@ ui <- navbarPage(theme = shinytheme("lumen"),
                                                  min = 0.75, max = 1.25, value = 1),
                                      sliderInput(inputId = "sd1.3",
                                                  label = p("Group 3", style = "color:blue"),
-                                                 min = 0.75, max = 1.25, value = 1)
-                                   ),)
+                                                 min = 0.75, max = 1.25, value = 1),
+                                     fluidRow(
+                                       column(offset = 6, width = 6,
+                                              tipify(el = p(em(strong("What's happening?")), style = "text-align:right; color:#00B5E5; font-size:12px"),
+                                                     title = "Try moving the sliders from one end to the other. Notice how decreasing within group variance generally increases the F-stat and increasing it generally decreases the F-stat. The F-stat for this data can be found on the Stpe 3 tab",
+                                                     placement = "top", trigger = "hover")))
+                                   ))
                           )
                  ),
                  ##--------------------------------------------------------tab2

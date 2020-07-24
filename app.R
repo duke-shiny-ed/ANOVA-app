@@ -342,7 +342,10 @@ ui <- navbarPage(theme = shinytheme("lumen"),
                                    
                                    
                             ),
-                            
+                            tags$style(type = 'text/css', 
+                              '#concl {
+                              background-color:yellow;
+                              }'),
                             column(width = 3,
                                    h3(strong("Conclusion")),
                                    wellPanel(
@@ -744,6 +747,7 @@ server <- function(input, output, session) {
   output$FTest <- renderPrint ({
     print(summary(runTest())[[1]][["F value"]][[1]])
   })
+  
   
   output$concl <- renderText({
     if(tidy(runTest())$p.value[1] < 0.05) {

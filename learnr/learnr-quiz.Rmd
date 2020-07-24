@@ -105,28 +105,37 @@ grade_code("This code is correct. The general formula for printing the output of
 ```
 
 
-Based on the test output is there sufficient evidence to conclude that there is at least one difference between the group means? Enter Yes or No.
-```{r text_box, echo = FALSE}
-question_text(
-  "Type your conclusion below:",
-  answer("no", message = "Recall that if $p_{obs}$, the number listed under Pr(>F), is less than the alpha value
+```{r conclusion, echo = FALSE}
+question("Based on the test output is there sufficient evidence to conclude that there is at least one difference between the group means?",
+  
+  answer("$p_{obs} < 0.05$ so we reject the null hypothesis and conclude that there is sufficient evidence to suggest
+         there is at least one difference among the means",
+         message = "Recall that if $p_{obs}$, the number listed under Pr(>F), is less than the alpha value
          there is sufficient evidence to conclude that there is at least one difference between the group means. 
          However, $p_{obs}$ is 0.469 in this case and greater than the alpha value."),
-  answer("NO", message = "Recall that if $p_{obs}$, the number listed under Pr(>F), is less than the alpha value
+  answer("$p_{obs} < 0.05$ so we fail to reject the null hypothesis and conclude that there is insufficient evidence to suggest
+         there is at least one difference among the means",
+         message = "Recall that if $p_{obs}$, the number listed under Pr(>F), is less than the alpha value
          there is sufficient evidence to conclude that there is at least one difference between the group means. 
          However, $p_{obs}$ is 0.469 in this case and greater than the alpha value."),
-  answer("No", message = "Recall that if $p_{obs}$, the number listed under Pr(>F), is less than the alpha value
-         there is sufficient evidence to conclude that there is at least one difference between the group means. 
-         However, $p_{obs}$ is 0.469 in this case and greater than the alpha value."),
-  answer("yes", correct = TRUE, message = "The p-value corresponding to the F-stat is 0.469. This is greater than the
+  answer("$p_{obs} > 0.05$ so we reject the null hypothesis and conclude that there is sufficient evidence to suggest
+         there is at least one difference among the means",
+         message = "The p-value corresponding to the F-stat is 0.469. This is greater than the
          alpha value, .05. Therefore there is NOT sufficient evidence to conclude that there is 
          at least one difference between the group means."),
-  answer("Yes", correct = TRUE, message = "The p-value corresponding to the F-stat is 0.469. This is greater than the
+  answer("$p_{obs} > 0.05$ so we fail reject the null hypothesis and conclude that there is insufficient evidence to suggest
+         there is at least one difference among the means",
+         correct = TRUE,
+         message = "The p-value corresponding to the F-stat is 0.469. This is greater than the
          alpha value, .05. Therefore there is NOT sufficient evidence to conclude that there is 
          at least one difference between the group means."),
-  answer("YES", correct = TRUE, message = "The p-value corresponding to the F-stat is 0.469. This is greater than the
-         alpha value, .05. Therefore there is NOT sufficient evidence to conclude that there is 
-         at least one difference between the group means."),
-  allow_retry = TRUE
+  allow_retry = TRUE,
+  random_answer_order = TRUE
 )
+
 ```
+
+
+
+
+

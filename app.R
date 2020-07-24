@@ -96,8 +96,25 @@ ui <- navbarPage(theme = shinytheme("lumen"),
                           hr(),
                           
                           h2("Acknowledgements"),
-                          p("contents"),
-                          br(), br(), br(), br(), br(), br(), br(), br(),
+                          p("Portions of this app may utilize information from the following sources:"), br(),
+                          fluidRow(
+                            column(offset = 1, width = 3,
+                                   p(strong("Unit 4: Inference for numerical data - 4. ANOVA"), br(), em("Duke University, Department of Statistical Science"), br(),
+                                     em("Presentation by Dr. Abrahamsen"))
+                                   ),
+                            column(width = 3,
+                                   p(strong("ANOVA"), br(), em("Duke University, Department of Statistical Science"), br(), 
+                                     em("Presentation by Dr. Jiang"))
+                                   ),
+                            column(width = 3,
+                                   p(strong("Analysis of Variance - ANOVA"), br(), em("Duke University, Department of Statistical Science"), br(), 
+                                     em("Presentation by Dr. Tackett"))
+                            )
+                           ),
+                          br(),
+                          p("Special thank you to Dr. Yue Jiang for introducing me to ANOVA and describing it in a way that would eventually inspire this app."),
+                          br(), br(), br(), br(), br(), br(),
+                          
                           p("Created by Samantha Owusu-Antwi for Duke University 'Creating Interactive Learning Tools' Project, Summer 2020", style = "text-align:center")),
                  
                  ##--------------------------------------------------------tab 1

@@ -555,17 +555,10 @@ server <- function(input, output, session) {
         return(set1)
       }
     } else if(between == "dec"){
-      if(mean(set1) > mean(set2) & mean(set1) > mean(set3)) {
         return(set1)
-      } else if(mean(set1) < mean(set2) & mean(set1) < mean(set3)) {
-        return(set1)
-      } else {
-        return(set1)
-      }
     }
     
   }
-  # difference between means detected at 0.0005 total
   
   pop1_trans <- reactive({translate_pop(set1 = pop1(), set2 = pop2(), set3 = pop3(), between = input$btwsd1)})
   pop2_trans <- reactive({translate_pop(set1 = pop2(), set2 = pop1(), set3 = pop3(), between = input$btwsd1)})
@@ -622,10 +615,11 @@ server <- function(input, output, session) {
                     style = "color:#20C100"))
     } else { #n =< 10
       if(input$skew1 != "norm" | input$skew2 != "norm" | input$skew3 != "norm") {
-        return(p("This assumption is currently NOT met because the selected sample size is less than or equal to 10 and one or more of the
+        return(p("This assumption is currently NOT met because the selected sample size is 10 or less and one or more of the
                population distributions is skewed", style = "color:#C10000"))
       } else {
-        return(p("This assumption is currently NOT met because the selected sample size is less than or equal to 10", style = "color:#C10000"))
+        return(p("This assumption is currently met, though the selected sample size is not greater than 10, 
+                 because the underlying population distributions are normal", style = "color:#20C100"))
       }
     }
     
@@ -683,7 +677,7 @@ server <- function(input, output, session) {
         return(p("This assumption is currently met because the maximum within groups variance is less 
                than double the minimum within groups variance", style = "color:#20C100"))
       } else {
-        return(p("This assumption is NOT met because the maximum within groups variance is greater than 
+        return(p("This assumption is currently NOT met because the maximum within groups variance is greater than 
                or equal to double the minimum within groups variance", style = "color:#C10000"))
       }
     }
@@ -699,7 +693,7 @@ server <- function(input, output, session) {
         return(p("This assumption is currently met because the maximum within groups variance is less 
                than double the minimum within groups variance", style = "color:#20C100"))
       } else {
-        return(p("This assumption is NOT met because the maximum within groups variance is greater than 
+        return(p("This assumption is currently NOT met because the maximum within groups variance is greater than 
                or equal to double the minimum within groups variance", style = "color:#C10000"))
       }
     }
@@ -712,7 +706,7 @@ server <- function(input, output, session) {
         return(p("This assumption is currently met because the maximum within groups variance is less 
                than double the minimum within groups variance", style = "color:#20C100"))
       } else {
-        return(p("This assumption is NOT met because the maximum within groups variance is greater than 
+        return(p("This assumption is currently NOT met because the maximum within groups variance is greater than 
                or equal to double the minimum within groups variance", style = "color:#C10000"))
       }
     }
@@ -757,6 +751,20 @@ server <- function(input, output, session) {
             axis.text.x=element_blank(), axis.ticks.x=element_blank())
   })
   
+  stats <- reactive({c(mean(sample1()), var(sample1()),
+                       mean(sample2()), var(sample2()),
+                       mean(sample3()), var(sample3()))})
+  
+  output$sumstats <- renderPrint({
+    matrix <- matrix(stats(), ncol = 2, byrow = TRUE)
+    rownames(matrix) <- c("Sample 1 (Red)", "Sample 2 (Green)", "Sample 3 (Blue)")
+    colnames(matrix) <- c("mean", "variance")
+    
+    return(matrix)
+    
+  })
+  
+  ##--------------------------------------------------------------ANOVA Test Tab
   output$boxplot2 <- renderPlot({
     ggplot(data = sampledf_long(), aes(x = dataset, y = values)) + 
       geom_boxplot(aes(color = dataset)) +
@@ -768,23 +776,11 @@ server <- function(input, output, session) {
             axis.text.x=element_blank(), axis.ticks.x=element_blank())
   })
   
-  stats <- reactive({c(mean(sample1()), var(sample1()),
-             mean(sample2()), var(sample2()),
-             mean(sample3()), var(sample3()))})
-  
-  output$sumstats <- renderPrint({
-    matrix <- matrix(stats(), ncol = 2, byrow = TRUE)
-    rownames(matrix) <- c("Sample 1 (Red)", "Sample 2 (Green)", "Sample 3 (Blue)")
-    colnames(matrix) <- c("mean", "variance")
-    
-    return(matrix)
-  
-  })
-  
   runTest <- reactive({aov(values ~ dataset, data = sampledf_long())})
   output$aovTest <- renderPrint ({
     print(summary(runTest()))
   })
+  
   output$FTest <- renderPrint ({
     print(summary(runTest())[[1]][["F value"]][[1]])
   })
@@ -800,19 +796,22 @@ server <- function(input, output, session) {
   
   output$valid <- renderUI({
     if(grepl(pattern = ".*is currently met", 
-             x = rank(s1 = sample1(), s2 = sample2(), s3 = sample3())) == FALSE & input$n > 10) {
+             x = rank(s1 = sample1(), s2 = sample2(), s3 = sample3())) == FALSE & 
+       (input$n > 10 | (input$skew1 == "norm" & input$skew2 == "norm" & input$skew3 == "norm"))) {
       return(p("CAUTION: Since the assumption that the within group variances are approximately equal is not currently met,
              the output of this ANOVA test may not be valid.", style = "color:#C10000"))
     }
     
     if(grepl(pattern = ".*is currently met", 
-             x = rank(s1 = sample1(), s2 = sample2(), s3 = sample3())) == FALSE & input$n <= 10) {
+             x = rank(s1 = sample1(), s2 = sample2(), s3 = sample3())) == FALSE & 
+       (input$n <= 10 & (input$skew1 != "norm" | input$skew2 != "norm" | input$skew3 != "norm"))) {
       return(p("CAUTION: Since the assumptions of approximate normality and approximate equality of within group variances are not currently met,
              the output of this ANOVA test may not be valid.", style = "color:#C10000"))
     }
     
     if(grepl(pattern = ".*is currently met", 
-             x = rank(s1 = sample1(), s2 = sample2(), s3 = sample3())) == TRUE & input$n <= 10) {
+             x = rank(s1 = sample1(), s2 = sample2(), s3 = sample3())) == TRUE & 
+       (input$n <= 10 & (input$skew1 != "norm" | input$skew2 != "norm" | input$skew3 != "norm"))) {
       return(p("CAUTION: Since the assumption that all groups are approximately normal is not currently met,
              the output of this ANOVA test may not be valid.", style = "color:#C10000"))
     }
@@ -822,3 +821,4 @@ server <- function(input, output, session) {
 }
 
 shinyApp(ui = ui, server = server)
+

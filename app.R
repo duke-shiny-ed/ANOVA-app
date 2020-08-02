@@ -32,9 +32,9 @@ ui <- navbarPage(theme = shinytheme("lumen"),
                           tags$style(
                             HTML("
                                  .tooltip > .tooltip-inner {
-                                 background-color: #F1F0F0;
-                                 color: #000000;
-                                 border: 1px solid #F1F0F0;
+                                 background-color: #000000;
+                                 color: #FFFFFF;
+                                 border: 1px solid #000000;
                                  text-align: left;
                                  }
                                  ")),
@@ -133,9 +133,12 @@ ui <- navbarPage(theme = shinytheme("lumen"),
                                      br(),
                                      "$H_1$: At least one of the means $(\\mu_i)$ is not equal to the others", style = "text-align:center"),
                                    br(),
-                                   p("Below you have the opportunity to manipulate the skew,", tipify(strong("between group variance", style = "color:#00B5E5"),
-                                                                                                      title = "ANOVA is concerned with two variances. This refers to how group means vary around the overall mean",
-                                                                                                      placement = "top", trigger = "hover"), 
+                                   p("Below you have the opportunity to manipulate the", tipify(strong("skew", style = "color:#00B5E5"),
+                                                                                                title = "Define skew here",
+                                                                                                placement = "top", trigger = "hover"), 
+                                     ",", tipify(strong("between group variance", style = "color:#00B5E5"),
+                                                 title = "ANOVA is concerned with two variances. This refers to how group means vary around the overall mean",
+                                                 placement = "top", trigger = "hover"), 
                                      ", and the", tipify(strong("within group variances", style = "color:#00B5E5"),
                                                          title = "ANOVA is concerend with two variances. This refers to how the individual observations of a group vary around the mean of that group",
                                                          placement = "top", trigger = "hover"), "of the population data we will be working with.
@@ -166,7 +169,7 @@ ui <- navbarPage(theme = shinytheme("lumen"),
                                      fluidRow(
                                        column(offset = 6, width = 6, 
                                               tipify(el = p(em(strong("What's happening?")), style = "text-align:right; color:#00B5E5; font-size:12px"),
-                                                     title = "Increasing the between group variance increases the F-stat and reducing it decreases the F-stat. The F-stat for this data can be found on the Stpe 3 tab",
+                                                     title = "Increasing the between group variance increases the F-stat and reducing it decreases the F-stat. The F-stat for this data can be found on the Step 3 tab",
                                                      placement = "bottom", trigger = "hover")))
                                    ),
                                    
@@ -180,20 +183,20 @@ ui <- navbarPage(theme = shinytheme("lumen"),
                                      selectInput(inputId = "skew1", 
                                                  label = p("Group 1", style = "color:red"),
                                                  choices = c("Normal" = "norm",
-                                                             "Right Skewed" = "rskew",
-                                                             "Left Skewed" = "lskew"),
+                                                             "Right Skewed (Positive)" = "rskew",
+                                                             "Left Skewed (Negative)" = "lskew"),
                                                  selected = "norm"),
                                      selectInput(inputId = "skew2", 
                                                  label = p("Group 2", style = "color:green"),
                                                  choices = c("Normal" = "norm",
-                                                             "Right Skewed" = "rskew",
-                                                             "Left Skewed" = "lskew"),
+                                                             "Right Skewed (Positive)" = "rskew",
+                                                             "Left Skewed (Negative)" = "lskew"),
                                                  selected = "norm"),
                                      selectInput(inputId = "skew3", 
                                                  label = p("Group 3", style = "color:blue"),
                                                  choices = c("Normal" = "norm",
-                                                             "Right Skewed" = "rskew",
-                                                             "Left Skewed" = "lskew"),
+                                                             "Right Skewed (Positive)" = "rskew",
+                                                             "Left Skewed (Negative)" = "lskew"),
                                                  selected = "norm")),
                                    br(), br()
                                    
@@ -338,7 +341,7 @@ ui <- navbarPage(theme = shinytheme("lumen"),
                                    wellPanel(
                                      p("If the sample means vary around the overall mean more that the individual observations vary around
                                      their sample means, we have evidence that the corresponding population means are different. We formally compare
-                                    these variances with the F-stat", br(), br(), br(),
+                                    these variances with the F-stat.", br(), br(),
                                        "If there is", tipify(el = strong("no treatment effect", style = "color:#00B5E5"),
                                                              title = "No treatment effect implies that the null hypothesis is true, the means of all groups are truly equal",
                                                              placement = "top", trigger = "hover"),
@@ -358,7 +361,7 @@ ui <- navbarPage(theme = shinytheme("lumen"),
                                        "$\\bullet$ $ddf$ is the", tipify(strong("denominator degrees of freedom", style = "color:#00B5E5"),
                                                                          title = "The degrees of freedom corresponding to the within groups variance, calculated as the total number of observations - the number of groups",
                                                                          placement = "bottom", trigger = "hover")),
-                                     br(), br(),
+                                     br(),
                                      
                                      p("The F-stat for our data is:"),
                                      verbatimTextOutput(outputId = "FTest"))
@@ -525,7 +528,6 @@ ui <- navbarPage(theme = shinytheme("lumen"),
 server <- function(input, output, session) {
   ##--------------------------------------------------------------Population Tab
   # To keep mean same when changing skew: use rnorm when normal and set mean to skew mean??
-  #check coord cartesian for limits
   pop_dist <- function(skew, within, n) {
     if(skew == "norm") {
       set.seed(n)
@@ -577,7 +579,7 @@ server <- function(input, output, session) {
   output$curve <- renderPlot({
     ggplot(data = popdf_long(), aes(x=values, color = dataset)) +
       geom_density() +
-      coord_cartesian(xlim = c(-.25, 1.5), ylim = c(0,10)) +
+      coord_cartesian(xlim = c(-.25, 1.5), ylim = c(0,10.2)) +
       geom_vline(data = pop_means(), aes(xintercept = means, color = dataset),
                  linetype = 2, size = 0.8) +
       ggtitle("Population Distributions") +

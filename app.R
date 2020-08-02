@@ -524,6 +524,8 @@ ui <- navbarPage(theme = shinytheme("lumen"),
 
 server <- function(input, output, session) {
   ##--------------------------------------------------------------Population Tab
+  # To keep mean same when changing skew: use rnorm when normal and set mean to skew mean??
+  #check coord cartesian for limits
   pop_dist <- function(skew, within, n) {
     if(skew == "norm") {
       set.seed(n)
@@ -531,11 +533,11 @@ server <- function(input, output, session) {
       #initial mean = 0.5002202, 0.5009305, 0.4988691
     } else if(skew == "rskew") {
       set.seed(n)
-      return(rbeta(20000, shape1 = 13, shape2 = 31) * within)
+      return(rbeta(20000, shape1 = 4, shape2 = 31) * within)
       #initial mean = 0.2955792, 0.2961759, 0.2941847
     } else {
       set.seed(n)
-      return(rbeta(20000, shape1 = 31, shape2 = 13) * within)
+      return(rbeta(20000, shape1 = 31, shape2 = 4) * within)
       #initial mean = 0.7044208, 0.7038241, 0.7058153
     }
   }
@@ -575,7 +577,7 @@ server <- function(input, output, session) {
   output$curve <- renderPlot({
     ggplot(data = popdf_long(), aes(x=values, color = dataset)) +
       geom_density() +
-      coord_cartesian(xlim = c(-.125, 1.25), ylim = c(0,10)) +
+      coord_cartesian(xlim = c(-.25, 1.5), ylim = c(0,10)) +
       geom_vline(data = pop_means(), aes(xintercept = means, color = dataset),
                  linetype = 2, size = 0.8) +
       ggtitle("Population Distributions") +

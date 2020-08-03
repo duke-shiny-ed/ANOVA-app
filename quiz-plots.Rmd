@@ -99,15 +99,15 @@ control.A <- matrix(rnorm(n = 50, sd = .8), ncol = 1)
 treat1.A <- matrix(rnorm(n = 50, sd = .82), ncol = 1)
 treat2.A <- matrix(rnorm(n = 50, sd =.83), ncol = 1)
 
-# Location 2
+# Location 2; add 0.5 to some treatments to incr btw groups var
 Location.B <- matrix(rep("Location B", times = 150), ncol = 1)
 set.seed(2)
-control.B <- matrix(rnorm(n = 50, sd = .69), ncol = 1)
-treat1.B <- matrix(rnorm(n = 50, sd = .76), ncol = 1)
-treat2.B <- matrix(rnorm(n = 50, sd =.78), ncol = 1)
+control.B <- matrix((rnorm(n = 50, sd = .69) + 0.5), ncol = 1)
+treat1.B <- matrix((rnorm(n = 50, sd = .76) - 0.5), ncol = 1)
+treat2.B <- matrix((rnorm(n = 50, sd =.78) + 0.5), ncol = 1)
 
 # Location 3
-Location.C <- matrix(rep("LocationC", times = 150), ncol = 1)
+Location.C <- matrix(rep("Location C", times = 150), ncol = 1)
 set.seed(3)
 control.C <- matrix(rnorm(n = 50, sd = .8), ncol = 1)
 treat1.C <- matrix(rnorm(n = 50, sd = .86), ncol = 1)
@@ -166,7 +166,7 @@ ggplot(data = PlantHeights, aes(y = Value)) +
 PlantHeights
 
 LocationC <- PlantHeights %>%
-  filter(Location == "C")
+  filter(Location == "Location C")
 
 LocationC
 summary(aov(Value ~ Treatment, data = LocationC))

@@ -7,13 +7,7 @@ library(broom)
 library(shinyBS)
 library(plyr)
 
-# add text at end for discussion of step down tests and bonferroni correction?
-# add text at beginning explaining why we don't just do pairwise test (family-wise error increases)
-# possible equations ot include, variance eqs, ANOVa model eq, reading ANOVA test table output
-
-# button that leads straight to "insuff evidence" conclusion ?
-
-# maybe reiterate vocab on resources page
+# Consider adding button that leads straight to "insuff evidence" conclusion?
 
 ui <- navbarPage(theme = shinytheme("lumen"),
                  

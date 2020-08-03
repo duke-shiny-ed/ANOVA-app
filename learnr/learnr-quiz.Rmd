@@ -59,7 +59,7 @@ quiz(caption = "Indicate whether the following statements regarding the boxplots
   random_answer_order = TRUE),
   
   
-  question("It appears that the pooled estimate of the within groups variances of the Location A data is less 
+  question("It appears that the pooled estimate of the within groups variances of the Location A data would be less 
            than the pooled estimate of the within groups variances of the Location B data",
     answer("True", correct = TRUE, 
             message = "In this case we can consider the IQR to be a good estimate of the within groups variances.

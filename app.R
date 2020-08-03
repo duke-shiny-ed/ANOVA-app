@@ -134,7 +134,7 @@ ui <- navbarPage(theme = shinytheme("lumen"),
                                      "$H_1$: At least one of the means $(\\mu_i)$ is not equal to the others", style = "text-align:center"),
                                    br(),
                                    p("Below you have the opportunity to manipulate the", tipify(strong("skew", style = "color:#00B5E5"),
-                                                                                                title = "Define skew here",
+                                                                                                title = "Skew refers to the asymmetry of a distribution that is ideally symmetrical, in this case bell curves",
                                                                                                 placement = "top", trigger = "hover"), 
                                      ",", tipify(strong("between group variance", style = "color:#00B5E5"),
                                                  title = "ANOVA is concerned with two variances. This refers to how group means vary around the overall mean",
@@ -406,6 +406,16 @@ ui <- navbarPage(theme = shinytheme("lumen"),
                  ),
                  
                  
+                 ##---------------------------------------------------------quiz on boxplots comparing F-stats  
+                 tabPanel("Quiz",
+                          fluidRow(
+                            tags$iframe(src = "https://samanthaowusu.shinyapps.io/ANOVA-quiz/",
+                                        width = "1500", height = "1000",
+                                        frameBorder="0")
+                          )
+                 ),
+                 
+                 
                  tabPanel("Resources",
                           
                           h1("Equations"),
@@ -509,16 +519,6 @@ ui <- navbarPage(theme = shinytheme("lumen"),
                           ),
                           br(), br(), br(), br(), br()
                           
-                 ),
-                 
-                 
-                 ##---------------------------------------------------------quiz on boxplots comparing F-stats  
-                 tabPanel("Quiz",
-                          fluidRow(
-                            tags$iframe(src = "https://samanthaowusu.shinyapps.io/ANOVA-quiz/",
-                                        width = "1500", height = "1000",
-                                        frameBorder="0")
-                          )
                  )
                  
                  

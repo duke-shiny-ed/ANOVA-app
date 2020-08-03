@@ -527,19 +527,38 @@ ui <- navbarPage(theme = shinytheme("lumen"),
 
 server <- function(input, output, session) {
   ##--------------------------------------------------------------Population Tab
-  # To keep mean same when changing skew: use rnorm when normal and set mean to skew mean??
+  #Preserve mean when manipulate skew
   pop_dist <- function(skew, within, n) {
+    mean.initial <- reactive({
+      set.seed(n)
+      mean(rbeta(20000, shape1 = 22, shape2 = 22) * within)
+    })
+    
     if(skew == "norm") {
       set.seed(n)
       return(rbeta(20000, shape1 = 22, shape2 = 22) * within)
       #initial mean = 0.5002202, 0.5009305, 0.4988691
+      
+      
     } else if(skew == "rskew") {
+      mean.rskew <- reactive({
+        set.seed(n)
+        mean(rbeta(20000, shape1 = 4, shape2 = 31) * within)
+      })
+      
       set.seed(n)
-      return(rbeta(20000, shape1 = 4, shape2 = 31) * within)
+      return(rbeta(20000, shape1 = 4, shape2 = 31) * within - (mean.rskew() - mean.initial()))
       #initial mean = 0.2955792, 0.2961759, 0.2941847
+    
+      
     } else {
+      mean.lskew <- reactive({
+        set.seed(n)
+        mean(rbeta(20000, shape1 = 31, shape2 = 4) * within)
+      }) 
+      
       set.seed(n)
-      return(rbeta(20000, shape1 = 31, shape2 = 4) * within)
+      return(rbeta(20000, shape1 = 31, shape2 = 4) * within - (mean.lskew() - mean.initial()))
       #initial mean = 0.7044208, 0.7038241, 0.7058153
     }
   }

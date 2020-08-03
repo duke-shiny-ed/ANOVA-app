@@ -21,7 +21,7 @@ download(url, destfile=filename)
 
 PlantHeights <- read.csv("PlantHeights.csv")
 LocationC <- PlantHeights %>%
-  filter(Location == "C")
+  filter(Location == "Location C")
   
 ```
 

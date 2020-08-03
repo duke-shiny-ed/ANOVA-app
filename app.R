@@ -52,7 +52,7 @@ ui <- navbarPage(theme = shinytheme("lumen"),
                                                                                 trigger = "hover"), 
                                      "affect the ANOVA test output"),
                                    p("2. Understand the relationship between the", tipify(strong("F-statistic", style = "color:#00B5E5"),
-                                                                                          title = "The F-stat is a ratio of the between and within groups variances. When F is large we are prompted to reject the null hypothesis and conclude that there is at least one difference between th egroup means",
+                                                                                          title = "The F-stat is a ratio of the between and within groups variances. When F is large we are prompted to reject the null hypothesis and conclude that there is at least one difference between the group means",
                                                                                           placement = "bottom", trigger = "hover"), "and the ANOVA test output"),
                                    p("3. Predict how manipulation of between and within group variances will affect the F-statistic
                                      and the ANOVA test output"),
@@ -68,7 +68,7 @@ ui <- navbarPage(theme = shinytheme("lumen"),
                             ),
                             ## put intro to ANOVA info here
                             column(width = 5,
-                                   p("ANOVA is a method used in statistical anylsis to make inferences about numerical data. In particular, 
+                                   p("ANOVA is a method used in statistical analysis to make inferences about numerical data. In particular, 
                             ANOVA is used to question whether there is a meaningful difference between groups being studied. To
                             do this, ANOVA tests the alternative hypothesis that at least one of the group means is truly different
                             from the others against the null hypothesis that there is no difference between the group means. In this sense, 
@@ -134,7 +134,7 @@ ui <- navbarPage(theme = shinytheme("lumen"),
                                                  title = "ANOVA is concerned with two variances. This refers to how group means vary around the overall mean",
                                                  placement = "top", trigger = "hover"), 
                                      ", and the", tipify(strong("within group variances", style = "color:#00B5E5"),
-                                                         title = "ANOVA is concerend with two variances. This refers to how the individual observations of a group vary around the mean of that group",
+                                                         title = "ANOVA is concerned with two variances. This refers to how the individual observations of a group vary around the mean of that group",
                                                          placement = "top", trigger = "hover"), "of the population data we will be working with.
                                      Normally, true population parameters are not known.", strong("Remember, ANOVA assumes each group's population density is approximately normal")) 
                                    
@@ -151,7 +151,7 @@ ui <- navbarPage(theme = shinytheme("lumen"),
                                    h3(strong("Between Group Variance")),
                                    wellPanel(
                                      p("Toggle between 'Reduced' and 'Increased' to translate the population density curves, 
-                                  altering the distance between thier means", 
+                                  altering the distance between their means", 
                                        style = "color:grey"),
                                      br(),
                                      
@@ -231,7 +231,7 @@ ui <- navbarPage(theme = shinytheme("lumen"),
                                      fluidRow(
                                        column(offset = 6, width = 6,
                                               tipify(el = p(em(strong("What's happening?")), style = "text-align:right; color:#00B5E5; font-size:12px"),
-                                                     title = "Try moving the sliders from one end to the other. Notice how decreasing within group variance generally increases the F-stat and increasing it generally decreases the F-stat. The F-stat for this data can be found on the Stpe 3 tab",
+                                                     title = "Try moving the sliders from one end to the other. Notice how decreasing within group variance generally increases the F-stat and increasing it generally decreases the F-stat. The F-stat for this data can be found on the Step 3 tab",
                                                      placement = "bottom", trigger = "hover")))
                                    ))
                           )
@@ -370,7 +370,7 @@ ui <- navbarPage(theme = shinytheme("lumen"),
                                    fluidRow(
                                      column(offset = 9, width = 3,
                                             tipify(el = p(em(strong("What's happening?")), style = "text-align:right; color:#00B5E5; font-size:12px"),
-                                                   title = "This is the output of our ANOVA test when run in R. If the sample means are far apart there is evidence against the null hypothesis that the mean value of response is the same for all groups. But what is considered far appart? The F-stat quantifies this",
+                                                   title = "This is the output of our ANOVA test when run in R. If the sample means are far apart there is evidence against the null hypothesis that the mean value of response is the same for all groups. But what is considered far apart? The F-stat quantifies this",
                                                    placement = "top", trigger = "hover"))),
                                    br(), br(), br(), br()
                                    
@@ -804,7 +804,7 @@ server <- function(input, output, session) {
     if(tidy(runTest())$p.value[1] < 0.05) {
       return("sufficient evidence to conclude there is at least one difference between the group means.")
     } else {
-      return("insufficent evidence to conclude there is at least one difference between the group means.")
+      return("insufficient evidence to conclude there is at least one difference between the group means.")
     }
   })
   

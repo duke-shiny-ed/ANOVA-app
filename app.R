@@ -49,13 +49,13 @@ ui <- navbarPage(theme = shinytheme("lumen"),
                                    p("Welcome! This interactive learning tool is brought to you by Duke Shiny-Ed. In this particular app 
                             you will be able to explore", tipify(strong("ANOVA", style = "color:#00B5E5"), 
                                                                  title = "Hypothesis test which analyzes variance to make inferences about means. Tests the null that all group means are equal and the alternative that at least one of the means are different, not necessarily that all are unequal", 
-                                                                 placement = "right", trigger = "hover"), 
+                                                                 trigger = "hover"), 
                                      ", or Analysis of Variance. This app is designed to gradually introduce you to the different aspects of ANOVA and it concludes with a quiz so that you 
                             can test what you've learned! Hopefully, after using this
                             app, you will be able to:"),
                                    p("1. Examine how violations of the", tipify(strong("assumptions of ANOVA", style = "color:#00B5E5"),
                                                                                 title = "1)Independent observations 2)Approximately normal population distributions for all groups 3)Approximately equal within group variances for all groups", 
-                                                                                placement = "right", trigger = "hover"), 
+                                                                                trigger = "hover"), 
                                      "affect the ANOVA test output"),
                                    p("2. Understand the relationship between the", tipify(strong("F-statistic", style = "color:#00B5E5"),
                                                                                           title = "The F-stat is a ratio of the between and within groups variances. When F is large we are prompted to reject the null hypothesis and conclude that there is at least one difference between th egroup means",
@@ -67,7 +67,7 @@ ui <- navbarPage(theme = shinytheme("lumen"),
                                    p("If you haven't already noticed, while interacting with this app you will routinely encounter text that
                                      is highlighted blue like this:", tipify(el = strong(em("What's happening?", style = "color:#00B5E5; font-size:13px")),
                                                                              title = "This is an example! Hover over any text highlighted in blue like this to view helpful information",
-                                                                             placement = "top", trigger = "hover"), 
+                                                                             placement = "bottom", trigger = "hover"), 
                                      "These are designed to help you navigate the material being presented. Hover over them to view definitions 
                                     of commonly used terms and other information meant to guide you through the exploration!")
                                    
@@ -238,7 +238,7 @@ ui <- navbarPage(theme = shinytheme("lumen"),
                                        column(offset = 6, width = 6,
                                               tipify(el = p(em(strong("What's happening?")), style = "text-align:right; color:#00B5E5; font-size:12px"),
                                                      title = "Try moving the sliders from one end to the other. Notice how decreasing within group variance generally increases the F-stat and increasing it generally decreases the F-stat. The F-stat for this data can be found on the Stpe 3 tab",
-                                                     placement = "top", trigger = "hover")))
+                                                     placement = "bottom", trigger = "hover")))
                                    ))
                           )
                  ),
@@ -537,7 +537,6 @@ server <- function(input, output, session) {
     if(skew == "norm") {
       set.seed(n)
       return(rbeta(20000, shape1 = 22, shape2 = 22) * within)
-      #initial mean = 0.5002202, 0.5009305, 0.4988691
       
       
     } else if(skew == "rskew") {
@@ -548,7 +547,6 @@ server <- function(input, output, session) {
       
       set.seed(n)
       return(rbeta(20000, shape1 = 4, shape2 = 31) * within - (mean.rskew() - mean.initial()))
-      #initial mean = 0.2955792, 0.2961759, 0.2941847
     
       
     } else {
@@ -559,7 +557,6 @@ server <- function(input, output, session) {
       
       set.seed(n)
       return(rbeta(20000, shape1 = 31, shape2 = 4) * within - (mean.lskew() - mean.initial()))
-      #initial mean = 0.7044208, 0.7038241, 0.7058153
     }
   }
   
@@ -598,7 +595,7 @@ server <- function(input, output, session) {
   output$curve <- renderPlot({
     ggplot(data = popdf_long(), aes(x=values, color = dataset)) +
       geom_density() +
-      coord_cartesian(xlim = c(-.25, 1.5), ylim = c(0,10.2)) +
+      coord_cartesian(xlim = c(0, 1), ylim = c(0,10.2)) +
       geom_vline(data = pop_means(), aes(xintercept = means, color = dataset),
                  linetype = 2, size = 0.8) +
       ggtitle("Population Distributions") +

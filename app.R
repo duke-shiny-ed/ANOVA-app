@@ -230,13 +230,13 @@ ui <- navbarPage(theme = shinytheme("lumen"),
                                      
                                      sliderInput(inputId = "sd1",
                                                  label = p("Group 1", style = "color:red"),
-                                                 min = 0.75, max = 1.25, value = 1),
+                                                 min = 0.25, max = 2.25, value = 1),
                                      sliderInput(inputId = "sd2",
                                                  label = p("Group 2", style = "color:green"),
-                                                 min = 0.75, max = 1.25, value = 1),
+                                                 min = 0.25, max = 2.25, value = 1),
                                      sliderInput(inputId = "sd3",
                                                  label = p("Group 3", style = "color:blue"),
-                                                 min = 0.75, max = 1.25, value = 1),
+                                                 min = 0.25, max = 2.25, value = 1),
                                      br(),
                                      
                                      p("The pooled estimate of the within groups variance for this data is:"),
@@ -547,30 +547,30 @@ server <- function(input, output, session) {
     if(skew == "norm") {
       mean.norm <- reactive ({
         set.seed(n)
-        mean(rbeta(20000, shape1 = 22, shape2 = 22) * within)
+        mean(rbeta(20000, shape1 = 22, shape2 = 22) * (within + .5))
       })
       set.seed(n)
-      return(rbeta(20000, shape1 = 22, shape2 = 22) * within - (mean.norm() - mean.initial()))
+      return(rbeta(20000, shape1 = 22, shape2 = 22) * (within + .5) - (mean.norm() - mean.initial()))
       
       
     } else if(skew == "rskew") {
       mean.rskew <- reactive({
         set.seed(n)
-        mean(rbeta(20000, shape1 = 4, shape2 = 31) * within)
+        mean(rbeta(20000, shape1 = 4, shape2 = 31) * (within + .5))
       })
       
       set.seed(n)
-      return(rbeta(20000, shape1 = 4, shape2 = 31) * within - (mean.rskew() - mean.initial()))
+      return(rbeta(20000, shape1 = 4, shape2 = 31) * (within + .5) - (mean.rskew() - mean.initial()))
     
       
     } else {
       mean.lskew <- reactive({
         set.seed(n)
-        mean(rbeta(20000, shape1 = 31, shape2 = 4) * within)
+        mean(rbeta(20000, shape1 = 31, shape2 = 4) * (within + .5))
       }) 
       
       set.seed(n)
-      return(rbeta(20000, shape1 = 31, shape2 = 4) * within - (mean.lskew() - mean.initial()))
+      return(rbeta(20000, shape1 = 31, shape2 = 4) * (within + .5) - (mean.lskew() - mean.initial()))
     }
   }
   
@@ -609,7 +609,7 @@ server <- function(input, output, session) {
   output$curve <- renderPlot({
     ggplot(data = popdf_long(), aes(x=values, color = dataset)) +
       geom_density() +
-      coord_cartesian(xlim = c(0, 1), ylim = c(0,10.2)) +
+      coord_cartesian(xlim = c(-0.43, 1.55), ylim = c(0, 10.8)) +
       geom_vline(data = pop_means(), aes(xintercept = means, color = dataset),
                  linetype = 2, size = 0.8) +
       ggtitle("Population Distributions") +

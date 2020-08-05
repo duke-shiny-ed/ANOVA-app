@@ -160,10 +160,14 @@ ui <- navbarPage(theme = shinytheme("lumen"),
                                                  choices = c("Increased Between Group Variance" = "inc",
                                                              "Reduced Between Group Variance" = "dec"),
                                                  selected = "inc"),
+                                     br(),
+                                     
+                                     p("The estimated between groups variance for this data is:"),
+                                     verbatimTextOutput(outputId = "between.group"),
                                      fluidRow(
                                        column(offset = 6, width = 6, 
                                               tipify(el = p(em(strong("What's happening?")), style = "text-align:right; color:#00B5E5; font-size:12px"),
-                                                     title = "Increasing the between group variance increases the F-stat and reducing it decreases the F-stat. The F-stat for this data can be found on the Step 3 tab",
+                                                     title = "Try toggling between Increased and Reduced. Notice how increasing the between group variance increases the F-stat and reducing it decreases the F-stat. The F-stat for this data can be found on the Step 3 tab",
                                                      placement = "bottom", trigger = "hover")))
                                    ),
                                    
@@ -199,6 +203,8 @@ ui <- navbarPage(theme = shinytheme("lumen"),
                             
                             column(width = 6,
                                    br(),
+                                   #reset manipulations to default
+                                   
                                    p(plotOutput(outputId = "curve")),
                                    fluidRow(
                                      column(width = 4,
@@ -228,6 +234,11 @@ ui <- navbarPage(theme = shinytheme("lumen"),
                                      sliderInput(inputId = "sd3",
                                                  label = p("Group 3", style = "color:blue"),
                                                  min = 0.75, max = 1.25, value = 1),
+                                     br(),
+                                     
+                                     p("The pooled estimate of the within groups variance for this data is:"),
+                                     verbatimTextOutput(outputId = "within.group"),
+                                     
                                      fluidRow(
                                        column(offset = 6, width = 6,
                                               tipify(el = p(em(strong("What's happening?")), style = "text-align:right; color:#00B5E5; font-size:12px"),
@@ -358,7 +369,8 @@ ui <- navbarPage(theme = shinytheme("lumen"),
                                      br(),
                                      
                                      p("The F-stat for our data is:"),
-                                     verbatimTextOutput(outputId = "FTest"))
+                                     verbatimTextOutput(outputId = "FTest")
+                                     )
                             ),
                             
                             column(width = 6,
@@ -623,6 +635,15 @@ server <- function(input, output, session) {
     sampledf() %>%
       gather(key = dataset, value = values)
   })
+  
+  #Between groups variance eq
+  all.samples <- reactive({
+    rbind(sample1(), sample2(), sample3())
+  })
+  output$between.group <- renderPrint(((input$n*(mean(sample1())-mean(all.samples()))^(2)) + (input$n*(mean(sample2())-mean(all.samples()))^(2)) + (input$n*(mean(sample3())-mean(all.samples()))^(2)))/2)
+  
+  #Pooled estimate of within groups variance eq
+  output$within.group <- renderPrint(((input$n-1)*(var(sample1()))^(2) + (input$n-1)*(var(sample2()))^(2) + (input$n-1)*(var(sample3()))^(2))/(input$n*3 - 3))
   
   ##--------------------------------------------------------------Samples Tab
   ##recall that sample1, sample2, sample3 already defined; also dataset with all is sampledf_long()

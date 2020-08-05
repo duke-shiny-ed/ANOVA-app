@@ -203,14 +203,17 @@ ui <- navbarPage(theme = shinytheme("lumen"),
                             
                             column(width = 6,
                                    br(),
-                                   #reset manipulations to default
                                    
                                    p(plotOutput(outputId = "curve")),
                                    fluidRow(
                                      column(width = 4,
                                             tipify(el = p(em(strong("What does this graph show?")), style = "text-align:left; color:#00B5E5; font-size:12px"),
                                                    title = "These are the population distributions of the response variable of interest. The vertical dotted lines are the mean values of the response for the corresponding groups. Using ANOVA we will be exploring if there is a significant difference between these mean values.",
-                                                   placement = "bottom", trigger = "hover"))
+                                                   placement = "bottom", trigger = "hover")),
+                                     #reset manipulations to default
+                                       column(width = 4, offset = 4,
+                                              actionButton("reset", label = "click to reset manipulations"))
+                                     
                                    )
                                    
                             ),
@@ -640,10 +643,35 @@ server <- function(input, output, session) {
   all.samples <- reactive({
     rbind(sample1(), sample2(), sample3())
   })
-  output$between.group <- renderPrint(((input$n*(mean(sample1())-mean(all.samples()))^(2)) + (input$n*(mean(sample2())-mean(all.samples()))^(2)) + (input$n*(mean(sample3())-mean(all.samples()))^(2)))/2)
+  
+  overall.mean <- reactive({mean(all.samples())})
+  total.size <- reactive({input$n * 3})
+  
+  m1 <- reactive({mean(sample1())})
+  m2 <- reactive({mean(sample2())})
+  m3 <- reactive({mean(sample3())})
+  
+  var1 <- reactive({var(sample1())})
+  var2 <- reactive({var(sample2())})
+  var3 <- reactive({var(sample3())})
+  
+  #between groups variance eq
+  output$between.group <- renderPrint(((input$n * (m1() - overall.mean())^(2)) + (input$n * (m2() - overall.mean())^(2)) + (input$n * (m3() - overall.mean())^(2)))/2)
   
   #Pooled estimate of within groups variance eq
-  output$within.group <- renderPrint(((input$n-1)*(var(sample1()))^(2) + (input$n-1)*(var(sample2()))^(2) + (input$n-1)*(var(sample3()))^(2))/(input$n*3 - 3))
+  output$within.group <- renderPrint((((input$n - 1)*(var1())^(2)) + ((input$n - 1)*(var2())^(2)) + ((input$n - 1)*(var3())^(2)))/(total.size() - 3))
+  
+  #Reset manipulations
+  observeEvent(input$reset, {
+    updateNumericInput(session, "n", value = 100)
+    updateSelectInput(session, "btwsd1", selected = "inc")
+    updateSelectInput(session, "skew1", selected = "norm")
+    updateSelectInput(session, "skew2", selected = "norm")
+    updateSelectInput(session, "skew3", selected = "norm")
+    updateSliderInput(session, "sd1", value = 1)
+    updateSliderInput(session, "sd2", value = 1)
+    updateSliderInput(session, "sd3", value = 1)
+  })
   
   ##--------------------------------------------------------------Samples Tab
   ##recall that sample1, sample2, sample3 already defined; also dataset with all is sampledf_long()
@@ -791,9 +819,9 @@ server <- function(input, output, session) {
             axis.text.x=element_blank(), axis.ticks.x=element_blank())
   })
   
-  stats <- reactive({c(mean(sample1()), var(sample1()),
-                       mean(sample2()), var(sample2()),
-                       mean(sample3()), var(sample3()))})
+  stats <- reactive({c(m1(), var1(),
+                       m2(), var2(),
+                       m3(), var3())})
   
   output$sumstats <- renderPrint({
     matrix <- matrix(stats(), ncol = 2, byrow = TRUE)

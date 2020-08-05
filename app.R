@@ -522,15 +522,20 @@ ui <- navbarPage(theme = shinytheme("lumen"),
 server <- function(input, output, session) {
   ##--------------------------------------------------------------Population Tab
   #Preserve mean when manipulate skew
+  #Preserve mean when manipulate variance with similar procedure?
   pop_dist <- function(skew, within, n) {
     mean.initial <- reactive({
       set.seed(n)
-      mean(rbeta(20000, shape1 = 22, shape2 = 22) * within)
+      mean(rbeta(20000, shape1 = 22, shape2 = 22) * 1)
     })
     
     if(skew == "norm") {
+      mean.norm <- reactive ({
+        set.seed(n)
+        mean(rbeta(20000, shape1 = 22, shape2 = 22) * within)
+      })
       set.seed(n)
-      return(rbeta(20000, shape1 = 22, shape2 = 22) * within)
+      return(rbeta(20000, shape1 = 22, shape2 = 22) * within - (mean.norm() - mean.initial()))
       
       
     } else if(skew == "rskew") {

@@ -677,16 +677,27 @@ server <- function(input, output, session) {
   })
   
   
-  
   sample1 <- reactive({
+    validate(
+      need(!(input$n > 200), 'Please enter a number between 2 and 200.'),
+      need(!(input$n < 2), 'Please enter a number between 2 and 200.')
+    )
     set.seed(1)
     sample(pop1_trans(), size = input$n, replace = TRUE)
   })
   sample2 <- reactive({
+    validate(
+      need(!(input$n > 200), 'Please enter a number between 2 and 200.'),
+      need(!(input$n < 2), 'Please enter a number between 2 and 200.')
+    )
     set.seed(1)
     sample(pop2_trans(), size = input$n, replace = TRUE)
   })
   sample3 <- reactive({
+    validate(
+      need(!(input$n > 200), 'Please enter a number between 2 and 200.'),
+      need(!(input$n < 2), 'Please enter a number between 2 and 200.')
+    )
     set.seed(1)
     sample(pop3_trans(), size = input$n, replace = TRUE)
   })
@@ -714,7 +725,10 @@ server <- function(input, output, session) {
   var3 <- reactive({var(sample3())})
   
   #between groups variance eq
-  output$between.group <- renderPrint(((input$n * (m1() - overall.mean())^(2)) + (input$n * (m2() - overall.mean())^(2)) + (input$n * (m3() - overall.mean())^(2)))/2)
+  output$between.group <- renderPrint(
+    (
+    (input$n * (m1() - overall.mean())^(2)) + (input$n * (m2() - overall.mean())^(2)) + (input$n * (m3() - overall.mean())^(2)))/2
+    )
   
   #Pooled estimate of within groups variance eq
   output$within.group <- renderPrint((((input$n - 1)*(var1())^(2)) + ((input$n - 1)*(var2())^(2)) + ((input$n - 1)*(var3())^(2)))/(total.size() - 3))

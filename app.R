@@ -6,6 +6,7 @@ library(ggplot2)
 library(broom)
 library(shinyBS)
 library(plyr)
+library(DT)
 
 # Consider adding button that leads straight to "insuff evidence" conclusion?
 
@@ -87,32 +88,7 @@ ui <- navbarPage(theme = shinytheme("lumen"),
                                      "for the family-wise error rate, to determine where exactly the difference lies.")
                             ),
                           ),
-                          hr(),
                           
-                          h2("Acknowledgements"),
-                          p("Portions of this app may utilize information from the following sources:"), br(),
-                          fluidRow(
-                            column(offset = 1, width = 3,
-                                   p(strong("''Unit 4: Inference for numerical data - 4. ANOVA''"), br(),
-                                     em("Presentation by Dr. Abrahamsen"), br(), 
-                                     em("Duke University, Department of Statistical Science")
-                                   )
-                            ),
-                            column(width = 3,
-                                   p(strong("''ANOVA''"), br(),
-                                     em("Presentation by Dr. Jiang"), br(),
-                                     em("Duke University, Department of Statistical Science"))
-                            ),
-                            column(width = 3,
-                                   p(strong("''Analysis of Variance - ANOVA''"), br(), 
-                                     em("Presentation by Dr. Tackett"), br(), 
-                                     em("Duke University, Department of Statistical Science")
-                                   )
-                            )
-                          ),
-                          br(), br(),
-                          
-                          p("Special thank you to Dr. Yue Jiang for introducing me to ANOVA and describing it in a way that would eventually inspire this app."),
                           br(), br(), br(), br(), br(), br(),
                           
                           p("Created by Samantha Owusu-Antwi for Duke University 'Creating Interactive Learning Tools' Project, Summer 2020", style = "text-align:center")
@@ -136,8 +112,9 @@ ui <- navbarPage(theme = shinytheme("lumen"),
                                      ", and the", tipify(strong("within group variances", style = "color:#00B5E5"),
                                                          title = "ANOVA is concerned with two variances. This refers to how the individual observations of a group vary around the mean of that group",
                                                          placement = "top", trigger = "hover"), "of the population data we will be working with.
-                                     Normally, true population parameters are not known.", strong("Remember, ANOVA assumes each group's population density is approximately normal")) 
-                                   
+                                     Normally, true population parameters are not known.", strong("Remember, ANOVA assumes each group's population density is approximately normal.")), 
+                                   br(),
+                                   p(strong("DISCLAIMER: It is unrealistic to choose the population, but for the purposes of understanding the material, you are able to do so in this app.")),
                             )
                             
                           ),
@@ -167,8 +144,9 @@ ui <- navbarPage(theme = shinytheme("lumen"),
                                      fluidRow(
                                        column(offset = 6, width = 6, 
                                               tipify(el = p(em(strong("What's happening?")), style = "text-align:right; color:#00B5E5; font-size:12px"),
-                                                     title = "Try toggling between Increased and Reduced. Notice how increasing the between group variance increases the F-stat and reducing it decreases the F-stat. The F-stat for this data can be found on the Step 3 tab",
-                                                     placement = "bottom", trigger = "hover")))
+                                                     title = "Try toggling between Increased and Reduced. Based on the distributions that result, how does this relate to how different the means are?",
+                                                     placement = "bottom", trigger = "hover"))),
+                                     actionButton(inputId = "gobtw", label = "Update")
                                    ),
                                    
                                    h3(strong("Shape")),
@@ -195,7 +173,9 @@ ui <- navbarPage(theme = shinytheme("lumen"),
                                                  choices = c("Normal" = "norm",
                                                              "Right Skewed (Positive)" = "rskew",
                                                              "Left Skewed (Negative)" = "lskew"),
-                                                 selected = "norm")),
+                                                 selected = "norm"),
+                                     actionButton(inputId = "goshape", label = "Update")
+                                     ),
                                    br(), br()
                                    
                             ),
@@ -211,10 +191,39 @@ ui <- navbarPage(theme = shinytheme("lumen"),
                                                    title = "These are the population distributions of the response variable of interest. The vertical dotted lines are the mean values of the response for the corresponding groups. Using ANOVA we will be exploring if there is a significant difference between these mean values.",
                                                    placement = "bottom", trigger = "hover")),
                                      #reset manipulations to default
-                                       column(width = 4, offset = 4,
-                                              actionButton("reset", label = "click to reset manipulations"))
+                                     column(width = 4, offset = 4,
+                                            actionButton("reset", label = "click to reset manipulations"))
                                      
-                                   )
+                                   ),
+                                   
+                                   h3(strong("Summary Statistics")),
+                                   wellPanel(
+                                     p("Red", style = "color:grey"),
+                                
+                                     verbatimTextOutput(
+                                       outputId = "summary1"
+                                       
+                                     ),
+                                     
+                                     br(),
+                                     
+                                     p("Green", style = "color:grey"),
+                                     
+                                     verbatimTextOutput(
+                                       outputId = "summary2"
+                                       
+                                     ),
+                                     
+                                     br(),
+                                     
+                                     p("Blue", style = "color:grey"),
+                                     
+                                     verbatimTextOutput(
+                                       outputId = "summary3"
+                                       
+                                     ),
+                                     
+                                     ),
                                    
                             ),
                             
@@ -245,8 +254,9 @@ ui <- navbarPage(theme = shinytheme("lumen"),
                                      fluidRow(
                                        column(offset = 6, width = 6,
                                               tipify(el = p(em(strong("What's happening?")), style = "text-align:right; color:#00B5E5; font-size:12px"),
-                                                     title = "Try moving the sliders from one end to the other. Notice how decreasing within group variance generally increases the F-stat and increasing it generally decreases the F-stat. The F-stat for this data can be found on the Step 3 tab",
-                                                     placement = "bottom", trigger = "hover")))
+                                                     title = "Try moving the sliders from one end to the other. Based on the distributions that result, how does this relate to how different the means are?",
+                                                     placement = "bottom", trigger = "hover"))),
+                                     actionButton(inputId = "gowithin", label = "Update")
                                    ))
                           )
                  ),
@@ -314,7 +324,7 @@ ui <- navbarPage(theme = shinytheme("lumen"),
                                               ),
                                               br(), br(), br(), br()
                                      )
-                                   )
+                                   ),
                                    
                                    
                             ),
@@ -322,7 +332,11 @@ ui <- navbarPage(theme = shinytheme("lumen"),
                             column(width = 3,
                                    br(), br(), br(), br(),
                                    h3(strong("Summary Statistics")),
-                                   verbatimTextOutput("sumstats"))
+                                   verbatimTextOutput("sumstats"),
+                                   br(), br(),
+                                   DTOutput(outputId = "table")
+                                   ),
+                            
                           )
                  ),
                  
@@ -349,7 +363,8 @@ ui <- navbarPage(theme = shinytheme("lumen"),
                                    wellPanel(
                                      p("If the sample means vary around the overall mean more that the individual observations vary around
                                      their sample means, we have evidence that the corresponding population means are different. We formally compare
-                                    these variances with the F-stat.", br(), br(),
+                                    these variances with the F-statistic. Relating back to Step 1, we see that increasing the between group variance 
+                                       and decreasing the within group variance increases the F-stat, while doing the opposite decreases the F-stat.", br(), br(),
                                        "If there is", tipify(el = strong("no treatment effect", style = "color:#00B5E5"),
                                                              title = "No treatment effect implies that the null hypothesis is true, the means of all groups are truly equal",
                                                              placement = "top", trigger = "hover"),
@@ -526,6 +541,33 @@ ui <- navbarPage(theme = shinytheme("lumen"),
                                          is less than $\\alpha$")
                             )
                           ),
+                          hr(),
+                          
+                          h2("Acknowledgements"),
+                          p("Portions of this app may utilize information from the following sources:"), br(),
+                          fluidRow(
+                            column(offset = 1, width = 3,
+                                   p(strong("''Unit 4: Inference for numerical data - 4. ANOVA''"), br(),
+                                     em("Presentation by Dr. Abrahamsen"), br(), 
+                                     em("Duke University, Department of Statistical Science")
+                                   )
+                            ),
+                            column(width = 3,
+                                   p(strong("''ANOVA''"), br(),
+                                     em("Presentation by Dr. Jiang"), br(),
+                                     em("Duke University, Department of Statistical Science"))
+                            ),
+                            column(width = 3,
+                                   p(strong("''Analysis of Variance - ANOVA''"), br(), 
+                                     em("Presentation by Dr. Tackett"), br(), 
+                                     em("Duke University, Department of Statistical Science")
+                                   )
+                            )
+                          ),
+                          br(), br(),
+                          
+                          p("Special thank you to Dr. Yue Jiang for introducing me to ANOVA and describing it in a way that would eventually inspire this app."),
+                          br(), br(), br(), br(), br(), br(),
                           br(), br(), br(), br(), br()
                           
                  )
@@ -578,6 +620,7 @@ server <- function(input, output, session) {
   pop2 <- reactive({pop_dist(skew = input$skew2, within = input$sd2, n = 2)})
   pop3 <- reactive({pop_dist(skew = input$skew3, within = input$sd3, n = 3)})
   
+  
   ## effect of btwsd select menu
   translate_pop <- function(set1, set2, set3, between) {
     if(between == "inc") {
@@ -619,6 +662,21 @@ server <- function(input, output, session) {
             axis.title.x=element_blank(), axis.title.y=element_blank()) 
     
   })
+
+  
+  output$summary1 <- renderPrint({
+    summary(pop1_trans())
+  })
+  
+  output$summary2 <- renderPrint({
+    summary(pop2_trans())
+  })
+  
+  output$summary3 <- renderPrint({
+    summary(pop3_trans())
+  })
+  
+  
   
   sample1 <- reactive({
     set.seed(1)
@@ -818,6 +876,11 @@ server <- function(input, output, session) {
       theme(legend.position = "none", plot.title = element_text(size = "14"),
             axis.text.x=element_blank(), axis.ticks.x=element_blank())
   })
+  
+  output$table <- renderDT(
+    datatable(sampledf_long(), filter = 'top', options = list(
+      pageLength = 5, autoWidth = TRUE)
+  ))
   
   stats <- reactive({c(m1(), var1(),
                        m2(), var2(),

@@ -23,7 +23,7 @@ ui <- navbarPage(theme = shinytheme("lumen"),
                                 }
                                 });"
                           ),
-                          #style = "font-size:14px" for size later?
+                          style = "font-size:20px",
                           tags$style(
                             HTML("
                                  .tooltip > .tooltip-inner {
@@ -441,6 +441,7 @@ ui <- navbarPage(theme = shinytheme("lumen"),
                  
                  
                  tabPanel("Resources",
+                          style = "font-size:20px",
                           
                           h1("Equations"),
                           fluidRow(
@@ -652,10 +653,11 @@ server <- function(input, output, session) {
   output$curve <- renderPlot({
     ggplot(data = popdf_long(), aes(x=values, color = dataset)) +
       geom_density() +
-      coord_cartesian(xlim = c(-0.43, 1.55), ylim = c(0, 10.8)) +
+      coord_cartesian(xlim = c(-0.3, 1.3), ylim = c(0, 6.8)) +
       geom_vline(data = pop_means(), aes(xintercept = means, color = dataset),
                  linetype = 2, size = 0.8) +
       ggtitle("Population Distributions") +
+      theme_bw()+
       theme(legend.position = "none", plot.title = element_text(size = "14"),
             axis.text.x=element_blank(), axis.ticks.x=element_blank(), 
             axis.text.y=element_blank(), axis.ticks.y=element_blank(),
@@ -865,6 +867,7 @@ server <- function(input, output, session) {
       #coord_cartesian(ylim =c(0.1, 1.2)) +
       geom_hline(yintercept=mean(sampledf_long()$values), linetype=2, color = "black") +
       labs(title = "Sample Distributions", x = "Sample", y = "Values") +
+      theme_bw() +
       theme(legend.position = "none",  plot.title = element_text(size = "14"),
             axis.text.x=element_blank(), axis.ticks.x=element_blank())
   })
@@ -876,6 +879,7 @@ server <- function(input, output, session) {
       #coord_cartesian(ylim =c(0.1, 1.2)) +
       geom_hline(yintercept=mean(sampledf_long()$values), linetype=1, color = "black") +
       labs(title = "Sample Distributions", x = "Sample", y = "Values") +
+      theme_bw()+
       theme(legend.position = "none", plot.title = element_text(size = "14"),
             axis.text.x=element_blank(), axis.ticks.x=element_blank())
   })
@@ -887,6 +891,7 @@ server <- function(input, output, session) {
                    geom = "crossbar", width = 0.5, aes(color = dataset)) +
       #coord_cartesian(ylim =c(0.1, 1.2)) +
       labs(title = "Sample Distributions", x = "Sample", y = "Values") +
+      theme_bw()+
       theme(legend.position = "none", plot.title = element_text(size = "14"),
             axis.text.x=element_blank(), axis.ticks.x=element_blank())
   })
@@ -917,6 +922,7 @@ server <- function(input, output, session) {
       #coord_cartesian(ylim =c(0.1, 1.2)) +
       geom_hline(yintercept=mean(sampledf_long()$values), linetype=2, color = "black") +
       labs(title = "Sample Distributions", x = "Sample", y = "Values") +
+      theme_bw() +
       theme(legend.position = "none",  plot.title = element_text(size = "14"),
             axis.text.x=element_blank(), axis.ticks.x=element_blank())
   })

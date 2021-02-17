@@ -210,7 +210,7 @@ ui <- navbarPage(
                                    
                                    h3(strong("Summary Statistics")),
                                    #wellPanel(
-                                     p(strong("Red"), style = "text-align:left; color:#D34F2A; font-size:15px"),
+                                     p(strong("Group 1"), style = "text-align:left; color:red; font-size:15px"),
                                 
                                      htmlOutput(
                                        outputId = "summary1"
@@ -218,14 +218,14 @@ ui <- navbarPage(
                                      ),
                                      
                                      
-                                     p(strong("Green"), style = "text-align:left; color:#1C9C8A; font-size:15px"),
+                                     p(strong("Group 2"), style = "text-align:left; color:green; font-size:15px"),
                                      
                                      htmlOutput(
                                        outputId = "summary2"
                                        
                                      ),
                                      
-                                     p(strong("Blue"), style = "text-align:left; color:#2172B2; font-size:15px"),
+                                     p(strong("Group 3"), style = "text-align:left; color:blue; font-size:15px"),
                                      
                                      htmlOutput(
                                        outputId = "summary3"

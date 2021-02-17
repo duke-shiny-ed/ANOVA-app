@@ -344,7 +344,7 @@ ui <- navbarPage(
                                    htmlOutput("sumstats"),
                                    br(), br(),
                                    h3(strong("Sample Observations")),
-                                   p("Filter the dataset to view each sample's values."),
+                                   p("Filter the dataset to view the values within each sample."),
                                    DTOutput(outputId = "table")
                                    ),
                             

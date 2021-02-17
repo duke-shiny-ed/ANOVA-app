@@ -11,7 +11,18 @@ library(knitr)
 
 # Consider adding button that leads straight to "insuff evidence" conclusion?
 
-ui <- navbarPage(theme = shinytheme("lumen"),
+ui <- navbarPage(
+  
+  tags$head(
+    tags$style(HTML("
+      .shiny-output-error-validation {
+        color: #ff0000;
+        font-weight: bold;
+      }
+    "))
+  ),
+  
+  theme = shinytheme("lumen"),
                  
                  title = "ANOVA",
                  tabPanel("About",

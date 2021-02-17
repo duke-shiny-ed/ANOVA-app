@@ -7,6 +7,7 @@ library(broom)
 library(shinyBS)
 library(plyr)
 library(DT)
+library(knitr)
 
 # Consider adding button that leads straight to "insuff evidence" conclusion?
 
@@ -146,7 +147,7 @@ ui <- navbarPage(theme = shinytheme("lumen"),
                                               tipify(el = p(em(strong("What's happening?")), style = "text-align:right; color:#00B5E5; font-size:12px"),
                                                      title = "Try toggling between Increased and Reduced. Based on the distributions that result, how does this relate to how different the means are?",
                                                      placement = "bottom", trigger = "hover"))),
-                                     actionButton(inputId = "gobtw", label = "Update")
+                                     #actionButton(inputId = "gobtw", label = "Update")
                                    ),
                                    
                                    h3(strong("Shape")),
@@ -174,7 +175,7 @@ ui <- navbarPage(theme = shinytheme("lumen"),
                                                              "Right Skewed (Positive)" = "rskew",
                                                              "Left Skewed (Negative)" = "lskew"),
                                                  selected = "norm"),
-                                     actionButton(inputId = "goshape", label = "Update")
+                                     #actionButton(inputId = "goshape", label = "Update")
                                      ),
                                    br(), br()
                                    
@@ -198,27 +199,27 @@ ui <- navbarPage(theme = shinytheme("lumen"),
                                    
                                    h3(strong("Summary Statistics")),
                                    wellPanel(
-                                     p("Red", style = "color:grey"),
+                                     p(strong("Red"), style = "text-align:left; color:#D34F2A; font-size:20px"),
                                 
-                                     verbatimTextOutput(
+                                     htmlOutput(
                                        outputId = "summary1"
                                        
                                      ),
                                      
                                      br(),
                                      
-                                     p("Green", style = "color:grey"),
+                                     p(strong("Green"), style = "text-align:left; color:#1C9C8A; font-size:20px"),
                                      
-                                     verbatimTextOutput(
+                                     htmlOutput(
                                        outputId = "summary2"
                                        
                                      ),
                                      
                                      br(),
                                      
-                                     p("Blue", style = "color:grey"),
+                                     p(strong("Blue"), style = "text-align:left; color:#2172B2; font-size:20px"),
                                      
-                                     verbatimTextOutput(
+                                     htmlOutput(
                                        outputId = "summary3"
                                        
                                      ),
@@ -256,12 +257,14 @@ ui <- navbarPage(theme = shinytheme("lumen"),
                                               tipify(el = p(em(strong("What's happening?")), style = "text-align:right; color:#00B5E5; font-size:12px"),
                                                      title = "Try moving the sliders from one end to the other. Based on the distributions that result, how does this relate to how different the means are?",
                                                      placement = "bottom", trigger = "hover"))),
-                                     actionButton(inputId = "gowithin", label = "Update")
+                                     #actionButton(inputId = "gowithin", label = "Update")
                                    ))
                           )
                  ),
                  ##--------------------------------------------------------tab2
                  tabPanel("Step 2: Draw the Samples",
+                          
+                          
                           fluidRow(
                             column(offset = 2, width = 8, 
                                    p("Now that our population data is set, let's examine the random samples taken from the populations."),
@@ -285,8 +288,7 @@ ui <- navbarPage(theme = shinytheme("lumen"),
                                    br(), br(), br(), br(),
                                    h3(strong("ANOVA Assumptions")),
                                    wellPanel(
-                                     "1. Independent Observations", p("This assumption is currently met because the sample size is 
-                                                                               less than 10% of the population", style = "color:#20C100"),
+                                     "1. Independent Observations", uiOutput("assumption1"),
                                      "2. Approximately normal population distributions for all groups", uiOutput("assumption2"),
                                      "3. Approximately equal within group variances for all groups", uiOutput("assumption3")
                                    )
@@ -658,7 +660,7 @@ server <- function(input, output, session) {
                  linetype = 2, size = 0.8) +
       ggtitle("Population Distributions") +
       theme_bw()+
-      theme(legend.position = "none", plot.title = element_text(size = "14"),
+      theme(legend.position = "none", plot.title = element_text(size = "20", face = "bold"),
             axis.text.x=element_blank(), axis.ticks.x=element_blank(), 
             axis.text.y=element_blank(), axis.ticks.y=element_blank(),
             axis.title.x=element_blank(), axis.title.y=element_blank()) 
@@ -666,39 +668,60 @@ server <- function(input, output, session) {
   })
 
   
-  output$summary1 <- renderPrint({
-    summary(pop1_trans())
+  output$summary1 <- renderText({
+    popdf() %>%
+      summarise(Mean = mean(pop1_trans()),
+                Median = median(pop1_trans()),
+                SD = sd(pop1_trans()),
+                Variance = var(pop1_trans()),
+                Min = min(pop1_trans()),
+                Max = max(pop1_trans()))%>%
+      knitr::kable(format = "html") %>%
+      kableExtra::kable_styling("striped")
   })
   
-  output$summary2 <- renderPrint({
-    summary(pop2_trans())
+  output$summary2 <- renderText({
+    popdf() %>%
+      summarise(Mean = mean(pop2_trans()),
+                Median = median(pop2_trans()),
+                SD = sd(pop2_trans()),
+                Variance = var(pop2_trans()),
+                Min = min(pop2_trans()),
+                Max = max(pop2_trans()))%>%
+      knitr::kable(format = "html") %>%
+      kableExtra::kable_styling("striped")
   })
   
-  output$summary3 <- renderPrint({
-    summary(pop3_trans())
+  output$summary3 <- renderText({
+    popdf() %>%
+      summarise(Mean = mean(pop3_trans()),
+                Median = median(pop3_trans()),
+                SD = sd(pop3_trans()),
+                Variance = var(pop3_trans()),
+                Min = min(pop3_trans()),
+                Max = max(pop3_trans()))%>%
+      knitr::kable(format = "html") %>%
+      kableExtra::kable_styling("striped")
   })
   
   
   sample1 <- reactive({
     validate(
-      need(!(input$n > 200), 'Please enter a number between 2 and 200.'),
-      need(!(input$n < 2), 'Please enter a number between 2 and 200.')
+      need(!((input$n > 200) | (input$n < 2)), 'Please enter a number between 2 and 200.')
     )
     set.seed(1)
     sample(pop1_trans(), size = input$n, replace = TRUE)
   })
   sample2 <- reactive({
     validate(
-      need(!(input$n > 200), 'Please enter a number between 2 and 200.'),
-      need(!(input$n < 2), 'Please enter a number between 2 and 200.')
+      need(!((input$n > 200) | (input$n < 2)), 'Please enter a number between 2 and 200.')
     )
     set.seed(1)
     sample(pop2_trans(), size = input$n, replace = TRUE)
   })
   sample3 <- reactive({
     validate(
-      need(!(input$n > 200), 'Please enter a number between 2 and 200.'),
-      need(!(input$n < 2), 'Please enter a number between 2 and 200.')
+      need(!((input$n > 200) | (input$n < 2)), 'Please enter a number between 2 and 200.')
     )
     set.seed(1)
     sample(pop3_trans(), size = input$n, replace = TRUE)
@@ -750,8 +773,19 @@ server <- function(input, output, session) {
   ##--------------------------------------------------------------Samples Tab
   ##recall that sample1, sample2, sample3 already defined; also dataset with all is sampledf_long()
   
+  #Assumes Independence
+  output$assumption1 <- renderUI({
+    validate(
+      need(!((input$n > 200) | (input$n < 2)), 'Please enter a number between 2 and 200.')
+    )
+    return(p("This assumption is currently met because the sample size is less than 10% of the population", style = "color:#20C100"))
+  })
+  
   #Assumes approximate normality
   output$assumption2 <- renderUI({
+    validate(
+      need(!((input$n > 200) | (input$n < 2)), 'Please enter a number between 2 and 200.')
+    )
     if(input$n > 10) {
       return(p("This assumption is currently met because the selected sample size,", paste(input$n), ", is greater than 10",
                style = "color:#20C100"))
@@ -868,7 +902,7 @@ server <- function(input, output, session) {
       geom_hline(yintercept=mean(sampledf_long()$values), linetype=2, color = "black") +
       labs(title = "Sample Distributions", x = "Sample", y = "Values") +
       theme_bw() +
-      theme(legend.position = "none",  plot.title = element_text(size = "14"),
+      theme(legend.position = "none",  plot.title = element_text(size = "20", face = "bold"),
             axis.text.x=element_blank(), axis.ticks.x=element_blank())
   })
   
@@ -880,7 +914,7 @@ server <- function(input, output, session) {
       geom_hline(yintercept=mean(sampledf_long()$values), linetype=1, color = "black") +
       labs(title = "Sample Distributions", x = "Sample", y = "Values") +
       theme_bw()+
-      theme(legend.position = "none", plot.title = element_text(size = "14"),
+      theme(legend.position = "none", plot.title = element_text(size = "20", face = "bold"),
             axis.text.x=element_blank(), axis.ticks.x=element_blank())
   })
   
@@ -892,7 +926,7 @@ server <- function(input, output, session) {
       #coord_cartesian(ylim =c(0.1, 1.2)) +
       labs(title = "Sample Distributions", x = "Sample", y = "Values") +
       theme_bw()+
-      theme(legend.position = "none", plot.title = element_text(size = "14"),
+      theme(legend.position = "none", plot.title = element_text(size = "20", face = "bold"),
             axis.text.x=element_blank(), axis.ticks.x=element_blank())
   })
   
@@ -923,13 +957,16 @@ server <- function(input, output, session) {
       geom_hline(yintercept=mean(sampledf_long()$values), linetype=2, color = "black") +
       labs(title = "Sample Distributions", x = "Sample", y = "Values") +
       theme_bw() +
-      theme(legend.position = "none",  plot.title = element_text(size = "14"),
+      theme(legend.position = "none",  plot.title = element_text(size = "20", face = "bold"),
             axis.text.x=element_blank(), axis.ticks.x=element_blank())
   })
   
   runTest <- reactive({aov(values ~ dataset, data = sampledf_long())})
-  output$aovTest <- renderPrint ({
+  output$aovTest <- renderPrint({
     print(summary(runTest()))
+    # summary(runTest())%>%
+    #   knitr::kable(format = "html") %>%
+    #   kableExtra::kable_styling("striped", full_width = F)
   })
   
   output$FTest <- renderPrint ({

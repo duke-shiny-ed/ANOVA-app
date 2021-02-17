@@ -72,7 +72,7 @@ ui <- navbarPage(
                                    br(),
                                    ## put more general info here
                                    p("If you haven't already noticed, while interacting with this app you will routinely encounter text that
-                                     is highlighted blue like this:", tipify(el = strong(em("What's happening?", style = "color:#00B5E5; font-size:13px")),
+                                     is highlighted blue like this:", tipify(el = strong(em("What's happening?", style = "color:#00B5E5; font-size:20px")),
                                                                              title = "This is an example! Hover over any text highlighted in blue like this to view helpful information",
                                                                              placement = "bottom", trigger = "hover"), 
                                      "These are designed to help you navigate the material being presented. Hover over them to view definitions 
@@ -209,33 +209,30 @@ ui <- navbarPage(
                                    ),
                                    
                                    h3(strong("Summary Statistics")),
-                                   wellPanel(
-                                     p(strong("Red"), style = "text-align:left; color:#D34F2A; font-size:20px"),
+                                   #wellPanel(
+                                     p(strong("Red"), style = "text-align:left; color:#D34F2A; font-size:15px"),
                                 
                                      htmlOutput(
                                        outputId = "summary1"
                                        
                                      ),
                                      
-                                     br(),
                                      
-                                     p(strong("Green"), style = "text-align:left; color:#1C9C8A; font-size:20px"),
+                                     p(strong("Green"), style = "text-align:left; color:#1C9C8A; font-size:15px"),
                                      
                                      htmlOutput(
                                        outputId = "summary2"
                                        
                                      ),
                                      
-                                     br(),
-                                     
-                                     p(strong("Blue"), style = "text-align:left; color:#2172B2; font-size:20px"),
+                                     p(strong("Blue"), style = "text-align:left; color:#2172B2; font-size:15px"),
                                      
                                      htmlOutput(
                                        outputId = "summary3"
                                        
                                      ),
                                      
-                                     ),
+                                     #),
                                    
                             ),
                             
@@ -339,14 +336,15 @@ ui <- navbarPage(
                                      )
                                    ),
                                    
-                                   
                             ),
                             
                             column(width = 3,
                                    br(), br(), br(), br(),
                                    h3(strong("Summary Statistics")),
-                                   verbatimTextOutput("sumstats"),
+                                   htmlOutput("sumstats"),
                                    br(), br(),
+                                   h3(strong("Sample Observations")),
+                                   p("Filter the dataset to view each sample's values."),
                                    DTOutput(outputId = "table")
                                    ),
                             
@@ -409,7 +407,8 @@ ui <- navbarPage(
                                    br(),
                                    plotOutput(outputId = "boxplot2"),
                                    
-                                   p(verbatimTextOutput(outputId = "aovTest")),
+                                   #p(verbatimTextOutput(outputId = "aovTest")),
+                                   p(htmlOutput(outputId = "aovTest")),
                                    fluidRow(
                                      column(offset = 9, width = 3,
                                             tipify(el = p(em(strong("What's happening?")), style = "text-align:right; color:#00B5E5; font-size:12px"),
@@ -950,12 +949,14 @@ server <- function(input, output, session) {
                        m2(), var2(),
                        m3(), var3())})
   
-  output$sumstats <- renderPrint({
+  output$sumstats <- renderText({
     matrix <- matrix(stats(), ncol = 2, byrow = TRUE)
     rownames(matrix) <- c("Sample 1 (Red)", "Sample 2 (Green)", "Sample 3 (Blue)")
     colnames(matrix) <- c("mean", "variance")
     
-    return(matrix)
+    matrix %>%
+      knitr::kable(format = "html")%>%
+      kableExtra::kable_styling("striped", full_width = F)
     
   })
   
@@ -973,12 +974,15 @@ server <- function(input, output, session) {
   })
   
   runTest <- reactive({aov(values ~ dataset, data = sampledf_long())})
-  output$aovTest <- renderPrint({
-    print(summary(runTest()))
-    # summary(runTest())%>%
-    #   knitr::kable(format = "html") %>%
-    #   kableExtra::kable_styling("striped", full_width = F)
-  })
+  # output$aovTest <- renderPrint({
+  #   print(summary(runTest()))
+  # })
+  
+  output$aovTest <- renderText(
+    tidy(runTest())%>%
+      knitr::kable(format = "html") %>%
+      kableExtra::kable_styling("striped", full_width = F)
+  )
   
   output$FTest <- renderPrint ({
     print(summary(runTest())[[1]][["F value"]][[1]])

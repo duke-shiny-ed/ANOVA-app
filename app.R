@@ -686,7 +686,7 @@ server <- function(input, output, session) {
                 Variance = var(pop1_trans()),
                 Min = min(pop1_trans()),
                 Max = max(pop1_trans()))%>%
-      knitr::kable(format = "html") %>%
+      knitr::kable(format = "html", digits = 3) %>%
       kableExtra::kable_styling("striped")
   })
   
@@ -698,7 +698,7 @@ server <- function(input, output, session) {
                 Variance = var(pop2_trans()),
                 Min = min(pop2_trans()),
                 Max = max(pop2_trans()))%>%
-      knitr::kable(format = "html") %>%
+      knitr::kable(format = "html", digits = 3) %>%
       kableExtra::kable_styling("striped")
   })
   
@@ -710,7 +710,7 @@ server <- function(input, output, session) {
                 Variance = var(pop3_trans()),
                 Min = min(pop3_trans()),
                 Max = max(pop3_trans()))%>%
-      knitr::kable(format = "html") %>%
+      knitr::kable(format = "html", digits = 3) %>%
       kableExtra::kable_styling("striped")
   })
   
@@ -955,7 +955,7 @@ server <- function(input, output, session) {
     colnames(matrix) <- c("mean", "variance")
     
     matrix %>%
-      knitr::kable(format = "html")%>%
+      knitr::kable(format = "html", digits = 3)%>%
       kableExtra::kable_styling("striped", full_width = F)
     
   })
@@ -980,7 +980,7 @@ server <- function(input, output, session) {
   
   output$aovTest <- renderText(
     tidy(runTest())%>%
-      knitr::kable(format = "html") %>%
+      knitr::kable(format = "html", digits = 3, col.names = c("Term", "Degrees Freedom", "Sum of Squares", "Mean Square", "F-Stat", "P value")) %>%
       kableExtra::kable_styling("striped", full_width = F)
   )
   

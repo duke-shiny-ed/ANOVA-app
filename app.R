@@ -46,13 +46,12 @@ ui <- navbarPage(
                                  }
                                  ")),
                           fluidRow(
-                            column(offset = 1, width = 5,
+                            column(offset = 1, width = 10,
                                    h2("About the App")),
-                            column(width = 5,
-                                   h2("An Introduction to ANOVA"))
+                            
                           ),
                           fluidRow(
-                            column(offset = 1, width = 5,
+                            column(offset = 1, width = 10,
                                    p("Welcome! This interactive learning tool is brought to you by Duke Shiny-Ed. In this particular app 
                             you will be able to explore", tipify(strong("ANOVA", style = "color:#00B5E5"), 
                                                                  title = "Hypothesis test which analyzes variance to make inferences about means. Tests the null that all group means are equal and the alternative that at least one of the means are different, not necessarily that all are unequal", 
@@ -78,34 +77,73 @@ ui <- navbarPage(
                                      "These are designed to help you navigate the material being presented. Hover over them to view definitions 
                                     of commonly used terms and other information meant to guide you through the exploration!")
                                    
+                            
                             ),
-                            ## put intro to ANOVA info here
-                            column(width = 5,
-                                   p("ANOVA is a method used in statistical analysis to make inferences about numerical data. In particular, 
+                            
+                            
+                            
+                          ),
+                          
+                          br(), br(), br(), br(), br(), br(),
+                          
+                          hr(),
+                          
+                          h2("Acknowledgements"),
+                          p("Portions of this app may utilize information from the following sources:"), br(),
+                          fluidRow(
+                            column(offset = 1, width = 3,
+                                   p(strong("''Unit 4: Inference for numerical data - 4. ANOVA''"), br(),
+                                     em("Presentation by Dr. Abrahamsen"), br(), 
+                                     em("Duke University, Department of Statistical Science")
+                                   )
+                            ),
+                            column(width = 3,
+                                   p(strong("''ANOVA''"), br(),
+                                     em("Presentation by Dr. Jiang"), br(),
+                                     em("Duke University, Department of Statistical Science"))
+                            ),
+                            column(width = 3,
+                                   p(strong("''Analysis of Variance - ANOVA''"), br(), 
+                                     em("Presentation by Dr. Tackett"), br(), 
+                                     em("Duke University, Department of Statistical Science")
+                                   )
+                            )
+                          ),
+                          br(), br(),
+                          
+                          p("Special thank you to Dr. Yue Jiang for introducing me to ANOVA and describing it in a way that would eventually inspire this app."),
+                          br(), br(), br(), br(), br(), br(),
+                          br(), br(), br(), br(), br(),
+                          
+                          p("Created by Samantha Owusu-Antwi for Duke University 'Creating Interactive Learning Tools' Project, Summer 2020", style = "text-align:center")
+                 ),
+  
+  tabPanel("Background",
+           style = "font-size:20px",
+           column(offset = 1, width = 10,
+                  h2("An Introduction to ANOVA")),
+           ## put intro to ANOVA info here
+           column(offset = 1, width = 10,
+                  p("ANOVA is a method used in statistical analysis to make inferences about numerical data. In particular, 
                             ANOVA is used to question whether there is a meaningful difference between groups being studied. To
                             do this, ANOVA tests the alternative hypothesis that at least one of the group means is truly different
                             from the others against the null hypothesis that there is no difference between the group means. In this sense, 
                             ANOVA can be thought of as generalizing the two sample", tipify(strong("t-test", style = "color:#00B5E5"),
                                                                                             title = "A hypothesis test used to compare two means",
                                                                                             placement = "top", trigger = "hover"),
-                                     "to more that two categories!"),
-                                   p("So why don't we just use the two sample t-test multiple times? Conclusions drawn from such repetitive pairwise testing 
+                    "to more that two categories!"),
+                  p("So why don't we just use the two sample t-test multiple times? Conclusions drawn from such repetitive pairwise testing 
                                      can be misleading. More specifically, this practice will lead to an inflated", tipify(strong("family-wise error", style = "color:#00B5E5"),
                                                                                                                            title = "The probability that we fail to arrive at the correct conclusion at least once when we conduct multiple pairwise tests. This probability will generally increase as we increase the number of tests we are conducting",
                                                                                                                            placement = "bottom", trigger = "hover"), 
-                                     "rate. After all if you test anything enough times you're bound reach the wrong conclusion. So, to mitigate this error we generally wait until 
+                    "rate. After all if you test anything enough times you're bound reach the wrong conclusion. So, to mitigate this error we generally wait until 
                                      after ANOVA suggests there is at least one difference among groups before conducting pairwise 
                                      tests, while", tipify(strong("correcting", style = "color:#00B5E5"),
                                                            title = "Refers to the Bonferroni correction where the significance level, alpha, is adjusted before it is used. The adjusted alpha value is equal to the original alpha value divided by the total number of pairwise tests to be performed"), 
-                                     "for the family-wise error rate, to determine where exactly the difference lies.")
-                            ),
-                          ),
-                          
-                          br(), br(), br(), br(), br(), br(),
-                          
-                          p("Created by Samantha Owusu-Antwi for Duke University 'Creating Interactive Learning Tools' Project, Summer 2020", style = "text-align:center")
-                 ),
-                 
+                    "for the family-wise error rate, to determine where exactly the difference lies.")
+           ),
+  ),
+           
                  ##--------------------------------------------------------tab 1
                  tabPanel("Step 1: Identify the Population",
                           fluidRow(
@@ -554,34 +592,7 @@ ui <- navbarPage(
                                          is less than $\\alpha$")
                             )
                           ),
-                          hr(),
                           
-                          h2("Acknowledgements"),
-                          p("Portions of this app may utilize information from the following sources:"), br(),
-                          fluidRow(
-                            column(offset = 1, width = 3,
-                                   p(strong("''Unit 4: Inference for numerical data - 4. ANOVA''"), br(),
-                                     em("Presentation by Dr. Abrahamsen"), br(), 
-                                     em("Duke University, Department of Statistical Science")
-                                   )
-                            ),
-                            column(width = 3,
-                                   p(strong("''ANOVA''"), br(),
-                                     em("Presentation by Dr. Jiang"), br(),
-                                     em("Duke University, Department of Statistical Science"))
-                            ),
-                            column(width = 3,
-                                   p(strong("''Analysis of Variance - ANOVA''"), br(), 
-                                     em("Presentation by Dr. Tackett"), br(), 
-                                     em("Duke University, Department of Statistical Science")
-                                   )
-                            )
-                          ),
-                          br(), br(),
-                          
-                          p("Special thank you to Dr. Yue Jiang for introducing me to ANOVA and describing it in a way that would eventually inspire this app."),
-                          br(), br(), br(), br(), br(), br(),
-                          br(), br(), br(), br(), br()
                           
                  )
                  

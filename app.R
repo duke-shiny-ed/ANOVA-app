@@ -25,19 +25,19 @@ ui <- navbarPage(
   theme = shinytheme("lumen"),
                  
                  title = "ANOVA",
-                 tabPanel("About",
-                          withMathJax(),
-                          tags$script(
-                            "MathJax.Hub.Config({
+  tabPanel("About",
+           withMathJax(),
+           tags$script(
+             "MathJax.Hub.Config({
                                 tex2jax: {
                                 inlineMath: [['$','$'], ['\\(','\\)']],
                                 processEscapes: true
                                 }
                                 });"
-                          ),
-                          style = "font-size:20px",
-                          tags$style(
-                            HTML("
+           ),
+           style = "font-size:20px",
+           tags$style(
+             HTML("
                                  .tooltip > .tooltip-inner {
                                  background-color: #000000;
                                  color: #FFFFFF;
@@ -45,78 +45,78 @@ ui <- navbarPage(
                                  text-align: left;
                                  }
                                  ")),
-                          fluidRow(
-                            column(offset = 1, width = 10,
-                                   h2("About the App")),
-                            
-                          ),
-                          fluidRow(
-                            column(offset = 1, width = 10,
-                                   p("Welcome! This interactive learning tool is brought to you by Duke Shiny-Ed. In this particular app 
+           fluidRow(
+             column(offset = 1, width = 10,
+                    h2("About the App")),
+             
+           ),
+           fluidRow(
+             column(offset = 1, width = 10,
+                    p("Welcome! This interactive learning tool is brought to you by Duke Shiny-Ed. In this particular app 
                             you will be able to explore", tipify(strong("ANOVA", style = "color:#00B5E5"), 
                                                                  title = "Hypothesis test which analyzes variance to make inferences about means. Tests the null that all group means are equal and the alternative that at least one of the means are different, not necessarily that all are unequal", 
                                                                  trigger = "hover"), 
-                                     ", or Analysis of Variance. This app is designed to gradually introduce you to the different aspects of ANOVA and it concludes with a quiz so that you 
+                      ", or Analysis of Variance. This app is designed to gradually introduce you to the different aspects of ANOVA and it concludes with a quiz so that you 
                             can test what you've learned! Hopefully, after using this
                             app, you will be able to:"),
-                                   p("1. Examine how violations of the", tipify(strong("assumptions of ANOVA", style = "color:#00B5E5"),
-                                                                                title = "1)Independent observations 2)Approximately normal population distributions for all groups 3)Approximately equal within group variances for all groups", 
-                                                                                trigger = "hover"), 
-                                     "affect the ANOVA test output"),
-                                   p("2. Understand the relationship between the", tipify(strong("F-statistic", style = "color:#00B5E5"),
-                                                                                          title = "The F-stat is a ratio of the between and within groups variances. When F is large we are prompted to reject the null hypothesis and conclude that there is at least one difference between the group means",
-                                                                                          placement = "bottom", trigger = "hover"), "and the ANOVA test output"),
-                                   p("3. Predict how manipulation of between and within group variances will affect the F-statistic
+                    p("1. Examine how violations of the", tipify(strong("assumptions of ANOVA", style = "color:#00B5E5"),
+                                                                 title = "1)Independent observations 2)Approximately normal population distributions for all groups 3)Approximately equal within group variances for all groups", 
+                                                                 trigger = "hover"), 
+                      "affect the ANOVA test output"),
+                    p("2. Understand the relationship between the", tipify(strong("F-statistic", style = "color:#00B5E5"),
+                                                                           title = "The F-stat is a ratio of the between and within groups variances. When F is large we are prompted to reject the null hypothesis and conclude that there is at least one difference between the group means",
+                                                                           placement = "bottom", trigger = "hover"), "and the ANOVA test output"),
+                    p("3. Predict how manipulation of between and within group variances will affect the F-statistic
                                      and the ANOVA test output"),
-                                   br(),
-                                   ## put more general info here
-                                   p("If you haven't already noticed, while interacting with this app you will routinely encounter text that
+                    br(),
+                    ## put more general info here
+                    p("If you haven't already noticed, while interacting with this app you will routinely encounter text that
                                      is highlighted blue like this:", tipify(el = strong(em("What's happening?", style = "color:#00B5E5; font-size:20px")),
                                                                              title = "This is an example! Hover over any text highlighted in blue like this to view helpful information",
                                                                              placement = "bottom", trigger = "hover"), 
-                                     "These are designed to help you navigate the material being presented. Hover over them to view definitions 
+                      "These are designed to help you navigate the material being presented. Hover over them to view definitions 
                                     of commonly used terms and other information meant to guide you through the exploration!")
-                                   
-                            
-                            ),
-                            
-                            
-                            
-                          ),
-                          
-                          br(), br(), br(), br(), br(), br(),
-                          
-                          hr(),
-                          
-                          h2("Acknowledgements"),
-                          p("Portions of this app may utilize information from the following sources:"), br(),
-                          fluidRow(
-                            column(offset = 1, width = 3,
-                                   p(strong("''Unit 4: Inference for numerical data - 4. ANOVA''"), br(),
-                                     em("Presentation by Dr. Abrahamsen"), br(), 
-                                     em("Duke University, Department of Statistical Science")
-                                   )
-                            ),
-                            column(width = 3,
-                                   p(strong("''ANOVA''"), br(),
-                                     em("Presentation by Dr. Jiang"), br(),
-                                     em("Duke University, Department of Statistical Science"))
-                            ),
-                            column(width = 3,
-                                   p(strong("''Analysis of Variance - ANOVA''"), br(), 
-                                     em("Presentation by Dr. Tackett"), br(), 
-                                     em("Duke University, Department of Statistical Science")
-                                   )
-                            )
-                          ),
-                          br(), br(),
-                          
-                          p("Special thank you to Dr. Yue Jiang for introducing me to ANOVA and describing it in a way that would eventually inspire this app."),
-                          br(), br(), br(), br(), br(), br(),
-                          br(), br(), br(), br(), br(),
-                          
-                          p("Created by Samantha Owusu-Antwi for Duke University 'Creating Interactive Learning Tools' Project, Summer 2020", style = "text-align:center")
-                 ),
+                    
+                    
+             ),
+             
+             
+             
+           ),
+           
+           br(), br(), br(), br(), br(), br(),
+           
+           hr(),
+           
+           h2("Acknowledgements"),
+           p("Portions of this app may utilize information from the following sources:"), br(),
+           fluidRow(
+             column(offset = 1, width = 3,
+                    p(strong("''Unit 4: Inference for numerical data - 4. ANOVA''"), br(),
+                      em("Presentation by Dr. Abrahamsen"), br(), 
+                      em("Duke University, Department of Statistical Science")
+                    )
+             ),
+             column(width = 3,
+                    p(strong("''ANOVA''"), br(),
+                      em("Presentation by Dr. Jiang"), br(),
+                      em("Duke University, Department of Statistical Science"))
+             ),
+             column(width = 3,
+                    p(strong("''Analysis of Variance - ANOVA''"), br(), 
+                      em("Presentation by Dr. Tackett"), br(), 
+                      em("Duke University, Department of Statistical Science")
+                    )
+             )
+           ),
+           br(), br(),
+           
+           p("Special thank you to Dr. Yue Jiang for introducing me to ANOVA and describing it in a way that would eventually inspire this app."),
+           br(), br(), br(), br(), br(), br(),
+           br(), br(), br(), br(), br(),
+           
+           p("Created by Samantha Owusu-Antwi for Duke University 'Creating Interactive Learning Tools' Project, Summer 2020", style = "text-align:center")
+  ),
   
   tabPanel("Background",
            style = "font-size:20px",
@@ -142,9 +142,16 @@ ui <- navbarPage(
                                                            title = "Refers to the Bonferroni correction where the significance level, alpha, is adjusted before it is used. The adjusted alpha value is equal to the original alpha value divided by the total number of pairwise tests to be performed"), 
                     "for the family-wise error rate, to determine where exactly the difference lies.")
            ),
+           column(offset = 1, width = 10,
+                  h2("ANOVA Test")),
+           
+           column(offset = 1, width = 10,
+                  h2("ANOVA Assumptions")),
   ),
+  
            
                  ##--------------------------------------------------------tab 1
+  #tabPanel("Explore",
                  tabPanel("Step 1: Identify the Population",
                           fluidRow(
                             column(offset = 2, width = 8, style="background-color:#F1F0F0; padding:20px; border-radius:10px",
@@ -170,7 +177,7 @@ ui <- navbarPage(
                           ),
                           
                           br(),
-                          hr(),
+                          #hr(),
                           
                           fluidRow(
                             
@@ -327,7 +334,7 @@ ui <- navbarPage(
                                    style="background-color:#F1F0F0; padding:20px; border-radius:10px")
                           ),
                           br(),
-                          hr(),
+                          #hr(),
                           
                           fluidRow(
                             column(width = 3,
@@ -404,7 +411,7 @@ ui <- navbarPage(
                             )
                           ),
                           br(),
-                          hr(),
+                          #hr(),
                           
                           fluidRow(
                             column(width = 3,
@@ -478,6 +485,7 @@ ui <- navbarPage(
                           )
                           
                  ),
+  #),
                  
                  
                  ##---------------------------------------------------------quiz on boxplots comparing F-stats  
@@ -488,6 +496,7 @@ ui <- navbarPage(
                                         frameBorder="0")
                           )
                  ),
+              
                  
                  
                  tabPanel("Resources",

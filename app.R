@@ -27,15 +27,11 @@ ui <- navbarPage(
     "))
   ),
   
-<<<<<<< HEAD
+
   #theme = shinytheme("lumen"),
-                 
-                 title = "ANOVA",
-=======
-  theme = shinytheme("lumen"),
   
   title = "ANOVA",
->>>>>>> 9c46395ca4d2532eed95a62444f99f2435df9692
+
   tabPanel("About",
            withMathJax(),
            tags$script(
@@ -991,7 +987,7 @@ server <- function(input, output, session) {
     
     matrix %>%
       knitr::kable(format = "html", digits = 3)%>%
-      kableExtra::kable_styling("striped", full_width = F, font_size = 20)
+      kableExtra::kable_styling("striped", full_width = F, font_size = 15)
     
   })
   

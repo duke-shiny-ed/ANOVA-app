@@ -201,7 +201,7 @@ ui <- navbarPage(
                                      fluidRow(
                                        column(offset = 6, width = 6, 
                                               tipify(el = p(em(strong("What's happening?")), style = "text-align:right; color:#00B5E5; font-size:12px"),
-                                                     title = "Try toggling between Increased and Reduced. Based on the distributions that result, how does this relate to how different the means are?",
+                                                     title = "Try toggling between “Reduced” and “Increased” group variance, and use the plot and summary statistics to compare the distributions. How does the distance between group means differ when the between group variance differs?",
                                                      placement = "bottom", trigger = "hover"))),
                                      #actionButton(inputId = "gobtw", label = "Update")
                                    ),
@@ -245,11 +245,11 @@ ui <- navbarPage(
                                    fluidRow(
                                      column(width = 4,
                                             tipify(el = p(em(strong("What does this graph show?")), style = "text-align:left; color:#00B5E5; font-size:12px"),
-                                                   title = "These are the population distributions of the response variable of interest. The vertical dotted lines are the mean values of the response for the corresponding groups. Using ANOVA we will be exploring if there is a significant difference between these mean values.",
+                                                   title = "This graph shows the population distributions for the variable of interest. The vertical dotted lines show the mean of each distribution.",
                                                    placement = "bottom", trigger = "hover")),
                                      #reset manipulations to default
                                      column(width = 4, offset = 4,
-                                            actionButton("reset", label = "click to reset manipulations"))
+                                            actionButton("reset", label = "Click to reset settings"))
                                      
                                    ),
                                    
@@ -302,14 +302,14 @@ ui <- navbarPage(
                                                  min = 0.25, max = 2.25, value = 1),
                                      br(),
                                      
-                                     p("The pooled estimate of the within groups variance for this data is:"),
-                                     verbatimTextOutput(outputId = "within.group"),
+                                     # p("The pooled estimate of the within groups variance for this data is:"),
+                                     # verbatimTextOutput(outputId = "within.group"),
                                      
-                                     fluidRow(
-                                       column(offset = 6, width = 6,
-                                              tipify(el = p(em(strong("What's happening?")), style = "text-align:right; color:#00B5E5; font-size:12px"),
-                                                     title = "Try moving the sliders from one end to the other. Based on the distributions that result, how does this relate to how different the means are?",
-                                                     placement = "bottom", trigger = "hover"))),
+                                     # fluidRow(
+                                     #   column(offset = 6, width = 6,
+                                     #          tipify(el = p(em(strong("What's happening?")), style = "text-align:right; color:#00B5E5; font-size:12px"),
+                                     #                 title = "Try moving the sliders from one end to the other. Based on the distributions that result, how does this relate to how different the means are?",
+                                     #                 placement = "bottom", trigger = "hover"))),
                                      #actionButton(inputId = "gowithin", label = "Update")
                                    ))
                           )
@@ -323,13 +323,13 @@ ui <- navbarPage(
                                    p("Now that our population data is set, let's examine the random samples taken from the populations."),
                                    p(strong("Recall ANOVA assumes group distributions are approximately normal."), "However ANOVA is relatively robust against
                                 departures from normality. In fact, as long as sample sizes are", tipify(el = strong("large enough", style = "color:#00B5E5"),
-                                                                                                         title = "in this case approximately greater than 10 in each group",
+                                                                                                         title = "in this case approximately greater than 30 in each group",
                                                                                                          placement = "top", trigger = "hover"), "the conclusions
                                 of ANOVA may still be valid, even if the underlying population distributions are skewed"),
                                    
                                    p(strong("ANOVA also assumes that groups have roughly equal variability."), "ANOVA is not robust against violations
                                 of this assumption and the results of ANOVA may not be valid if", tipify(el = strong("$s_{max} \\geq 2s_{min}$", style = "color:#00B5E5"),
-                                                                                                         title = "in other words, if the maximum group variance is greater than or equal to double the minimum group variance")
+                                                                                                         title = "in other words, if the maximum group standard deviation is greater than or equal to double the minimum group standard deviation")
                                    ),   
                                    style="background-color:#F1F0F0; padding:20px; border-radius:10px")
                           ),
@@ -350,47 +350,48 @@ ui <- navbarPage(
                             column(width = 6,
                                    numericInput("n", label = "Choose a sample size between 2 and 200",
                                                 min = 2, max = 200, value = 100, step = 1),
-                                   tabsetPanel(
-                                     tabPanel("Whole Graph", column(width = 12, plotOutput(outputId = "boxplot")),
+                                   #tabsetPanel(
+                                     #tabPanel("Whole Graph", 
+                                       column(width = 12, plotOutput(outputId = "boxplot")),
                                               fluidRow(
                                                 column(offset = 1, width = 4,
                                                        tipify(el = p(em(strong("What does this graph show?")), style = "text-align:left; color:#00B5E5; font-size:12px"),
                                                               title = "These graphs all depict parts of the sample distributions. Here the between groups variance can be thought of as how the medians of the boxplots vary from the overall mean, the solid black line. The within groups variance can be thought of as how the datapoints of a sample vary from the median of that sample.",
                                                               placement = "top", trigger = "hover"))
                                               ),
-                                              br(), br(), br(), br()
-                                     ),
-                                     tabPanel("Focus on Within Groups Variance", column(width = 12, plotOutput(outputId = "toggleWin")),
-                                              fluidRow(
-                                                column(offset = 1, width = 4,
-                                                       tipify(el = p(em(strong("What does this graph show?")), style = "text-align:left; color:#00B5E5; font-size:12px"),
-                                                              title = "These graphs all depict parts of the sample distributions. Here the within groups variance is visualized as how the datapoints of a sample vary from the median of that sample, the corresponding solid lines.",
-                                                              placement = "top", trigger = "hover"))
-                                              ),
-                                              br(), br(), br(), br()
-                                     ),
-                                     
-                                     tabPanel("Focus on Between Groups Variance", column(width = 12, plotOutput(outputId = "toggleBtw")),
-                                              fluidRow(
-                                                column(offset = 1, width = 4,
-                                                       tipify(el = p(em(strong("What does this graph show?")), style = "text-align:left; color:#00B5E5; font-size:12px"),
-                                                              title = "These graphs all depict parts of the sample distributions. Here the between groups variance is visualized as how the median of a boxplot, represented by a point in this case, varies from the overall mean, the solid black line.",
-                                                              placement = "top", trigger = "hover"))
-                                              ),
-                                              br(), br(), br(), br()
-                                     )
-                                   ),
+                                              br(), br(),
+                                     #)
+                                     # tabPanel("Focus on Within Groups Variance", column(width = 12, plotOutput(outputId = "toggleWin")),
+                                     #          fluidRow(
+                                     #            column(offset = 1, width = 4,
+                                     #                   tipify(el = p(em(strong("What does this graph show?")), style = "text-align:left; color:#00B5E5; font-size:12px"),
+                                     #                          title = "These graphs all depict parts of the sample distributions. Here the within groups variance is visualized as how the datapoints of a sample vary from the median of that sample, the corresponding solid lines.",
+                                     #                          placement = "top", trigger = "hover"))
+                                     #          ),
+                                     #          br(), br(), br(), br()
+                                     # ),
+                                     # 
+                                     # tabPanel("Focus on Between Groups Variance", column(width = 12, plotOutput(outputId = "toggleBtw")),
+                                     #          fluidRow(
+                                     #            column(offset = 1, width = 4,
+                                     #                   tipify(el = p(em(strong("What does this graph show?")), style = "text-align:left; color:#00B5E5; font-size:12px"),
+                                     #                          title = "These graphs all depict parts of the sample distributions. Here the between groups variance is visualized as how the median of a boxplot, represented by a point in this case, varies from the overall mean, the solid black line.",
+                                     #                          placement = "top", trigger = "hover"))
+                                     #          ),
+                                     #          br(), br(), br(), br()
+                                     # )
+                                   #),
                                    
+                                   h3(strong("Sample Observations")),
+                                   p("Filter the dataset to view the values within each sample."),
+                                   DTOutput(outputId = "table")
                             ),
                             
                             column(width = 3,
                                    br(), br(), br(), br(),
                                    h3(strong("Summary Statistics")),
                                    htmlOutput("sumstats"),
-                                   br(), br(),
-                                   h3(strong("Sample Observations")),
-                                   p("Filter the dataset to view the values within each sample."),
-                                   DTOutput(outputId = "table")
+                                   br(), br()
                                    ),
                             
                           )
@@ -447,7 +448,7 @@ ui <- navbarPage(
                                      )
                             ),
                             
-                            column(width = 6,
+                            column(width = 9,
                                    br(),
                                    br(),
                                    plotOutput(outputId = "boxplot2"),
@@ -459,15 +460,8 @@ ui <- navbarPage(
                                             tipify(el = p(em(strong("What's happening?")), style = "text-align:right; color:#00B5E5; font-size:12px"),
                                                    title = "This is the output of our ANOVA test when run in R. If the sample means are far apart there is evidence against the null hypothesis that the mean value of response is the same for all groups. But what is considered far apart? The F-stat quantifies this",
                                                    placement = "top", trigger = "hover"))),
-                                   br(), br(), br(), br()
                                    
                                    
-                            ),
-                            tags$style(type = 'text/css', 
-                                       '#concl {
-                              background-color:yellow;
-                              }'),
-                            column(width = 3,
                                    h3(strong("Conclusion")),
                                    wellPanel(
                                      p("At the $\\alpha = .05$ level the F-stat corresponds to a p-value that suggests there is",
@@ -480,7 +474,13 @@ ui <- navbarPage(
                                        )
                                      ),
                                      uiOutput("valid"))
-                            )
+                                   
+                            ),
+                            tags$style(type = 'text/css', 
+                                       '#concl {
+                              background-color:yellow;
+                              }'),
+                            
                             
                           )
                           
@@ -786,7 +786,7 @@ server <- function(input, output, session) {
     )
   
   #Pooled estimate of within groups variance eq
-  output$within.group <- renderPrint((((input$n - 1)*(var1())^(2)) + ((input$n - 1)*(var2())^(2)) + ((input$n - 1)*(var3())^(2)))/(total.size() - 3))
+  # output$within.group <- renderPrint((((input$n - 1)*(var1())^(2)) + ((input$n - 1)*(var2())^(2)) + ((input$n - 1)*(var3())^(2)))/(total.size() - 3))
   
   #Reset manipulations
   observeEvent(input$reset, {
@@ -817,14 +817,14 @@ server <- function(input, output, session) {
       need(!((input$n > 200) | (input$n < 2)), 'Please enter a number between 2 and 200.')
     )
     if(input$n > 10) {
-      return(p("This assumption is currently met because the selected sample size,", paste(input$n), ", is greater than 10",
+      return(p("This assumption is currently met because the selected sample size,", paste(input$n), ", is greater than 30",
                style = "color:#20C100"))
     } else { #n =< 10
       if(input$skew1 != "norm" | input$skew2 != "norm" | input$skew3 != "norm") {
-        return(p("This assumption is currently NOT met because the selected sample size is 10 or less and one or more of the
+        return(p("This assumption is currently NOT met because the selected sample size is 30 or less and one or more of the
                population distributions is skewed", style = "color:#C10000"))
       } else {
-        return(p("This assumption is currently met, though the selected sample size is not greater than 10, 
+        return(p("This assumption is currently met, though the selected sample size is not greater than 30, 
                  because the underlying population distributions are normal", style = "color:#20C100"))
       }
     }
@@ -838,11 +838,11 @@ server <- function(input, output, session) {
       v3 <- reactive({var(s3)})
       
       if(v1() < (v3() * 2)) {
-        return(p("This assumption is currently met because the maximum within groups variance is less 
-               than double the minimum within groups variance", style = "color:#20C100"))
+        return(p("This assumption is currently met because the maximum within groups standard deviation is less 
+               than double the minimum within groups standard deviation", style = "color:#20C100"))
       } else {
-        return(p("This assumption is currently NOT met because the maximum within groups variance is greater than 
-               or equal to double the minimum within groups variance", style = "color:#C10000"))
+        return(p("This assumption is currently NOT met because the maximum within groups standard deviation is greater than 
+               or equal to double the minimum within groups standard deviation", style = "color:#C10000"))
       }
     }
     if(var(s1) > var(s2) & var(s1) > var(s3) & var(s3) > var(s2)) {
@@ -851,11 +851,11 @@ server <- function(input, output, session) {
       v3 <- reactive({var(s2)})
       
       if(v1() < (v3() * 2)) {
-        return(p("This assumption is currently met because the maximum within groups variance is less 
-               than double the minimum within groups variance", style = "color:#20C100"))
+        return(p("This assumption is currently met because the maximum within groups standard deviation is less 
+               than double the minimum within groups standard deviation", style = "color:#20C100"))
       } else {
-        return(p("This assumption is currently NOT met because the maximum within groups variance is greater than 
-               or equal to double the minimum within groups variance", style = "color:#C10000"))
+        return(p("This assumption is currently NOT met because the maximum within groups standard deviation is greater than 
+               or equal to double the minimum within groups standard deviation", style = "color:#C10000"))
       }
     }
     
@@ -867,11 +867,11 @@ server <- function(input, output, session) {
       v3 <- reactive({var(s3)})
       
       if(v1() < (v3() * 2)) {
-        return(p("This assumption is currently met because the maximum within groups variance is less 
-               than double the minimum within groups variance", style = "color:#20C100"))
+        return(p("This assumption is currently met because the maximum within groups standard deviation is less 
+               than double the minimum within groups standard deviation", style = "color:#20C100"))
       } else {
-        return(p("This assumption is currently NOT met because the maximum within groups variance is greater than 
-               or equal to double the minimum within groups variance", style = "color:#C10000"))
+        return(p("This assumption is currently NOT met because the maximum within groups standard deviation is greater than 
+               or equal to double the minimum within groups standard deviation", style = "color:#C10000"))
       }
     }
     if(var(s2) > var(s1) & var(s2) > var(s3) & var(s3) > var(s1)) {
@@ -880,11 +880,11 @@ server <- function(input, output, session) {
       v3 <- reactive({var(s1)})
       
       if(v1() < (v3() * 2)) {
-        return(p("This assumption is currently met because the maximum within groups variance is less 
-               than double the minimum within groups variance", style = "color:#20C100"))
+        return(p("This assumption is currently met because the maximum within groups standard deviation is less 
+               than double the minimum within groups standard deviation", style = "color:#20C100"))
       } else {
-        return(p("This assumption is currently NOT met because the maximum within groups variance is greater than 
-               or equal to double the minimum within groups variance", style = "color:#C10000"))
+        return(p("This assumption is currently NOT met because the maximum within groups standard deviation is greater than 
+               or equal to double the minimum within groups standard deviation", style = "color:#C10000"))
       }
     }
     
@@ -896,11 +896,11 @@ server <- function(input, output, session) {
       v3 <- reactive({var(s2)})
       
       if(v1() < (v3() * 2)) {
-        return(p("This assumption is currently met because the maximum within groups variance is less 
-               than double the minimum within groups variance", style = "color:#20C100"))
+        return(p("This assumption is currently met because the maximum within groups standard deviation is less 
+               than double the minimum within groups standard deviation", style = "color:#20C100"))
       } else {
-        return(p("This assumption is currently NOT met because the maximum within groups variance is greater than 
-               or equal to double the minimum within groups variance", style = "color:#C10000"))
+        return(p("This assumption is currently NOT met because the maximum within groups standard deviation is greater than 
+               or equal to double the minimum within groups standard deviation", style = "color:#C10000"))
       }
     }
     if(var(s3) > var(s1) & var(s3) > var(s2) & var(s2) > var(s1)) {
@@ -909,11 +909,11 @@ server <- function(input, output, session) {
       v3 <- reactive({var(s1)})
       
       if(v1() < (v3() * 2)) {
-        return(p("This assumption is currently met because the maximum within groups variance is less 
-               than double the minimum within groups variance", style = "color:#20C100"))
+        return(p("This assumption is currently met because the maximum within groups standard deviation is less 
+               than double the minimum within groups standard deviation", style = "color:#20C100"))
       } else {
-        return(p("This assumption is currently NOT met because the maximum within groups variance is greater than 
-               or equal to double the minimum within groups variance", style = "color:#C10000"))
+        return(p("This assumption is currently NOT met because the maximum within groups standard deviation is greater than 
+               or equal to double the minimum within groups standard deviation", style = "color:#C10000"))
       }
     }
     
@@ -936,29 +936,29 @@ server <- function(input, output, session) {
             axis.text.x=element_blank(), axis.ticks.x=element_blank())
   })
   
-  output$toggleBtw <- renderPlot({
-    ggplot(data = sampledf_long(), aes(x = dataset, y = values)) +
-      stat_summary(fun.y = median, fun.ymin = median, fun.ymax = median,
-                   geom = "point", shape=16, size=5, aes(color = dataset)) +
-      #coord_cartesian(ylim =c(0.1, 1.2)) +
-      geom_hline(yintercept=mean(sampledf_long()$values), linetype=1, color = "black") +
-      labs(title = "Sample Distributions", x = "Sample", y = "Values") +
-      theme_bw()+
-      theme(legend.position = "none", plot.title = element_text(size = "20", face = "bold"),
-            axis.text.x=element_blank(), axis.ticks.x=element_blank())
-  })
-  
-  output$toggleWin <- renderPlot({
-    ggplot(data = sampledf_long(), aes(x = dataset, y = values)) + 
-      geom_jitter(aes(x = dataset, y = values, alpha = .2, color = dataset), position=position_jitter(0.04)) +
-      stat_summary(fun.y = median, fun.ymin = median, fun.ymax = median,
-                   geom = "crossbar", width = 0.5, aes(color = dataset)) +
-      #coord_cartesian(ylim =c(0.1, 1.2)) +
-      labs(title = "Sample Distributions", x = "Sample", y = "Values") +
-      theme_bw()+
-      theme(legend.position = "none", plot.title = element_text(size = "20", face = "bold"),
-            axis.text.x=element_blank(), axis.ticks.x=element_blank())
-  })
+  # output$toggleBtw <- renderPlot({
+  #   ggplot(data = sampledf_long(), aes(x = dataset, y = values)) +
+  #     stat_summary(fun.y = median, fun.ymin = median, fun.ymax = median,
+  #                  geom = "point", shape=16, size=5, aes(color = dataset)) +
+  #     #coord_cartesian(ylim =c(0.1, 1.2)) +
+  #     geom_hline(yintercept=mean(sampledf_long()$values), linetype=1, color = "black") +
+  #     labs(title = "Sample Distributions", x = "Sample", y = "Values") +
+  #     theme_bw()+
+  #     theme(legend.position = "none", plot.title = element_text(size = "20", face = "bold"),
+  #           axis.text.x=element_blank(), axis.ticks.x=element_blank())
+  # })
+  # 
+  # output$toggleWin <- renderPlot({
+  #   ggplot(data = sampledf_long(), aes(x = dataset, y = values)) + 
+  #     geom_jitter(aes(x = dataset, y = values, alpha = .2, color = dataset), position=position_jitter(0.04)) +
+  #     stat_summary(fun.y = median, fun.ymin = median, fun.ymax = median,
+  #                  geom = "crossbar", width = 0.5, aes(color = dataset)) +
+  #     #coord_cartesian(ylim =c(0.1, 1.2)) +
+  #     labs(title = "Sample Distributions", x = "Sample", y = "Values") +
+  #     theme_bw()+
+  #     theme(legend.position = "none", plot.title = element_text(size = "20", face = "bold"),
+  #           axis.text.x=element_blank(), axis.ticks.x=element_blank())
+  # })
   
   output$table <- renderDT(
     datatable(sampledf_long(), filter = 'top', options = list(

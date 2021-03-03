@@ -8,10 +8,15 @@ library(shinyBS)
 library(plyr)
 library(DT)
 library(knitr)
+library(bslib)
 
 # Consider adding button that leads straight to "insuff evidence" conclusion?
 
+my_flatly_theme <- bs_theme(bootswatch = "flatly", primary = "#0577B1")
+
 ui <- navbarPage(
+  
+  theme = my_flatly_theme,
   
   tags$head(
     tags$style(HTML("
@@ -22,7 +27,7 @@ ui <- navbarPage(
     "))
   ),
   
-  theme = shinytheme("lumen"),
+  #theme = shinytheme("lumen"),
                  
                  title = "ANOVA",
   tabPanel("About",

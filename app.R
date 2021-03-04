@@ -27,15 +27,9 @@ ui <- navbarPage(
     "))
   ),
   
-<<<<<<< HEAD
   #theme = shinytheme("lumen"),
                  
-                 title = "ANOVA",
-=======
-  theme = shinytheme("lumen"),
-  
   title = "ANOVA",
->>>>>>> 9c46395ca4d2532eed95a62444f99f2435df9692
   tabPanel("About",
            withMathJax(),
            tags$script(

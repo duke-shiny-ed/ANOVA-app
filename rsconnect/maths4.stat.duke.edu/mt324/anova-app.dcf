@@ -1,0 +1,13 @@
+name: anova-app
+title: ANOVA-app
+username: mt324
+account: mt324
+server: maths4.stat.duke.edu
+hostUrl: http://maths4.stat.duke.edu:3939/__api__
+appId: 5
+bundleId: 7
+url: http://maths4.stat.duke.edu:3939/content/5/
+when: 1614801580.12491
+asMultiple: FALSE
+asStatic: FALSE
+ignoredFiles: quiz-plots.Rmd|README.md|learnr/.DS_Store|learnr/learnr-quiz.html|learnr/learnr-quiz.Rmd|learnr/images/.DS_Store|learnr/images/boxplots.png|www/output.png

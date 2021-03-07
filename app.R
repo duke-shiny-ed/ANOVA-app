@@ -27,11 +27,11 @@ ui <- navbarPage(
     "))
   ),
   
-
+  
   #theme = shinytheme("lumen"),
   
   title = "ANOVA",
-
+  
   tabPanel("About",
            withMathJax(),
            tags$script(
@@ -127,10 +127,10 @@ ui <- navbarPage(
   
   tabPanel("Background",
            style = "font-size:20px",
-           column(offset = 1, width = 10,
-                  h2("An Introduction to ANOVA")),
+           column(width = 12,
+                  h1("An Introduction to ANOVA")),
            ## put intro to ANOVA info here
-           column(offset = 1, width = 10,
+           column(width = 12,
                   p("ANOVA is a method used in statistical analysis to make inferences about numerical data. In particular, 
                             ANOVA is used to question whether there is a meaningful difference between groups being studied. To
                             do this, ANOVA tests the alternative hypothesis that at least one of the group means is truly different
@@ -147,11 +147,12 @@ ui <- navbarPage(
                                      after ANOVA suggests there is at least one difference among groups before conducting pairwise 
                                      tests, while", tipify(strong("correcting", style = "color:#00B5E5"),
                                                            title = "Refers to the Bonferroni correction where the significance level, alpha, is adjusted before it is used. The adjusted alpha value is equal to the original alpha value divided by the total number of pairwise tests to be performed"), 
-                    "for the family-wise error rate, to determine where exactly the difference lies.")
+                    "for the family-wise error rate, to determine where exactly the difference lies."),
+                  br(),
            ),
-           br(), br(),
-           column(offset = 1, width = 10,
-                  h2("ANOVA Test"),
+           
+           column(width = 12,
+                  h1("ANOVA Test"),
                   
                   h3(strong("Hypotheses")),
                   p("ANOVA tests the following hypotheses:"),
@@ -160,7 +161,7 @@ ui <- navbarPage(
                     "$H_1$: At least one of the means $(\\mu_i)$ is not equal to the others", style = "text-align:center"),
                   p("We will calculate a test statistic that quantifies how far apart the sample means are in the context of the data."),
                   #br(), 
-    
+                  
                   h3(strong("F Statistic")),
                   p("The total variation in the dataset can be decomposed into the variation between groups and the variation within each group."),
                   p("$\\sum_{i=1}^{K} \\sum_{j=1}^{n_i} {(y_{ij}  -  \\overline{y})}^{2} = \\sum_{i=1}^{K} {n_i} {(y_{i}  -  \\overline{y})}^{2} + \\sum_{i=1}^{K} \\sum_{j=1}^{n_i} {(y_{ij}  -  \\overline{y}_i)}^{2}$", style = "text-align:center"),
@@ -179,10 +180,12 @@ ui <- navbarPage(
                   #br(), 
                   
                   h3(strong("Conclusion")),
-                  p("The p-value is the probability of observing a test statistic at least as extreme as F-Stat given the group means are equal. This is calculated using an F distribution with $K - 1$ and $n - K$ degrees of freedom, where $K$ is the number of groups and $n$ is the number of observations. If the p-value is small (less than $\alpha = 0.05$), there is sufficient evidence to reject the null hypothesis, showing that at least one group has a mean that differs from the others.")),
-           br(), br(),
-           column(offset = 1, width = 10,
-                  h2("ANOVA Assumptions"),
+                  p("The p-value is the probability of observing a test statistic at least as extreme as F-Stat given the group means are equal. This is calculated using an F distribution with $K - 1$ and $n - K$ degrees of freedom, where $K$ is the number of groups and $n$ is the number of observations. If the p-value less than $\alpha = 0.05$, there is sufficient evidence to reject the null hypothesis, showing that at least one group has a mean that differs from the others."),
+                  br(),
+                  ),
+        
+           column(width = 12,
+                  h1("ANOVA Assumptions"),
                   
                   h3(strong("Normality")),
                   p("The group distributions are approximately normal if the sample size is greater than 30 and/or the underlying population distributions are normal."),
@@ -194,7 +197,115 @@ ui <- navbarPage(
                   
                   h3(strong("Independence")),
                   p("The observations within and across groups are independent if they are part of a random sample and the sample size is less than 10% of the population."),
-                  ),
+                  br(),
+                  hr(),
+           ),
+           
+           
+           
+           fluidRow(
+             
+             column(width = 12,
+                    h1("The ANOVA Test Output in R")
+             )
+             
+           ),
+           
+           fluidRow(
+             column(width = 12, align = "center",
+                    img(src = "output.png", width = 1000, height = 250)
+             )
+           ),
+           fluidRow(
+             column(offset = 2, width = 4,
+                    p(em("Values in the 'Source' column clarify the source of the variance in question"), style = "font-size:20px"),
+                    h4("$\\bullet$ The name of the grouping variable may be used in place of the 'Between' label"),
+                    h4("$\\bullet$ The word 'Residuals' may be used in place of the 'Within' label")
+             ),
+             
+             column(width = 4, 
+                    p(em("The Mean Sq Between is an estimate of the variance of the group means
+                                        from the overall mean"), style = "font-size:20px"),
+                    p(em("The Mean Sq Within is an estimate of $\\sigma^{2}$, the inherent variability in 
+                                          each group's population"), style = "font-size:20px"),
+                    h4("$\\bullet$ ${s_B}^{2}$ is the between groups variance"),
+                    h4("$\\bullet$ ${s_W}^{2}$ is a pooled estimated of the within groups variances")
+                    
+             )
+           ),
+           br(), br(),
+           
+           fluidRow(
+             column(offset = 2, width = 4,
+                    p(em("'df' refers to the degrees of freedom"), style = "font-size:20px"),
+                    h4("$\\bullet$ $ndf = K - 1$"),
+                    h4("$\\bullet$ $ddf = n - K$"),
+                    h4("Where $n$ is the total number of samples and $K$ is the total number of groups")
+             ),
+             column(width = 4,
+                    br(),
+                    h4("$\\bullet$ $F_{obs}$ is equal to the ratio of the 'Between' Mean Sq value 
+                                      to the 'Within' Mean Sq value"),
+                    h4("$\\bullet$ The null hypothesis is rejected if $p_{obs}$, the p-value corresponding to $F_{obs}$,
+                                         is less than $\\alpha$")
+             )
+           ),
+           
+           br(), br(), 
+           
+           hr(),
+           
+           h1("Other Equations"),
+           fluidRow(
+             column(width = 11,
+                    h4("The following are some equations that may not have been referenced in the app that you may come across when dealing with ANOVA. You", em("DO NOT"),
+                       "need to know these equations in order to interact with this app")
+             )
+           ), br(),
+           
+           fluidRow(
+             column(offset = 2, width = 3,
+                    h3(strong("Bonferroni correction"), style = "text-align:center"),
+                    p("$\\Large{\\alpha^{*} = \\frac{\\alpha}{k}}$", style = "text-align:center;background-color:yellow"),
+                    h4("$\\bullet$ $k$ is the total number of pair-wise tests"),
+                    h4("$\\bullet$ $\\alpha^{*}$ is the adjusted alpha value"),
+                    h4("$\\bullet$ $\\alpha$ is the original, unadjusted alpha value")
+             ),
+             
+             column(offset = 1, width = 4,
+                    h3(strong("The Between Groups Variance"), style = "text-align:center"),
+                    p("$\\Large{{s_B}^{2}  =  \\frac{n_1{(\\overline{y}_1 - \\overline{y})}^{2}   +   n_2{(\\overline{y}_2 - \\overline{y})}^{2}   + ... +   n_K{(\\overline{y}_K  -  \\overline{y})}^{2}}{K - 1}}$", style = "text-align:center;background-color:yellow"),
+                    h4("$\\bullet$ $K$ is the total number of groups, each with a corresponding sample size equal to $n_1, n_2, ... n_K$"),
+                    h4("$\\bullet$ $\\overline{y}_1$, $\\overline{y}_2$, ... $\\overline{y}_K$ are the means of groups $1$, $2$, and $K$ respectively"),
+                    h4("$\\bullet$ $\\overline{y}$ is the", em("overall"), "mean, the mean of all observations")
+             )
+           ),
+           br(),
+           
+           fluidRow(
+             column(offset = 2, width = 3,
+                    h3(strong("The ANOVA model"), style = "text-align:center"),
+                    p("$\\Large{y_{ij} = \\mu_i + \\epsilon_{ij}}$", style = "text-align:center; background-color:yellow"),
+                    h4("$\\bullet$ $y_{ij}$ is an individual observation, the response of a subject $j$ in group $i$"),
+                    h4("$\\bullet$ $\\mu_i$ is the mean of group $i$"),
+                    h4("$\\bullet$ $\\epsilon_{ij}$ is a specific random error term, the error of an individual about its group's mean")
+             ),
+             
+             column(offset = 1, width = 4,
+                    h3(strong("Pooled estimate of Within Groups Variance"), style = "text-align:center"),
+                    p("$\\Large{{s_W}^{2}  =  \\frac{(n_1  -  1){s_1}^{2} +  (n_2  -  1){s_2}^{2}  +  ...  +  (n_K  -  1){s_K}^{2}}{n - K}}$", style = "text-align:center;background-color:yellow"),
+                    h4("$\\bullet$ $K$ is the total number of groups, each with a corresponding sample size equal to $n_1, n_2, ... n_K$"),
+                    h4("$\\bullet$ $n$ is the total number of samples, $n = n_1 + n_2 + ... + n_K$"),
+                    h4("$\\bullet$ Each group's squared variance, ${s_1}^{2}$, ${s_2}^{2}$, ... ${s_K}^{2}$, is"),
+                    p("$\\Large{{s_i}^{2} = \\frac{\\sum_{j=1}^{n_i} {(y_{ij}  -  \\overline{y}_i)}^{2}}{n_i  -  1}}$", style = "text-align:center")
+             )
+             
+           ),
+           br(),
+           br(),
+           br(),
+           
+           
   ),
   
   
@@ -227,7 +338,7 @@ ui <- navbarPage(
                       ),
                       
                       br(),
-                      #hr(),
+                      hr(),
                       
                       fluidRow(
                         
@@ -384,7 +495,7 @@ ui <- navbarPage(
                                style="background-color:#F1F0F0; padding:20px; border-radius:10px")
                       ),
                       br(),
-                      #hr(),
+                      hr(),
                       
                       fluidRow(
                         column(width = 3,
@@ -463,7 +574,7 @@ ui <- navbarPage(
                         )
                       ),
                       br(),
-                      #hr(),
+                      hr(),
                       
                       fluidRow(
                         column(width = 3,
@@ -552,109 +663,108 @@ ui <- navbarPage(
   
   
   tabPanel("Resources",
-           style = "font-size:20px",
-           
-           h1("Equations"),
-           fluidRow(
-             column(width = 11,
-                    h4("The following are some equations that may not have been referenced in the app that you may come across when dealing with ANOVA. You", em("DO NOT"),
-                       "need to know these"),
-                    h4("equations in order to interact with this app")
-             )
-           ), br(),
-           
-           fluidRow(
-             column(offset = 2, width = 3,
-                    h3(strong("Bonferroni correction"), style = "text-align:center"),
-                    p("$\\Large{\\alpha^{*} = \\frac{\\alpha}{k}}$", style = "text-align:center;background-color:yellow"),
-                    h4("$\\bullet$ $k$ is the total number of pair-wise tests"),
-                    h4("$\\bullet$ $\\alpha^{*}$ is the adjusted alpha value"),
-                    h4("$\\bullet$ $\\alpha$ is the original, unadjusted alpha value")
-             ),
-             
-             column(offset = 1, width = 4,
-                    h3(strong("The Between Groups Variance"), style = "text-align:center"),
-                    p("$\\Large{{s_B}^{2}  =  \\frac{n_1{(\\overline{y}_1 - \\overline{y})}^{2}   +   n_2{(\\overline{y}_2 - \\overline{y})}^{2}   + ... +   n_K{(\\overline{y}_K  -  \\overline{y})}^{2}}{K - 1}}$", style = "text-align:center;background-color:yellow"),
-                    h4("$\\bullet$ $K$ is the total number of groups, each with a corresponding sample size equal to $n_1, n_2, ... n_K$"),
-                    h4("$\\bullet$ $\\overline{y}_1$, $\\overline{y}_2$, ... $\\overline{y}_K$ are the means of groups $1$, $2$, and $K$ respectively"),
-                    h4("$\\bullet$ $\\overline{y}$ is the", em("overall"), "mean, the mean of all observations")
-             )
-           ),
-           br(),
-           
-           fluidRow(
-             column(offset = 2, width = 3,
-                    h3(strong("The ANOVA model"), style = "text-align:center"),
-                    p("$\\Large{y_{ij} = \\mu_i + \\epsilon_{ij}}$", style = "text-align:center; background-color:yellow"),
-                    h4("$\\bullet$ $y_{ij}$ is an individual observation, the response of a subject $j$ in group $i$"),
-                    h4("$\\bullet$ $\\mu_i$ is the mean of group $i$"),
-                    h4("$\\bullet$ $\\epsilon_{ij}$ is a specific random error term, the error of an individual about its group's mean")
-             ),
-             
-             column(offset = 1, width = 4,
-                    h3(strong("Pooled estimate of Within Groups Variance"), style = "text-align:center"),
-                    p("$\\Large{{s_W}^{2}  =  \\frac{(n_1  -  1){s_1}^{2} +  (n_2  -  1){s_2}^{2}  +  ...  +  (n_K  -  1){s_K}^{2}}{n - K}}$", style = "text-align:center;background-color:yellow"),
-                    h4("$\\bullet$ $K$ is the total number of groups, each with a corresponding sample size equal to $n_1, n_2, ... n_K$"),
-                    h4("$\\bullet$ $n$ is the total number of samples, $n = n_1 + n_2 + ... + n_K$"),
-                    h4("$\\bullet$ Each group's squared variance, ${s_1}^{2}$, ${s_2}^{2}$, ... ${s_K}^{2}$, is"),
-                    p("$\\Large{{s_i}^{2} = \\frac{\\sum_{j=1}^{n_i} {(y_{ij}  -  \\overline{y}_i)}^{2}}{n_i  -  1}}$", style = "text-align:center")
-             )
-             
-           ),
-           br(),
-           br(),
-           
-           h1("Other Resources"),
-           h4("When running an ANOVA test in R you will encounter the following table. It is important to understand what information
-                            is being presented"),
-           br(),
-           
-           fluidRow(
-             column(offset = 2, width = 8,
-                    h3(strong("The ANOVA Test Output in R"))
-             )
-           ),
-           fluidRow(
-             column(width = 12, align = "center",
-                    img(src = "output.png", width = 1000, height = 250)
-             )
-           ),
-           fluidRow(
-             column(offset = 2, width = 4,
-                    p(em("Values in the 'Source' column clarify the source of the variance in question"), style = "font-size:20px"),
-                    h4("$\\bullet$ The name of the grouping variable may be used in place of the 'Between' label"),
-                    h4("$\\bullet$ The word 'Residuals' may be used in place of the 'Within' label")
-             ),
-             
-             column(width = 4, 
-                    p(em("The Mean Sq Between is an estimate of the variance of the group means
-                                        from the overall mean"), style = "font-size:20px"),
-                    p(em("The Mean Sq Within is an estimate of $\\sigma^{2}$, the inherent variability in 
-                                          each group's population"), style = "font-size:20px"),
-                    h4("$\\bullet$ ${s_B}^{2}$ is the between groups variance"),
-                    h4("$\\bullet$ ${s_W}^{2}$ is a pooled estimated of the within groups variances")
-                    
-             )
-           ),
-           br(), br(),
-           
-           fluidRow(
-             column(offset = 2, width = 4,
-                    p(em("'df' refers to the degrees of freedom"), style = "font-size:20px"),
-                    h4("$\\bullet$ $ndf = K - 1$"),
-                    h4("$\\bullet$ $ddf = n - K$"),
-                    h4("Where $n$ is the total number of samples and $K$ is the total number of groups")
-             ),
-             column(width = 4,
-                    br(),
-                    h4("$\\bullet$ $F_{obs}$ is equal to the ratio of the 'Between' Mean Sq value 
-                                      to the 'Within' Mean Sq value"),
-                    h4("$\\bullet$ The null hypothesis is rejected if $p_{obs}$, the p-value corresponding to $F_{obs}$,
-                                         is less than $\\alpha$")
-             )
-           ),
-           
-           
+           #          style = "font-size:20px",
+           #          
+           #          h1("Equations"),
+           #          fluidRow(
+           #            column(width = 11,
+           #                   h4("The following are some equations that may not have been referenced in the app that you may come across when dealing with ANOVA. You", em("DO NOT"),
+           #                      "need to know these equations in order to interact with this app")
+           #            )
+           #          ), br(),
+           #          
+           #          fluidRow(
+           #            column(offset = 2, width = 3,
+           #                   h3(strong("Bonferroni correction"), style = "text-align:center"),
+           #                   p("$\\Large{\\alpha^{*} = \\frac{\\alpha}{k}}$", style = "text-align:center;background-color:yellow"),
+           #                   h4("$\\bullet$ $k$ is the total number of pair-wise tests"),
+           #                   h4("$\\bullet$ $\\alpha^{*}$ is the adjusted alpha value"),
+           #                   h4("$\\bullet$ $\\alpha$ is the original, unadjusted alpha value")
+           #            ),
+           #            
+           #            column(offset = 1, width = 4,
+           #                   h3(strong("The Between Groups Variance"), style = "text-align:center"),
+           #                   p("$\\Large{{s_B}^{2}  =  \\frac{n_1{(\\overline{y}_1 - \\overline{y})}^{2}   +   n_2{(\\overline{y}_2 - \\overline{y})}^{2}   + ... +   n_K{(\\overline{y}_K  -  \\overline{y})}^{2}}{K - 1}}$", style = "text-align:center;background-color:yellow"),
+           #                   h4("$\\bullet$ $K$ is the total number of groups, each with a corresponding sample size equal to $n_1, n_2, ... n_K$"),
+           #                   h4("$\\bullet$ $\\overline{y}_1$, $\\overline{y}_2$, ... $\\overline{y}_K$ are the means of groups $1$, $2$, and $K$ respectively"),
+           #                   h4("$\\bullet$ $\\overline{y}$ is the", em("overall"), "mean, the mean of all observations")
+           #            )
+           #          ),
+           #          br(),
+           #          
+           #          fluidRow(
+           #            column(offset = 2, width = 3,
+           #                   h3(strong("The ANOVA model"), style = "text-align:center"),
+           #                   p("$\\Large{y_{ij} = \\mu_i + \\epsilon_{ij}}$", style = "text-align:center; background-color:yellow"),
+           #                   h4("$\\bullet$ $y_{ij}$ is an individual observation, the response of a subject $j$ in group $i$"),
+           #                   h4("$\\bullet$ $\\mu_i$ is the mean of group $i$"),
+           #                   h4("$\\bullet$ $\\epsilon_{ij}$ is a specific random error term, the error of an individual about its group's mean")
+           #            ),
+           #            
+           #            column(offset = 1, width = 4,
+           #                   h3(strong("Pooled estimate of Within Groups Variance"), style = "text-align:center"),
+           #                   p("$\\Large{{s_W}^{2}  =  \\frac{(n_1  -  1){s_1}^{2} +  (n_2  -  1){s_2}^{2}  +  ...  +  (n_K  -  1){s_K}^{2}}{n - K}}$", style = "text-align:center;background-color:yellow"),
+           #                   h4("$\\bullet$ $K$ is the total number of groups, each with a corresponding sample size equal to $n_1, n_2, ... n_K$"),
+           #                   h4("$\\bullet$ $n$ is the total number of samples, $n = n_1 + n_2 + ... + n_K$"),
+           #                   h4("$\\bullet$ Each group's squared variance, ${s_1}^{2}$, ${s_2}^{2}$, ... ${s_K}^{2}$, is"),
+           #                   p("$\\Large{{s_i}^{2} = \\frac{\\sum_{j=1}^{n_i} {(y_{ij}  -  \\overline{y}_i)}^{2}}{n_i  -  1}}$", style = "text-align:center")
+           #            )
+           #            
+           #          ),
+           #          br(),
+           #          br(),
+           #          
+           #          h1("Other Resources"),
+           #          h4("When running an ANOVA test in R you will encounter the following table. It is important to understand what information
+           #                           is being presented"),
+           #          br(),
+           #          
+           #          fluidRow(
+           #            column(offset = 2, width = 8,
+           #                   h3(strong("The ANOVA Test Output in R"))
+           #            )
+           #          ),
+           #          fluidRow(
+           #            column(width = 12, align = "center",
+           #                   img(src = "output.png", width = 1000, height = 250)
+           #            )
+           #          ),
+           #          fluidRow(
+           #            column(offset = 2, width = 4,
+           #                   p(em("Values in the 'Source' column clarify the source of the variance in question"), style = "font-size:20px"),
+           #                   h4("$\\bullet$ The name of the grouping variable may be used in place of the 'Between' label"),
+           #                   h4("$\\bullet$ The word 'Residuals' may be used in place of the 'Within' label")
+           #            ),
+           #            
+           #            column(width = 4, 
+           #                   p(em("The Mean Sq Between is an estimate of the variance of the group means
+           #                                       from the overall mean"), style = "font-size:20px"),
+           #                   p(em("The Mean Sq Within is an estimate of $\\sigma^{2}$, the inherent variability in 
+           #                                         each group's population"), style = "font-size:20px"),
+           #                   h4("$\\bullet$ ${s_B}^{2}$ is the between groups variance"),
+           #                   h4("$\\bullet$ ${s_W}^{2}$ is a pooled estimated of the within groups variances")
+           #                   
+           #            )
+           #          ),
+           #          br(), br(),
+           #          
+           #          fluidRow(
+           #            column(offset = 2, width = 4,
+           #                   p(em("'df' refers to the degrees of freedom"), style = "font-size:20px"),
+           #                   h4("$\\bullet$ $ndf = K - 1$"),
+           #                   h4("$\\bullet$ $ddf = n - K$"),
+           #                   h4("Where $n$ is the total number of samples and $K$ is the total number of groups")
+           #            ),
+           #            column(width = 4,
+           #                   br(),
+           #                   h4("$\\bullet$ $F_{obs}$ is equal to the ratio of the 'Between' Mean Sq value 
+           #                                     to the 'Within' Mean Sq value"),
+           #                   h4("$\\bullet$ The null hypothesis is rejected if $p_{obs}$, the p-value corresponding to $F_{obs}$,
+           #                                        is less than $\\alpha$")
+           #            )
+           #          ),
+           #          
+           #          
   )
   
   

@@ -98,7 +98,7 @@ ui <- navbarPage(
            h2("Acknowledgements"),
            p("Portions of this app may utilize information from the following sources:"), br(),
            fluidRow(
-             column(offset = 1, width = 3,
+             column(width = 3,
                     p(strong("''Unit 4: Inference for numerical data - 4. ANOVA''"), br(),
                       em("Presentation by Dr. Abrahamsen"), br(), 
                       em("Duke University, Department of Statistical Science")
@@ -114,6 +114,12 @@ ui <- navbarPage(
                       em("Presentation by Dr. Tackett"), br(), 
                       em("Duke University, Department of Statistical Science")
                     )
+             ),
+             column(width = 3,
+                    p(strong("''Comparing means with ANOVA''"), br(),
+                      em("Presentation by Dr. Maria Tackett"), br(), 
+                      em("Duke University, Department of Statistical Science")
+                    ),
              )
            ),
            br(), br(),
@@ -259,7 +265,7 @@ ui <- navbarPage(
            fluidRow(
              column(width = 11,
                     h4("The following are some equations that may not have been referenced in the app that you may come across when dealing with ANOVA. You", em("DO NOT"),
-                       "need to know these equations in order to interact with this app")
+                       "need to know these equations in order to interact with this app.")
              )
            ), br(),
            
@@ -663,7 +669,16 @@ ui <- navbarPage(
   
   
   tabPanel("Resources",
-           #          style = "font-size:20px",
+                     style = "font-size:20px",
+           h1("Links"),
+           tags$a(href="https://sta210-fa20.netlify.app/slides/07-anova.html#1", 
+                  "''Comparing means with ANOVA'' Slides"),
+           br(),
+           tags$a(href = HTML("<a><span class='tex2jax_ignore'>https://stats.libretexts.org/Bookshelves/Introductory_Statistics/Book%3A_OpenIntro_Statistics_(Diez_et_al)./05%3A_Inference_for_Numerical_Data/5.05%3A_Comparing_many_Means_with_ANOVA_(Special_Topic)</span></h4>"),
+                  "OpenIntro Statistics - ''Comparing many Means with ANOVA''"),
+           br(),
+           tags$a(href = "https://www.rdocumentation.org/packages/stats/versions/3.6.2/topics/aov",
+                  "''aov'' function R documentation")
            #          
            #          h1("Equations"),
            #          fluidRow(

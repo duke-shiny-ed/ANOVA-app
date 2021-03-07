@@ -150,7 +150,16 @@ ui <- navbarPage(
                     "for the family-wise error rate, to determine where exactly the difference lies.")
            ),
            column(offset = 1, width = 10,
-                  h2("ANOVA Test")),
+                  h2("ANOVA Test"),
+                  
+                  p("ANOVA tests the following hypotheses:"),
+                  p("$H_0$: The means of all groups are equal $(\\mu_1 = \\mu_2 = ... = \\mu_K)$", 
+                    br(),
+                    "$H_1$: At least one of the means $(\\mu_i)$ is not equal to the others", style = "text-align:center"),
+                  p("We will calculate a test statistic that quantifies how far apart the sample means are in the context of the data."),
+                  p("We will do this by decomposing the total variation into the variation between groups and the variation within each group. "),
+                  p("$\\sum_{i=1}^{K} \\sum_{j=1}^{n_i} {(y_{ij}  -  \\overline{y})}^{2} = \\sum_{i=1}^{K} {n_i} {(y_{i}  -  \\overline{y})}^{2} + \\sum_{i=1}^{K} \\sum_{j=1}^{n_i} {(y_{ij}  -  \\overline{y}_i)}^{2}$"),
+                  p("If the variation between groups is significantly greater than the variation within each group, then there is evidence against the null hypothesis.")),
            
            column(offset = 1, width = 10,
                   h2("ANOVA Assumptions")),

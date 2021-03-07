@@ -1,0 +1,13 @@
+name: ANOVA-app
+title: ANOVA-app
+username:
+account: matackett
+server: shinyapps.io
+hostUrl: https://api.shinyapps.io/v1
+appId: 3742070
+bundleId: 4305232
+url: https://matackett.shinyapps.io/ANOVA-app/
+when: 1614957459.56604
+asMultiple: FALSE
+asStatic: FALSE
+ignoredFiles: .RData|quiz-plots.Rmd|README.md|learnr/.DS_Store|learnr/images/.DS_Store

@@ -16,7 +16,7 @@ my_flatly_theme <- bs_theme(bootswatch = "flatly", primary = "#0577B1")
 
 ui <- navbarPage(
   
-  theme = my_flatly_theme,
+ # theme = my_flatly_theme,
   
   tags$head(
     tags$style(HTML("
@@ -26,9 +26,8 @@ ui <- navbarPage(
       }
     "))
   ),
-  
-  #theme = shinytheme("lumen"),
-                 
+
+  theme = shinytheme("lumen"),  
   title = "ANOVA",
   tabPanel("About",
            withMathJax(),
@@ -159,6 +158,7 @@ ui <- navbarPage(
   tabPanel("Explore",
            tabsetPanel(
              tabPanel("Step 1: Identify the Population",
+                      style = "font-size:15px",
                       fluidRow(
                         column(offset = 2, width = 8, style="background-color:#F1F0F0; padding:20px; border-radius:10px",
                                p("ANOVA tests the following hypotheses:"),
@@ -323,7 +323,7 @@ ui <- navbarPage(
              ##--------------------------------------------------------tab2
              tabPanel("Step 2: Draw the Samples",
                       
-                      
+                      style = "font-size:15px",
                       fluidRow(
                         column(offset = 2, width = 8, 
                                p("Now that our population data is set, let's examine the random samples taken from the populations."),
@@ -406,6 +406,7 @@ ui <- navbarPage(
              
              ##--------------------------------------------------------tab 3
              tabPanel("Step 3: ANOVA Test",
+                      style = "font-size:15px",
                       fluidRow(
                         column(offset = 2, width = 8, style="background-color:#F1F0F0; padding:20px; border-radius:10px",
                                p("Below you will find the results of the ANOVA test run on the data you manipulated in the previous
@@ -714,7 +715,7 @@ server <- function(input, output, session) {
                 Min = min(pop1_trans()),
                 Max = max(pop1_trans()))%>%
       knitr::kable(format = "html", digits = 3) %>%
-      kableExtra::kable_styling("striped")
+      kableExtra::kable_styling("striped", font_size = 20)
   })
   
   output$summary2 <- renderText({
@@ -726,7 +727,7 @@ server <- function(input, output, session) {
                 Min = min(pop2_trans()),
                 Max = max(pop2_trans()))%>%
       knitr::kable(format = "html", digits = 3) %>%
-      kableExtra::kable_styling("striped")
+      kableExtra::kable_styling("striped", font_size = 20)
   })
   
   output$summary3 <- renderText({
@@ -738,7 +739,7 @@ server <- function(input, output, session) {
                 Min = min(pop3_trans()),
                 Max = max(pop3_trans()))%>%
       knitr::kable(format = "html", digits = 3) %>%
-      kableExtra::kable_styling("striped")
+      kableExtra::kable_styling("striped", font_size = 20)
   })
   
   
@@ -972,18 +973,19 @@ server <- function(input, output, session) {
       pageLength = 5, autoWidth = TRUE)
     ))
   
-  stats <- reactive({c(m1(), var1(),
-                       m2(), var2(),
-                       m3(), var3())})
+  stats <- reactive({
+    tibble(mean = c(m1(), m2(), m3()), 
+           var = c(var1(), var2(), var3()))
+    })
   
   output$sumstats <- renderText({
-    matrix <- matrix(stats(), ncol = 2, byrow = TRUE)
+     matrix <- stats()
     rownames(matrix) <- c("Sample 1 (Red)", "Sample 2 (Green)", "Sample 3 (Blue)")
     colnames(matrix) <- c("mean", "variance")
     
-    matrix %>%
-      knitr::kable(format = "html", digits = 3)%>%
-      kableExtra::kable_styling("striped", full_width = F)
+     matrix %>%
+     knitr::kable(format = "html", digits = 3)%>%
+      kableExtra::kable_styling("striped", full_width = F, font_size = 15)
     
   })
   
@@ -1008,7 +1010,7 @@ server <- function(input, output, session) {
   output$aovTest <- renderText(
     tidy(runTest())%>%
       knitr::kable(format = "html", digits = 3, col.names = c("Term", "Degrees Freedom", "Sum of Squares", "Mean Square", "F-Stat", "P value")) %>%
-      kableExtra::kable_styling("striped", full_width = F)
+      kableExtra::kable_styling("striped", full_width = F, font_size = 24) 
   )
   
   output$FTest <- renderPrint ({

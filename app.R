@@ -91,7 +91,7 @@ ui <- navbarPage(
              
            ),
            
-           br(), br(), br(), br(), br(), br(),
+           br(), br(), 
            
            hr(),
            
@@ -149,20 +149,52 @@ ui <- navbarPage(
                                                            title = "Refers to the Bonferroni correction where the significance level, alpha, is adjusted before it is used. The adjusted alpha value is equal to the original alpha value divided by the total number of pairwise tests to be performed"), 
                     "for the family-wise error rate, to determine where exactly the difference lies.")
            ),
+           br(), br(),
            column(offset = 1, width = 10,
                   h2("ANOVA Test"),
                   
+                  h3(strong("Hypotheses")),
                   p("ANOVA tests the following hypotheses:"),
                   p("$H_0$: The means of all groups are equal $(\\mu_1 = \\mu_2 = ... = \\mu_K)$", 
                     br(),
                     "$H_1$: At least one of the means $(\\mu_i)$ is not equal to the others", style = "text-align:center"),
                   p("We will calculate a test statistic that quantifies how far apart the sample means are in the context of the data."),
-                  p("We will do this by decomposing the total variation into the variation between groups and the variation within each group. "),
-                  p("$\\sum_{i=1}^{K} \\sum_{j=1}^{n_i} {(y_{ij}  -  \\overline{y})}^{2} = \\sum_{i=1}^{K} {n_i} {(y_{i}  -  \\overline{y})}^{2} + \\sum_{i=1}^{K} \\sum_{j=1}^{n_i} {(y_{ij}  -  \\overline{y}_i)}^{2}$"),
-                  p("If the variation between groups is significantly greater than the variation within each group, then there is evidence against the null hypothesis.")),
-           
+                  #br(), 
+    
+                  h3(strong("F Statistic")),
+                  p("The total variation in the dataset can be decomposed into the variation between groups and the variation within each group."),
+                  p("$\\sum_{i=1}^{K} \\sum_{j=1}^{n_i} {(y_{ij}  -  \\overline{y})}^{2} = \\sum_{i=1}^{K} {n_i} {(y_{i}  -  \\overline{y})}^{2} + \\sum_{i=1}^{K} \\sum_{j=1}^{n_i} {(y_{ij}  -  \\overline{y}_i)}^{2}$", style = "text-align:center"),
+                  p("$SumSq_{total} = SumSq_{between} + SumSq_{within}$", style = "text-align:center"),
+                  p("If the variation between groups is significantly greater than the variation within each group, then there is evidence against the null hypothesis."),
+                  p("The F statistic is calculated by the following equation: "),
+                  p("$\\large{F = \\frac{{{s_B}^{2}}/ndf}{{{s_W}^{2}}/ddf}  = \\frac{{SumSq_{between}}/{DF_{between}}}{{SumSq_{within}}/{DF_{within}}} = \\frac{MeanSq_{between}}{MeanSq_{within}}}$", style = "text-align:center"),
+                  p("$\\bullet$ ${s_B}^{2}$ is the between groups variance", tipify(strong("*", style = "color:#00B5E5"),
+                                                                                    title = "the between groups variance is proportional to F",
+                                                                                    placement = "top", trigger = "hover"), br(),
+                    "$\\bullet$ ${s_W}^{2}$ is a pooled estimate of the within groups variances", tipify(strong("*", style = "color:#00B5E5"),
+                                                                                                         title = "the within groups variance is inversely proportional to F",
+                                                                                                         placement = "right", trigger = "hover"), br(),
+                    "$\\bullet$ $ndf$ is the numerator degrees of freedom", br(),
+                    "$\\bullet$ $ddf$ is the demoninator degrees of freedom"),
+                  #br(), 
+                  
+                  h3(strong("Conclusion")),
+                  p("The p-value is the probability of observing a test statistic at least as extreme as F-Stat given the group means are equal. This is calculated using an F distribution with $K - 1$ and $n - K$ degrees of freedom, where $K$ is the number of groups and $n$ is the number of observations. If the p-value is small (less than $\alpha = 0.05$), there is sufficient evidence to reject the null hypothesis, showing that at least one group has a mean that differs from the others.")),
+           br(), br(),
            column(offset = 1, width = 10,
-                  h2("ANOVA Assumptions")),
+                  h2("ANOVA Assumptions"),
+                  
+                  h3(strong("Normality")),
+                  p("The group distributions are approximately normal if the sample size is greater than 30 and/or the underlying population distributions are normal."),
+                  #br(),
+                  
+                  h3(strong("Constant Variance")),
+                  p("The groups have roughly equal variability if the maximum standard deviation is less than or equal to 2 times the smallest one. When the sample sizes are small, it is okay to have the maximum standard deviation to be slightly greater than 2."),
+                  #br(),
+                  
+                  h3(strong("Independence")),
+                  p("The observations within and across groups are independent if they are part of a random sample and the sample size is less than 10% of the population."),
+                  ),
   ),
   
   

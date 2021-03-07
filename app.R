@@ -53,12 +53,12 @@ ui <- navbarPage(
                                  }
                                  ")),
            fluidRow(
-             column(offset = 1, width = 10,
+             column(width = 12,
                     h2("About the App")),
              
            ),
            fluidRow(
-             column(offset = 1, width = 10,
+             column(width = 12,
                     p("Welcome! This interactive learning tool is brought to you by Duke Shiny-Ed. In this particular app 
                             you will be able to explore", tipify(strong("ANOVA", style = "color:#00B5E5"), 
                                                                  title = "Hypothesis test which analyzes variance to make inferences about means. Tests the null that all group means are equal and the alternative that at least one of the means are different, not necessarily that all are unequal", 
@@ -166,15 +166,18 @@ ui <- navbarPage(
                     br(),
                     "$H_1$: At least one of the means $(\\mu_i)$ is not equal to the others", style = "text-align:center"),
                   p("We will calculate a test statistic that quantifies how far apart the sample means are in the context of the data."),
-                  #br(), 
+                  br(), 
                   
                   h3(strong("F Statistic")),
                   p("The total variation in the dataset can be decomposed into the variation between groups and the variation within each group."),
                   p("$\\sum_{i=1}^{K} \\sum_{j=1}^{n_i} {(y_{ij}  -  \\overline{y})}^{2} = \\sum_{i=1}^{K} {n_i} {(y_{i}  -  \\overline{y})}^{2} + \\sum_{i=1}^{K} \\sum_{j=1}^{n_i} {(y_{ij}  -  \\overline{y}_i)}^{2}$", style = "text-align:center"),
-                  p("$SumSq_{total} = SumSq_{between} + SumSq_{within}$", style = "text-align:center"),
+                  p("$SumSq_{total} = SumSq_{between} + SumSq_{within}$", style = "text-align:center"), br(),
                   p("If the variation between groups is significantly greater than the variation within each group, then there is evidence against the null hypothesis."),
                   p("The F statistic is calculated by the following equation: "),
                   p("$\\large{F = \\frac{{{s_B}^{2}}/ndf}{{{s_W}^{2}}/ddf}  = \\frac{{SumSq_{between}}/{DF_{between}}}{{SumSq_{within}}/{DF_{within}}} = \\frac{MeanSq_{between}}{MeanSq_{within}}}$", style = "text-align:center"),
+                  br(),
+                  fluidRow(
+                    column(offset = 5, width = 4,
                   p("$\\bullet$ ${s_B}^{2}$ is the between groups variance", tipify(strong("*", style = "color:#00B5E5"),
                                                                                     title = "the between groups variance is proportional to F",
                                                                                     placement = "top", trigger = "hover"), br(),
@@ -182,11 +185,13 @@ ui <- navbarPage(
                                                                                                          title = "the within groups variance is inversely proportional to F",
                                                                                                          placement = "right", trigger = "hover"), br(),
                     "$\\bullet$ $ndf$ is the numerator degrees of freedom", br(),
-                    "$\\bullet$ $ddf$ is the demoninator degrees of freedom"),
-                  #br(), 
-                  
+                    "$\\bullet$ $ddf$ is the demoninator degrees of freedom", style = "font-size:15px"),
+                    )
+                  ), br(),
+                  p("More information on each of these terms can be found under ''The ANOVA Test Output in R'' section below."), 
+                  br(),
                   h3(strong("Conclusion")),
-                  p("The p-value is the probability of observing a test statistic at least as extreme as F-Stat given the group means are equal. This is calculated using an F distribution with $K - 1$ and $n - K$ degrees of freedom, where $K$ is the number of groups and $n$ is the number of observations. If the p-value less than $\alpha = 0.05$, there is sufficient evidence to reject the null hypothesis, showing that at least one group has a mean that differs from the others."),
+                  p("The p-value is the probability of observing a test statistic at least as extreme as F-Stat given the group means are equal. This is calculated using an F distribution with $K - 1$ and $n - K$ degrees of freedom, where $K$ is the number of groups and $n$ is the number of observations. If the p-value less than $\\alpha$ = 0.05, there is sufficient evidence to reject the null hypothesis, showing that at least one group has a mean that differs from the others."),
                   br(),
                   ),
         
@@ -195,11 +200,11 @@ ui <- navbarPage(
                   
                   h3(strong("Normality")),
                   p("The group distributions are approximately normal if the sample size is greater than 30 and/or the underlying population distributions are normal."),
-                  #br(),
+                  br(),
                   
                   h3(strong("Constant Variance")),
                   p("The groups have roughly equal variability if the maximum standard deviation is less than or equal to 2 times the smallest one. When the sample sizes are small, it is okay to have the maximum standard deviation to be slightly greater than 2."),
-                  #br(),
+                  br(),
                   
                   h3(strong("Independence")),
                   p("The observations within and across groups are independent if they are part of a random sample and the sample size is less than 10% of the population."),
@@ -635,10 +640,10 @@ ui <- navbarPage(
                                  p("At the $\\alpha = .05$ level the F-stat corresponds to a p-value that suggests there is",
                                    textOutput(outputId = "concl", inline = TRUE)),
                                  fluidRow(
-                                   column(offset = 5, width = 7,
+                                   column(offset = 9, width = 3,
                                           tipify(el = p(em(strong("What's happening?")), style = "text-align:right; color:#00B5E5; font-size:12px"),
                                                  title = "When the p-value is less than alpha we reject the null in favor of the alternative hypothesis. When the p-value is greater than alpha we fail to reject the the null hypothesis",
-                                                 placement = "bottom", trigger = "hover")
+                                                 placement = "top", trigger = "hover")
                                    )
                                  ),
                                  uiOutput("valid"))

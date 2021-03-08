@@ -8,73 +8,69 @@ library(shinyBS)
 library(plyr)
 library(DT)
 library(knitr)
-library(bslib)
 
 # Consider adding button that leads straight to "insuff evidence" conclusion?
 
-my_flatly_theme <- bs_theme(bootswatch = "flatly", primary = "#0577B1")
+## UI---------------------------------------------------------------------------
 
 ui <- navbarPage(
-  
- # theme = my_flatly_theme,
-  
-  tags$head(
-    tags$style(HTML("
-      .shiny-output-error-validation {
-        color: #ff0000;
-        font-weight: bold;
-      }
-    "))
-  ),
-
-  theme = shinytheme("lumen"),  
+  theme = shinytheme("lumen"), 
   title = "ANOVA",
-  tabPanel("About",
-           withMathJax(),
-           tags$script(
-             "MathJax.Hub.Config({
+  
+ # includeCSS("www/my-theme.css"),
+
+## About tab -------------------------------------------------------------------
+
+tabPanel("About", 
+         style = "font-size:20px",
+         
+         withMathJax(),
+         tags$script(
+           "MathJax.Hub.Config({
                                 tex2jax: {
                                 inlineMath: [['$','$'], ['\\(','\\)']],
                                 processEscapes: true
                                 }
                                 });"
-           ),
-           style = "font-size:20px",
-           tags$style(
-             HTML("
-                                 .tooltip > .tooltip-inner {
+         ),
+         
+         tags$head(
+           tags$style(HTML("
+      .shiny-output-error-validation {
+        color: #ff0000;
+        font-weight: bold;
+      }
+    
+      
+       .tooltip > .tooltip-inner {
                                  background-color: #000000;
                                  color: #FFFFFF;
                                  border: 1px solid #000000;
                                  text-align: left;
                                  }
-                                 ")),
+    
+    "))),
+        
            fluidRow(
-             column(offset = 1, width = 10,
-                    h2("About the App")),
-             
+             column(width = 12,
+                    h2("ANOVA"),
+             br(), 
+             p("Welcome! This app will help you explore Analysis of Variance (ANOVA), specifically in the context of comparing means for mutliple groups."),
+             )
            ),
            fluidRow(
-             column(offset = 1, width = 10,
-                    p("Welcome! This interactive learning tool is brought to you by Duke Shiny-Ed. In this particular app 
-                            you will be able to explore", tipify(strong("ANOVA", style = "color:#00B5E5"), 
-                                                                 title = "Hypothesis test which analyzes variance to make inferences about means. Tests the null that all group means are equal and the alternative that at least one of the means are different, not necessarily that all are unequal", 
-                                                                 trigger = "hover"), 
-                      ", or Analysis of Variance. This app is designed to gradually introduce you to the different aspects of ANOVA and it concludes with a quiz so that you 
-                            can test what you've learned! Hopefully, after using this
-                            app, you will be able to:"),
-                    p("1. Examine how violations of the", tipify(strong("assumptions of ANOVA", style = "color:#00B5E5"),
-                                                                 title = "1)Independent observations 2)Approximately normal population distributions for all groups 3)Approximately equal within group variances for all groups", 
-                                                                 trigger = "hover"), 
-                      "affect the ANOVA test output"),
-                    p("2. Understand the relationship between the", tipify(strong("F-statistic", style = "color:#00B5E5"),
-                                                                           title = "The F-stat is a ratio of the between and within groups variances. When F is large we are prompted to reject the null hypothesis and conclude that there is at least one difference between the group means",
-                                                                           placement = "bottom", trigger = "hover"), "and the ANOVA test output"),
-                    p("3. Predict how manipulation of between and within group variances will affect the F-statistic
-                                     and the ANOVA test output"),
+             column(width = 12,
+                    h2("Using the app"),
                     br(),
-                    ## put more general info here
-                    p("If you haven't already noticed, while interacting with this app you will routinely encounter text that
+                    p("1. Background: Get a brief introduction to ANOVA"),
+                    p("2. Explore; Go through the steps of ANOVA using this interactive tool. You'll start by examining simulated population distributions, then you can examine the sample data, and lastly you'll see the results of the ANOVA test. As you go through the explore tab, notice the connections between the populations, samples, and eventual ANOVA test results."), 
+                    p("3. Resources: Find a list of resources for further reading about ANOVA"),
+                    
+                    br(), br(), 
+                    
+  
+                      
+                    p("While interacting with this app you will routinely encounter text that
                                      is highlighted blue like this:", tipify(el = strong(em("What's happening?", style = "color:#00B5E5; font-size:20px")),
                                                                              title = "This is an example! Hover over any text highlighted in blue like this to view helpful information",
                                                                              placement = "bottom", trigger = "hover"), 
@@ -88,69 +84,195 @@ ui <- navbarPage(
              
            ),
            
-           br(), br(), br(), br(), br(), br(),
+           br(), br(), 
            
            hr(),
            
            h2("Acknowledgements"),
-           p("Portions of this app may utilize information from the following sources:"), br(),
-           fluidRow(
-             column(offset = 1, width = 3,
-                    p(strong("''Unit 4: Inference for numerical data - 4. ANOVA''"), br(),
-                      em("Presentation by Dr. Abrahamsen"), br(), 
-                      em("Duke University, Department of Statistical Science")
-                    )
-             ),
-             column(width = 3,
-                    p(strong("''ANOVA''"), br(),
-                      em("Presentation by Dr. Jiang"), br(),
-                      em("Duke University, Department of Statistical Science"))
-             ),
-             column(width = 3,
-                    p(strong("''Analysis of Variance - ANOVA''"), br(), 
-                      em("Presentation by Dr. Tackett"), br(), 
-                      em("Duke University, Department of Statistical Science")
-                    )
-             )
-           ),
-           br(), br(),
-           
-           p("Special thank you to Dr. Yue Jiang for introducing me to ANOVA and describing it in a way that would eventually inspire this app."),
-           br(), br(), br(), br(), br(), br(),
-           br(), br(), br(), br(), br(),
-           
-           p("Created by Samantha Owusu-Antwi for Duke University 'Creating Interactive Learning Tools' Project, Summer 2020", style = "text-align:center")
-  ),
+           p("This app was originally developed by Samantha Owusu-Antwi and updated by Shari Tian.")
+        
+),
+
+## Background tab --------------------------------------------------------------
+
   
   tabPanel("Background",
            style = "font-size:20px",
-           column(offset = 1, width = 10,
-                  h2("An Introduction to ANOVA")),
+           column(width = 12,
+                  h1("Introduction to ANOVA")),
            ## put intro to ANOVA info here
-           column(offset = 1, width = 10,
-                  p("ANOVA is a method used in statistical analysis to make inferences about numerical data. In particular, 
-                            ANOVA is used to question whether there is a meaningful difference between groups being studied. To
-                            do this, ANOVA tests the alternative hypothesis that at least one of the group means is truly different
-                            from the others against the null hypothesis that there is no difference between the group means. In this sense, 
-                            ANOVA can be thought of as generalizing the two sample", tipify(strong("t-test", style = "color:#00B5E5"),
-                                                                                            title = "A hypothesis test used to compare two means",
-                                                                                            placement = "top", trigger = "hover"),
-                    "to more that two categories!"),
-                  p("So why don't we just use the two sample t-test multiple times? Conclusions drawn from such repetitive pairwise testing 
-                                     can be misleading. More specifically, this practice will lead to an inflated", tipify(strong("family-wise error", style = "color:#00B5E5"),
-                                                                                                                           title = "The probability that we fail to arrive at the correct conclusion at least once when we conduct multiple pairwise tests. This probability will generally increase as we increase the number of tests we are conducting",
-                                                                                                                           placement = "bottom", trigger = "hover"), 
-                    "rate. After all if you test anything enough times you're bound reach the wrong conclusion. So, to mitigate this error we generally wait until 
-                                     after ANOVA suggests there is at least one difference among groups before conducting pairwise 
-                                     tests, while", tipify(strong("correcting", style = "color:#00B5E5"),
-                                                           title = "Refers to the Bonferroni correction where the significance level, alpha, is adjusted before it is used. The adjusted alpha value is equal to the original alpha value divided by the total number of pairwise tests to be performed"), 
-                    "for the family-wise error rate, to determine where exactly the difference lies.")
+           column(width = 12,
+                  p("In general, the goal of an Analysis of Variance (ANOVA) is to understand 
+                    sources of variability in a quantitative variable. 
+                    This app focuses on the particular task of using a categorical grouping to help explain some of the variability in the quantitative variable. 
+                    More specifically, the ANOVA test explored in this app will help us determine if there is a statistically significant difference in the mean value of the quantitative variable across the groups."), 
+                  
+                  # p("So why don't we just use the two sample t-test multiple times? Conclusions drawn from such repetitive pairwise testing 
+                  #                    can be misleading. More specifically, this practice will lead to an inflated", tipify(strong("family-wise error", style = "color:#00B5E5"),
+                  #                                                                                                          title = "The probability that we fail to arrive at the correct conclusion at least once when we conduct multiple pairwise tests. This probability will generally increase as we increase the number of tests we are conducting",
+                  #                                                                                                          placement = "bottom", trigger = "hover"), 
+                  #   "rate. After all if you test anything enough times you're bound reach the wrong conclusion. So, to mitigate this error we generally wait until 
+                  #                    after ANOVA suggests there is at least one difference among groups before conducting pairwise 
+                  #                    tests, while", tipify(strong("correcting", style = "color:#00B5E5"),
+                  #                                          title = "Refers to the Bonferroni correction where the significance level, alpha, is adjusted before it is used. The adjusted alpha value is equal to the original alpha value divided by the total number of pairwise tests to be performed"), 
+                  #   "for the family-wise error rate, to determine where exactly the difference lies."),
+                  br(),
            ),
-           column(offset = 1, width = 10,
-                  h2("ANOVA Test")),
            
-           column(offset = 1, width = 10,
-                  h2("ANOVA Assumptions")),
+           column(width = 12,
+                  h1("Details fo the ANOVA test for comparing group means"),
+                  
+                  h3(strong("Hypotheses")),
+                  p("Suppose there are $K$ groups. Then the ANOVA test can be used to test the following hypotheses:"),
+                  p("$H_0$: The means of all groups are equal $(\\mu_1 = \\mu_2 = ... = \\mu_K)$", 
+                    br(),
+                    "$H_1$: At least one of the means $(\\mu_i)$ is not equal to the others", style = "text-align:center"),
+                  br(), 
+                  
+                  h3(strong("F Test Statistic")),
+                  p("The total variability in the dataset can be partitioned into the variability between groups and the variability within each group."),
+                  br(), 
+                  
+                p("$\\sum_{i=1}^{K} \\sum_{j=1}^{n_i} {(y_{ij}  -  \\overline{y})}^{2} = \\sum_{i=1}^{K} {n_i} {(y_{i}  -  \\overline{y})}^{2} + \\sum_{i=1}^{K} \\sum_{j=1}^{n_i} {(y_{ij}  -  \\overline{y}_i)}^{2}$", style = "text-align:center"),
+                   p("$SS_{total} = SS_{between} + SS_{within}$", style = "text-align:center"), br(),
+                   br(),
+
+                  
+                   p("The F statistic is calculated by the following equation: "),
+                   p("$\\large{F =  \\frac{{SS_{between}}/{DF_{between}}}{{SS_{within}}/{DF_{within}}} = \\frac{MS_{between}}{MS_{within}}}$", style = "text-align:center"),
+                   br(),
+p("If the variability between groups is significantly greater than the variability within each group, the F test statistic will be large. A large F test statistic is consistent with evidence against the null hypothesis."),
+
+
+                  h3(strong("Conclusion")),
+                  p("The p-value is the probability of observing a test statistic at least as extreme as the observed F test statistic, given the group means are equal (i.e. the null hypothesis is true). 
+                    The p-value is calculated using an F distribution with $K - 1$ and $n - K$ degrees of freedom, where $K$ is the number of groups and $n$ is the total number of observations in the data set.
+                    A large F test statistic corresponds to a small p-value. If the p-value is sufficiently small, 
+                    then we conclude there is enough evidence to reject the null hypothesis 
+                    and that at least one group has a mean that is not equal to the others."),
+                  br(),
+                  ),
+        
+           column(width = 12,
+                  h1("Assumptions for ANOVA"),
+                  
+                  p("When conducting an ANOVA test to compare group means, we must check whether the following assumptions hold:"),
+                  
+                  h3(strong("Normality")),
+                  p("The distribution of the quantitative variable is approximately normal within each group. We can relax this condition if the sample size is sufficiently large $(n > 30)$."),
+  
+                  
+                  h3(strong("Constant Variance")),
+                  p("The variability within each group is constant. We conclude this condition holds if the maximum standard deviation within a group is no more than two times the minimum standard deviation within a group."),
+
+                  h3(strong("Independence")),
+                  p("The observations within and between groups are independent.")
+           ),
+           
+           
+           
+           # fluidRow(
+           #   
+           #   column(width = 12,
+           #          h1("The ANOVA Test Output in R")
+           #   )
+           #   
+           # ),
+           # 
+           # fluidRow(
+           #   column(width = 12, align = "center",
+           #          img(src = "output.png", width = 1000, height = 250)
+           #   )
+           # ),
+           # fluidRow(
+           #   column(offset = 2, width = 4,
+           #          p(em("Values in the 'Source' column clarify the source of the variance in question"), style = "font-size:20px"),
+           #          h4("$\\bullet$ The name of the grouping variable may be used in place of the 'Between' label"),
+           #          h4("$\\bullet$ The word 'Residuals' may be used in place of the 'Within' label")
+           #   ),
+           #   
+           #   column(width = 4, 
+           #          p(em("The Mean Sq Between is an estimate of the variance of the group means
+           #                              from the overall mean"), style = "font-size:20px"),
+           #          p(em("The Mean Sq Within is an estimate of $\\sigma^{2}$, the inherent variability in 
+           #                                each group's population"), style = "font-size:20px"),
+           #          h4("$\\bullet$ ${s_B}^{2}$ is the between groups variance"),
+           #          h4("$\\bullet$ ${s_W}^{2}$ is a pooled estimated of the within groups variances")
+           #          
+           #   )
+           # ),
+           # br(), br(),
+           # 
+           # fluidRow(
+           #   column(offset = 2, width = 4,
+           #          p(em("'df' refers to the degrees of freedom"), style = "font-size:20px"),
+           #          h4("$\\bullet$ $ndf = K - 1$"),
+           #          h4("$\\bullet$ $ddf = n - K$"),
+           #          h4("Where $n$ is the total number of samples and $K$ is the total number of groups")
+           #   ),
+           #   column(width = 4,
+           #          br(),
+           #          h4("$\\bullet$ $F_{obs}$ is equal to the ratio of the 'Between' Mean Sq value 
+           #                            to the 'Within' Mean Sq value"),
+           #          h4("$\\bullet$ The null hypothesis is rejected if $p_{obs}$, the p-value corresponding to $F_{obs}$,
+           #                               is less than $\\alpha$")
+           #   )
+           # ),
+           # 
+           # br(), br(), 
+           # 
+           # hr(),
+           # 
+           # h1("Other Equations"),
+           # fluidRow(
+           #   column(width = 11,
+           #          h4("The following are some equations that may not have been referenced in the app that you may come across when dealing with ANOVA. You", em("DO NOT"),
+           #             "need to know these equations in order to interact with this app.")
+           #   )
+           # ), br(),
+           # 
+           # fluidRow(
+           #   column(offset = 2, width = 3,
+           #          h3(strong("Bonferroni correction"), style = "text-align:center"),
+           #          p("$\\Large{\\alpha^{*} = \\frac{\\alpha}{k}}$", style = "text-align:center;background-color:yellow"),
+           #          h4("$\\bullet$ $k$ is the total number of pair-wise tests"),
+           #          h4("$\\bullet$ $\\alpha^{*}$ is the adjusted alpha value"),
+           #          h4("$\\bullet$ $\\alpha$ is the original, unadjusted alpha value")
+           #   ),
+           #   
+           #   column(offset = 1, width = 4,
+           #          h3(strong("The Between Groups Variance"), style = "text-align:center"),
+           #          p("$\\Large{{s_B}^{2}  =  \\frac{n_1{(\\overline{y}_1 - \\overline{y})}^{2}   +   n_2{(\\overline{y}_2 - \\overline{y})}^{2}   + ... +   n_K{(\\overline{y}_K  -  \\overline{y})}^{2}}{K - 1}}$", style = "text-align:center;background-color:yellow"),
+           #          h4("$\\bullet$ $K$ is the total number of groups, each with a corresponding sample size equal to $n_1, n_2, ... n_K$"),
+           #          h4("$\\bullet$ $\\overline{y}_1$, $\\overline{y}_2$, ... $\\overline{y}_K$ are the means of groups $1$, $2$, and $K$ respectively"),
+           #          h4("$\\bullet$ $\\overline{y}$ is the", em("overall"), "mean, the mean of all observations")
+           #   )
+           # ),
+           # br(),
+           # 
+           # fluidRow(
+           #   column(offset = 2, width = 3,
+           #          h3(strong("The ANOVA model"), style = "text-align:center"),
+           #          p("$\\Large{y_{ij} = \\mu_i + \\epsilon_{ij}}$", style = "text-align:center; background-color:yellow"),
+           #          h4("$\\bullet$ $y_{ij}$ is an individual observation, the response of a subject $j$ in group $i$"),
+           #          h4("$\\bullet$ $\\mu_i$ is the mean of group $i$"),
+           #          h4("$\\bullet$ $\\epsilon_{ij}$ is a specific random error term, the error of an individual about its group's mean")
+           #   ),
+           #   
+           #   column(offset = 1, width = 4,
+           #          h3(strong("Pooled estimate of Within Groups Variance"), style = "text-align:center"),
+           #          p("$\\Large{{s_W}^{2}  =  \\frac{(n_1  -  1){s_1}^{2} +  (n_2  -  1){s_2}^{2}  +  ...  +  (n_K  -  1){s_K}^{2}}{n - K}}$", style = "text-align:center;background-color:yellow"),
+           #          h4("$\\bullet$ $K$ is the total number of groups, each with a corresponding sample size equal to $n_1, n_2, ... n_K$"),
+           #          h4("$\\bullet$ $n$ is the total number of samples, $n = n_1 + n_2 + ... + n_K$"),
+           #          h4("$\\bullet$ Each group's squared variance, ${s_1}^{2}$, ${s_2}^{2}$, ... ${s_K}^{2}$, is"),
+           #          p("$\\Large{{s_i}^{2} = \\frac{\\sum_{j=1}^{n_i} {(y_{ij}  -  \\overline{y}_i)}^{2}}{n_i  -  1}}$", style = "text-align:center")
+           #   )
+           #   
+           # ),
+           # br(),
+           # br(),
+           # br(),
+      
   ),
   
   
@@ -158,7 +280,7 @@ ui <- navbarPage(
   tabPanel("Explore",
            tabsetPanel(
              tabPanel("Step 1: Identify the Population",
-                      style = "font-size:15px",
+                      style = "font-size:20px",
                       fluidRow(
                         column(offset = 2, width = 8, style="background-color:#F1F0F0; padding:20px; border-radius:10px",
                                p("ANOVA tests the following hypotheses:"),
@@ -183,7 +305,7 @@ ui <- navbarPage(
                       ),
                       
                       br(),
-                      #hr(),
+                      hr(),
                       
                       fluidRow(
                         
@@ -206,7 +328,7 @@ ui <- navbarPage(
                                  verbatimTextOutput(outputId = "between.group"),
                                  fluidRow(
                                    column(offset = 6, width = 6, 
-                                          tipify(el = p(em(strong("What's happening?")), style = "text-align:right; color:#00B5E5; font-size:12px"),
+                                          tipify(el = p(em(strong("What's happening?")), style = "text-align:right; color:#00B5E5; font-size:16px"),
                                                  title = "Try toggling between “Reduced” and “Increased” group variance, and use the plot and summary statistics to compare the distributions. How does the distance between group means differ when the between group variance differs?",
                                                  placement = "bottom", trigger = "hover"))),
                                  #actionButton(inputId = "gobtw", label = "Update")
@@ -250,7 +372,7 @@ ui <- navbarPage(
                                p(plotOutput(outputId = "curve")),
                                fluidRow(
                                  column(width = 4,
-                                        tipify(el = p(em(strong("What does this graph show?")), style = "text-align:left; color:#00B5E5; font-size:12px"),
+                                        tipify(el = p(em(strong("What does this graph show?")), style = "text-align:left; color:#00B5E5; font-size:16px"),
                                                title = "This graph shows the population distributions for the variable of interest. The vertical dotted lines show the mean of each distribution.",
                                                placement = "bottom", trigger = "hover")),
                                  #reset manipulations to default
@@ -313,7 +435,7 @@ ui <- navbarPage(
                                  
                                  # fluidRow(
                                  #   column(offset = 6, width = 6,
-                                 #          tipify(el = p(em(strong("What's happening?")), style = "text-align:right; color:#00B5E5; font-size:12px"),
+                                 #          tipify(el = p(em(strong("What's happening?")), style = "text-align:right; color:#00B5E5; font-size:16px"),
                                  #                 title = "Try moving the sliders from one end to the other. Based on the distributions that result, how does this relate to how different the means are?",
                                  #                 placement = "bottom", trigger = "hover"))),
                                  #actionButton(inputId = "gowithin", label = "Update")
@@ -340,7 +462,7 @@ ui <- navbarPage(
                                style="background-color:#F1F0F0; padding:20px; border-radius:10px")
                       ),
                       br(),
-                      #hr(),
+                      hr(),
                       
                       fluidRow(
                         column(width = 3,
@@ -361,7 +483,7 @@ ui <- navbarPage(
                                column(width = 12, plotOutput(outputId = "boxplot")),
                                fluidRow(
                                  column(offset = 1, width = 4,
-                                        tipify(el = p(em(strong("What does this graph show?")), style = "text-align:left; color:#00B5E5; font-size:12px"),
+                                        tipify(el = p(em(strong("What does this graph show?")), style = "text-align:left; color:#00B5E5; font-size:16px"),
                                                title = "These graphs all depict parts of the sample distributions. Here the between groups variance can be thought of as how the medians of the boxplots vary from the overall mean, the solid black line. The within groups variance can be thought of as how the datapoints of a sample vary from the median of that sample.",
                                                placement = "top", trigger = "hover"))
                                ),
@@ -370,7 +492,7 @@ ui <- navbarPage(
                                # tabPanel("Focus on Within Groups Variance", column(width = 12, plotOutput(outputId = "toggleWin")),
                                #          fluidRow(
                                #            column(offset = 1, width = 4,
-                               #                   tipify(el = p(em(strong("What does this graph show?")), style = "text-align:left; color:#00B5E5; font-size:12px"),
+                               #                   tipify(el = p(em(strong("What does this graph show?")), style = "text-align:left; color:#00B5E5; font-size:16px"),
                                #                          title = "These graphs all depict parts of the sample distributions. Here the within groups variance is visualized as how the datapoints of a sample vary from the median of that sample, the corresponding solid lines.",
                                #                          placement = "top", trigger = "hover"))
                                #          ),
@@ -380,7 +502,7 @@ ui <- navbarPage(
                                # tabPanel("Focus on Between Groups Variance", column(width = 12, plotOutput(outputId = "toggleBtw")),
                                #          fluidRow(
                                #            column(offset = 1, width = 4,
-                               #                   tipify(el = p(em(strong("What does this graph show?")), style = "text-align:left; color:#00B5E5; font-size:12px"),
+                               #                   tipify(el = p(em(strong("What does this graph show?")), style = "text-align:left; color:#00B5E5; font-size:16px"),
                                #                          title = "These graphs all depict parts of the sample distributions. Here the between groups variance is visualized as how the median of a boxplot, represented by a point in this case, varies from the overall mean, the solid black line.",
                                #                          placement = "top", trigger = "hover"))
                                #          ),
@@ -419,7 +541,7 @@ ui <- navbarPage(
                         )
                       ),
                       br(),
-                      #hr(),
+                      hr(),
                       
                       fluidRow(
                         column(width = 3,
@@ -464,7 +586,7 @@ ui <- navbarPage(
                                p(htmlOutput(outputId = "aovTest")),
                                fluidRow(
                                  column(offset = 9, width = 3,
-                                        tipify(el = p(em(strong("What's happening?")), style = "text-align:right; color:#00B5E5; font-size:12px"),
+                                        tipify(el = p(em(strong("What's happening?")), style = "text-align:right; color:#00B5E5; font-size:16px"),
                                                title = "This is the output of our ANOVA test when run in R. If the sample means are far apart there is evidence against the null hypothesis that the mean value of response is the same for all groups. But what is considered far apart? The F-stat quantifies this",
                                                placement = "top", trigger = "hover"))),
                                
@@ -474,10 +596,10 @@ ui <- navbarPage(
                                  p("At the $\\alpha = .05$ level the F-stat corresponds to a p-value that suggests there is",
                                    textOutput(outputId = "concl", inline = TRUE)),
                                  fluidRow(
-                                   column(offset = 5, width = 7,
-                                          tipify(el = p(em(strong("What's happening?")), style = "text-align:right; color:#00B5E5; font-size:12px"),
+                                   column(offset = 9, width = 3,
+                                          tipify(el = p(em(strong("What's happening?")), style = "text-align:right; color:#00B5E5; font-size:16px"),
                                                  title = "When the p-value is less than alpha we reject the null in favor of the alternative hypothesis. When the p-value is greater than alpha we fail to reject the the null hypothesis",
-                                                 placement = "bottom", trigger = "hover")
+                                                 placement = "top", trigger = "hover")
                                    )
                                  ),
                                  uiOutput("valid"))
@@ -497,130 +619,57 @@ ui <- navbarPage(
   
   
   ##---------------------------------------------------------quiz on boxplots comparing F-stats  
-  tabPanel("Quiz",
-           fluidRow(
-             tags$iframe(src = "https://samanthaowusu.shinyapps.io/ANOVA-quiz/",
-                         width = "1500", height = "1000",
-                         frameBorder="0")
-           )
-  ),
+  # tabPanel("Quiz",
+  #          fluidRow(
+  #            tags$iframe(src = "https://samanthaowusu.shinyapps.io/ANOVA-quiz/",
+  #                        width = "1500", height = "1000",
+  #                        frameBorder="0")
+  #          )
+  # ),
   
   
   
   tabPanel("Resources",
-           style = "font-size:20px",
+                     style = "font-size:20px",
+           h2("Link to additional resources"),
+           tags$a(href = HTML("<a><span class='tex2jax_ignore'>https://stats.libretexts.org/Bookshelves/Introductory_Statistics/Book%3A_OpenIntro_Statistics_(Diez_et_al)./05%3A_Inference_for_Numerical_Data/5.05%3A_Comparing_many_Means_with_ANOVA_(Special_Topic)</span></h4>"),
+                  "OpenIntro Statistics - ''Comparing many Means with ANOVA''"),
            
-           h1("Equations"),
-           fluidRow(
-             column(width = 11,
-                    h4("The following are some equations that may not have been referenced in the app that you may come across when dealing with ANOVA. You", em("DO NOT"),
-                       "need to know these"),
-                    h4("equations in order to interact with this app")
-             )
-           ), br(),
-           
-           fluidRow(
-             column(offset = 2, width = 3,
-                    h3(strong("Bonferroni correction"), style = "text-align:center"),
-                    p("$\\Large{\\alpha^{*} = \\frac{\\alpha}{k}}$", style = "text-align:center;background-color:yellow"),
-                    h4("$\\bullet$ $k$ is the total number of pair-wise tests"),
-                    h4("$\\bullet$ $\\alpha^{*}$ is the adjusted alpha value"),
-                    h4("$\\bullet$ $\\alpha$ is the original, unadjusted alpha value")
-             ),
-             
-             column(offset = 1, width = 4,
-                    h3(strong("The Between Groups Variance"), style = "text-align:center"),
-                    p("$\\Large{{s_B}^{2}  =  \\frac{n_1{(\\overline{y}_1 - \\overline{y})}^{2}   +   n_2{(\\overline{y}_2 - \\overline{y})}^{2}   + ... +   n_K{(\\overline{y}_K  -  \\overline{y})}^{2}}{K - 1}}$", style = "text-align:center;background-color:yellow"),
-                    h4("$\\bullet$ $K$ is the total number of groups, each with a corresponding sample size equal to $n_1, n_2, ... n_K$"),
-                    h4("$\\bullet$ $\\overline{y}_1$, $\\overline{y}_2$, ... $\\overline{y}_K$ are the means of groups $1$, $2$, and $K$ respectively"),
-                    h4("$\\bullet$ $\\overline{y}$ is the", em("overall"), "mean, the mean of all observations")
-             )
-           ),
+           br(), 
            br(),
            
-           fluidRow(
-             column(offset = 2, width = 3,
-                    h3(strong("The ANOVA model"), style = "text-align:center"),
-                    p("$\\Large{y_{ij} = \\mu_i + \\epsilon_{ij}}$", style = "text-align:center; background-color:yellow"),
-                    h4("$\\bullet$ $y_{ij}$ is an individual observation, the response of a subject $j$ in group $i$"),
-                    h4("$\\bullet$ $\\mu_i$ is the mean of group $i$"),
-                    h4("$\\bullet$ $\\epsilon_{ij}$ is a specific random error term, the error of an individual about its group's mean")
-             ),
-             
-             column(offset = 1, width = 4,
-                    h3(strong("Pooled estimate of Within Groups Variance"), style = "text-align:center"),
-                    p("$\\Large{{s_W}^{2}  =  \\frac{(n_1  -  1){s_1}^{2} +  (n_2  -  1){s_2}^{2}  +  ...  +  (n_K  -  1){s_K}^{2}}{n - K}}$", style = "text-align:center;background-color:yellow"),
-                    h4("$\\bullet$ $K$ is the total number of groups, each with a corresponding sample size equal to $n_1, n_2, ... n_K$"),
-                    h4("$\\bullet$ $n$ is the total number of samples, $n = n_1 + n_2 + ... + n_K$"),
-                    h4("$\\bullet$ Each group's squared variance, ${s_1}^{2}$, ${s_2}^{2}$, ... ${s_K}^{2}$, is"),
-                    p("$\\Large{{s_i}^{2} = \\frac{\\sum_{j=1}^{n_i} {(y_{ij}  -  \\overline{y}_i)}^{2}}{n_i  -  1}}$", style = "text-align:center")
-             )
-             
-           ),
+           tags$a(href="https://sta210-sp21.netlify.app/slides/08-anova.html#1", 
+                  "Comparing means with ANOVA - STA 210 slides"),
            br(),
+
            br(),
-           
-           h1("Other Resources"),
-           h4("When running an ANOVA test in R you will encounter the following table. It is important to understand what information
-                            is being presented"),
-           br(),
-           
-           fluidRow(
-             column(offset = 2, width = 8,
-                    h3(strong("The ANOVA Test Output in R"))
-             )
-           ),
-           fluidRow(
-             column(width = 12, align = "center",
-                    img(src = "output.png", width = 1000, height = 250)
-             )
-           ),
-           fluidRow(
-             column(offset = 2, width = 4,
-                    p(em("Values in the 'Source' column clarify the source of the variance in question"), style = "font-size:20px"),
-                    h4("$\\bullet$ The name of the grouping variable may be used in place of the 'Between' label"),
-                    h4("$\\bullet$ The word 'Residuals' may be used in place of the 'Within' label")
-             ),
-             
-             column(width = 4, 
-                    p(em("The Mean Sq Between is an estimate of the variance of the group means
-                                        from the overall mean"), style = "font-size:20px"),
-                    p(em("The Mean Sq Within is an estimate of $\\sigma^{2}$, the inherent variability in 
-                                          each group's population"), style = "font-size:20px"),
-                    h4("$\\bullet$ ${s_B}^{2}$ is the between groups variance"),
-                    h4("$\\bullet$ ${s_W}^{2}$ is a pooled estimated of the within groups variances")
-                    
-             )
-           ),
-           br(), br(),
-           
-           fluidRow(
-             column(offset = 2, width = 4,
-                    p(em("'df' refers to the degrees of freedom"), style = "font-size:20px"),
-                    h4("$\\bullet$ $ndf = K - 1$"),
-                    h4("$\\bullet$ $ddf = n - K$"),
-                    h4("Where $n$ is the total number of samples and $K$ is the total number of groups")
-             ),
-             column(width = 4,
-                    br(),
-                    h4("$\\bullet$ $F_{obs}$ is equal to the ratio of the 'Between' Mean Sq value 
-                                      to the 'Within' Mean Sq value"),
-                    h4("$\\bullet$ The null hypothesis is rejected if $p_{obs}$, the p-value corresponding to $F_{obs}$,
-                                         is less than $\\alpha$")
-             )
-           ),
-           
-           
-  )
+           tags$a(href = "https://www.rdocumentation.org/packages/stats/versions/3.6.2/topics/aov",
+                  "Documentation for the aov function in R")
+  ), 
+
+## Feedback tab
+tabPanel("Feedback",
+         style = "font-size: 20px",
+         
+         p("Use the form below to submit feedback about the app."), 
+         br(), br(),
+         
+           tags$iframe(src = "https://forms.office.com/Pages/ResponsePage.aspx?id=TsVyyzFKnk2xSh6jbfrJTBw0r2_bKCVMs9lST1_-2sxUQ1RRR1oyVDhMRDQ1OEg1WjBINjAwUkFJTC4u",
+                       width = "900", height = "400",
+                       frameBorder="0")
+)
   
   
 )
+
+## SERVER-----------------------------------------------------------------------
 
 
 server <- function(input, output, session) {
   ##--------------------------------------------------------------Population Tab
   #Preserve mean when manipulate skew
   #Preserve mean when manipulate variance with similar procedure?
+  
   pop_dist <- function(skew, within, n) {
     mean.initial <- reactive({
       set.seed(n)

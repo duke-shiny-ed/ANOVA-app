@@ -120,7 +120,7 @@ tabPanel("About",
            ),
            
            column(width = 12,
-                  h1("Details fo the ANOVA test for comparing group means"),
+                  h1("Details for the ANOVA test for comparing group means"),
                   
                   h3(strong("Hypotheses")),
                   p("Suppose there are $K$ groups. Then the ANOVA test can be used to test the following hypotheses:"),
@@ -632,7 +632,7 @@ p("If the variability between groups is significantly greater than the variabili
   tabPanel("Resources",
                      style = "font-size:20px",
            h2("Link to additional resources"),
-           tags$a(href = HTML("<a><span class='tex2jax_ignore'>https://stats.libretexts.org/Bookshelves/Introductory_Statistics/Book%3A_OpenIntro_Statistics_(Diez_et_al)./05%3A_Inference_for_Numerical_Data/5.05%3A_Comparing_many_Means_with_ANOVA_(Special_Topic)</span></h4>"),
+           tags$a(href = "https://stats.libretexts.org/Bookshelves/Introductory_Statistics/Book%3A_OpenIntro_Statistics_(Diez_et_al)./05%3A_Inference_for_Numerical_Data/5.05%3A_Comparing_many_Means_with_ANOVA_(Special_Topic)",
                   "OpenIntro Statistics - ''Comparing many Means with ANOVA''"),
            
            br(), 
@@ -740,8 +740,8 @@ server <- function(input, output, session) {
   pop_means <- reactive({ddply(popdf_long(), "dataset", summarize, means = mean(values))})
   
   output$curve <- renderPlot({
-    ggplot(data = popdf_long(), aes(x=values, color = dataset)) +
-      geom_density() +
+    ggplot(data = popdf_long(), aes(x=values, fill = dataset)) +
+      geom_density(alpha = 0.5) +
       coord_cartesian(xlim = c(-0.3, 1.3), ylim = c(0, 6.8)) +
       geom_vline(data = pop_means(), aes(xintercept = means, color = dataset),
                  linetype = 2, size = 0.8) +
@@ -983,7 +983,7 @@ server <- function(input, output, session) {
   
   output$boxplot <- renderPlot({
     ggplot(data = sampledf_long(), aes(x = dataset, y = values)) + 
-      geom_boxplot(aes(color = dataset)) +
+      geom_boxplot(aes(fill = dataset), alpha = 0.5) +
       geom_jitter(aes(x = dataset, y = values, alpha = .2, color = dataset), position=position_jitter(0.04)) +
       #coord_cartesian(ylim =c(0.1, 1.2)) +
       geom_hline(yintercept=mean(sampledf_long()$values), linetype=2, color = "black") +
@@ -1041,7 +1041,7 @@ server <- function(input, output, session) {
   ##--------------------------------------------------------------ANOVA Test Tab
   output$boxplot2 <- renderPlot({
     ggplot(data = sampledf_long(), aes(x = dataset, y = values)) + 
-      geom_boxplot(aes(color = dataset)) +
+      geom_boxplot(aes(fill = dataset), alpha = 0.5) +
       geom_jitter(aes(x = dataset, y = values, alpha = .2, color = dataset), position=position_jitter(0.04)) +
       #coord_cartesian(ylim =c(0.1, 1.2)) +
       geom_hline(yintercept=mean(sampledf_long()$values), linetype=2, color = "black") +

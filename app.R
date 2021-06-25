@@ -645,19 +645,20 @@ p("If the variability between groups is significantly greater than the variabili
            br(),
            tags$a(href = "https://www.rdocumentation.org/packages/stats/versions/3.6.2/topics/aov",
                   "Documentation for the aov function in R")
-  ), 
+  )
 
-## Feedback tab
-tabPanel("Feedback",
-         style = "font-size: 20px",
-         
-         p("Use the form below to submit feedback about the app."), 
-         br(), br(),
-         
-           tags$iframe(src = "https://forms.office.com/Pages/ResponsePage.aspx?id=TsVyyzFKnk2xSh6jbfrJTBw0r2_bKCVMs9lST1_-2sxUQ1RRR1oyVDhMRDQ1OEg1WjBINjAwUkFJTC4u",
-                       width = "900", height = "400",
-                       frameBorder="0")
-)
+## Feedback tab ----------------------------------------------------------------
+
+# tabPanel("Feedback",
+#          style = "font-size: 20px",
+#          
+#          p("Use the form below to submit feedback about the app."), 
+#          br(), br(),
+#          
+#            tags$iframe(src = "https://forms.office.com/Pages/ResponsePage.aspx?id=TsVyyzFKnk2xSh6jbfrJTBw0r2_bKCVMs9lST1_-2sxUQ1RRR1oyVDhMRDQ1OEg1WjBINjAwUkFJTC4u",
+#                        width = "900", height = "400",
+#                        frameBorder="0")
+# )
   
   
 )
